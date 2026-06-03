@@ -188,11 +188,29 @@
     font-family: 'Orbitron', monospace; font-size: 0.78rem; font-weight: 900;
   }
   .s11 { color: var(--gold); text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+  .s12 { color: #ff6bff; text-shadow: 0 0 14px rgba(255,107,255,0.7); font-size: 0.95rem; }
   .s-high { color: var(--green); }
   .s-mid { color: var(--text); }
   .s-low { color: var(--accent2); }
   .s-zero { color: var(--red); }
   .s-empty { color: var(--text-dim); font-size: 0.6rem; }
+
+  .king-badge {
+    display: inline-block;
+    background: rgba(255,107,255,0.15);
+    border: 1px solid rgba(255,107,255,0.4);
+    color: #ff6bff;
+    font-size: 0.6rem;
+    font-family: 'Orbitron', monospace;
+    padding: 1px 7px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+  }
+  .king-owner-cell {
+    box-shadow: inset 0 0 10px rgba(255,107,255,0.2);
+    background: rgba(255,107,255,0.05) !important;
+  }
 
   /* Total row */
   .total-row td {
@@ -249,9 +267,8 @@
 <body>
 <div class="container">
   <header>
-    <h1>🏁 RACE TIME TRACKER BY FLY04</h1>
+    <h1>🏁 RACE TIME TRACKER</h1>
     <p>บันทึกเวลา · คำนวณแต้ม · จัดอันดับ</p>
-    <p>Tiktok:FLY04(@thefly2004)</p>
     <div class="scan-line"></div>
   </header>
 
@@ -288,6 +305,10 @@ for (const [stars, list] of Object.entries(STAGES_BY_STAR))
 
 const PLAYERS = 6;
 const TIME_ROWS = 9;
+
+// KingMap: rowIndex (0-based) → playerIndex (0-based) ที่เป็นเจ้าของ
+// P1→รอบ2(idx1), P2→รอบ3(idx2), P3→รอบ4(idx3), P4→รอบ5(idx4), P5→รอบ6(idx5), P6→รอบ7(idx6)
+const KING_MAP = { 1:0, 2:1, 3:2, 4:3, 5:4, 6:5 }; // rowIndex: playerIndex
 
 // State: tables[i] = { id, rows[r] = { stageName, times[p] } }
 let tables = [];
@@ -331,24 +352,30 @@ function formatTimeInput(v) {
   }
   return v;
 }
-function rowScores(row) {
-  // row = { stageName, times[PLAYERS] }
+function rowScores(row, rowIndex) {
+  // row = { stageName, times[PLAYERS] }, rowIndex = 0-based
   const parsed = row.times.map(t => parseTime(t));
   const valid = parsed.filter(t => t !== null);
   if (!valid.length) return parsed.map(() => null);
   const fastest = Math.min(...valid);
-  return parsed.map(t => {
+  const kingPlayer = (rowIndex !== undefined && rowIndex in KING_MAP) ? KING_MAP[rowIndex] : -1;
+  return parsed.map((t, p) => {
     if (t === null) return null;
     const ds = (t - fastest) / 100;
-    if (ds === 0) return 11;
-    if (ds < 1) return 10; if (ds < 2) return 9; if (ds < 3) return 8;
-    if (ds < 4) return 7;  if (ds < 5) return 6; if (ds < 6) return 5;
-    if (ds < 7) return 4;  if (ds < 8) return 3; if (ds < 9) return 2;
-    if (ds < 10) return 1; return 0;
+    let score;
+    if (ds === 0) score = 11;
+    else if (ds < 1) score = 10; else if (ds < 2) score = 9; else if (ds < 3) score = 8;
+    else if (ds < 4) score = 7;  else if (ds < 5) score = 6; else if (ds < 6) score = 5;
+    else if (ds < 7) score = 4;  else if (ds < 8) score = 3; else if (ds < 9) score = 2;
+    else if (ds < 10) score = 1; else score = 0;
+    // KingMap bonus: เจ้าของ KingMap ชนะ (fastest) → +1 = 12
+    if (p === kingPlayer && ds === 0) score = 12;
+    return score;
   });
 }
 function scoreClass(s) {
   if (s === null) return 's-empty';
+  if (s === 12) return 's12';
   if (s === 11) return 's11';
   if (s >= 8) return 's-high';
   if (s >= 5) return 's-mid';
@@ -549,13 +576,18 @@ function buildTableDOM(tObj) {
     const srLabel = document.createElement('td');
     srLabel.colSpan = 2;
     srLabel.className = 'round-label score-label';
-    srLabel.textContent = '🏆 คะแนน';
+    const isKingRound = r in KING_MAP;
+    srLabel.innerHTML = isKingRound
+      ? `🏆 คะแนน &nbsp;<span class="king-badge">👑 KingMap P${KING_MAP[r]+1}</span>`
+      : '🏆 คะแนน';
     scoreRow.appendChild(srLabel);
 
     for (let p = 0; p < PLAYERS; p++) {
       const td = document.createElement('td');
       td.className = 'score-cell s-empty';
       td.dataset.sp = p;
+      // mark king owner cell
+      if (isKingRound && KING_MAP[r] === p) td.classList.add('king-owner-cell');
       td.textContent = '-';
       scoreRow.appendChild(td);
     }
@@ -595,7 +627,7 @@ function recalcBlock(tid) {
 
   for (let r = 0; r < TIME_ROWS; r++) {
     const row = tObj.rows[r];
-    const scores = rowScores(row);
+    const scores = rowScores(row, r);
     const parsed = row.times.map(t => parseTime(t));
     const valid = parsed.filter(t => t !== null);
     const fastest = valid.length ? Math.min(...valid) : null;
@@ -618,15 +650,16 @@ function recalcBlock(tid) {
     if (!scoreRow) continue;
     scoreRow.querySelectorAll('[data-sp]').forEach((td, p) => {
       const s = scores[p];
-      td.className = `score-cell ${scoreClass(s)}`;
+      const isKingOwner = (r in KING_MAP && KING_MAP[r] === p);
+      td.className = `score-cell ${scoreClass(s)}${isKingOwner ? ' king-owner-cell' : ''}`;
       td.textContent = s === null ? '-' : s;
     });
   }
 
   // Update grand total row
   const tableTotals = Array(PLAYERS).fill(0);
-  tObj.rows.forEach(row => {
-    rowScores(row).forEach((s, p) => { if (s !== null) tableTotals[p] += s; });
+  tObj.rows.forEach((row, r) => {
+    rowScores(row, r).forEach((s, p) => { if (s !== null) tableTotals[p] += s; });
   });
   const maxTotal = Math.max(...tableTotals);
   const totalRow = document.getElementById(`total-${tid}`);
@@ -662,8 +695,8 @@ function removeTable(tid) {
 function calcTotals() {
   const totals = Array(PLAYERS).fill(0);
   tables.forEach(tObj => {
-    tObj.rows.forEach(row => {
-      const scores = rowScores(row);
+    tObj.rows.forEach((row, r) => {
+      const scores = rowScores(row, r);
       scores.forEach((s, p) => { if (s !== null) totals[p] += s; });
     });
   });
