@@ -3,753 +3,548 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🏁 Race Time Tracker By FLY04</title>
+<title>🏁 Race Time Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a26;
-    --border: #2a2a3e;
-    --accent: #00f5ff;
-    --accent2: #ff6b35;
-    --gold: #ffd700;
-    --text: #e0e0f0;
-    --text-dim: #6a6a8a;
-    --red: #ff4444;
-    --green: #00e676;
-    --star3: #4fc3f7;
-    --star4: #81c784;
-    --star5: #ffb74d;
-    --star6: #f06292;
-    --star7: #ce93d8;
+    --bg:#0a0a0f; --surface:#12121a; --surface2:#1a1a26; --border:#2a2a3e;
+    --accent:#00f5ff; --accent2:#ff6b35; --gold:#ffd700;
+    --text:#e0e0f0; --text-dim:#6a6a8a; --red:#ff3232; --green:#00e676;
+    --star3:#4fc3f7; --star4:#81c784; --star5:#ffb74d; --star6:#f06292; --star7:#ce93d8;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Sarabun', sans-serif;
-    min-height: 100vh;
-  }
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image:
-      linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none; z-index: 0;
-  }
-  .container { position: relative; z-index: 1; padding: 20px; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,245,255,.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,245,255,.03)1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .container{position:relative;z-index:1;padding:20px;}
 
-  header { text-align: center; padding: 28px 20px 16px; }
-  header h1 {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(1.3rem, 3vw, 2rem);
-    font-weight: 900; letter-spacing: 4px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin-bottom: 4px;
-  }
-  header p { color: var(--text-dim); font-size: 0.82rem; letter-spacing: 1px; }
-  .scan-line {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    margin: 12px auto; max-width: 500px;
-    animation: scan 3s ease-in-out infinite;
-  }
-  @keyframes scan { 0%,100%{opacity:0.3} 50%{opacity:1} }
+  /* HEADER */
+  header{text-align:center;padding:28px 20px 16px;}
+  #mainTitle{font-family:'Orbitron',monospace;font-size:clamp(1.3rem,3vw,2rem);font-weight:900;letter-spacing:4px;margin-bottom:10px;display:block;}
+  #mainTitle .char{display:inline-block;background:linear-gradient(135deg,#ffffff,#ff3232,#ffffff,#ff6060,#ffffff);background-size:400% 400%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:rainbowShift 5s linear infinite,charFloat 2.5s ease-in-out infinite;}
+  #mainTitle .char:nth-child(1){animation-delay:0s,0s}#mainTitle .char:nth-child(2){animation-delay:.15s,.12s}#mainTitle .char:nth-child(3){animation-delay:.3s,.24s}#mainTitle .char:nth-child(4){animation-delay:.45s,.36s}#mainTitle .char:nth-child(5){animation-delay:.6s,.48s}#mainTitle .char:nth-child(6){animation-delay:.75s,.6s}#mainTitle .char:nth-child(7){animation-delay:.9s,.72s}#mainTitle .char:nth-child(8){animation-delay:1.05s,.84s}#mainTitle .char:nth-child(9){animation-delay:1.2s,.96s}#mainTitle .char:nth-child(10){animation-delay:1.35s,1.08s}#mainTitle .char:nth-child(11){animation-delay:1.5s,1.2s}#mainTitle .char:nth-child(12){animation-delay:1.65s,1.32s}#mainTitle .char:nth-child(13){animation-delay:1.8s,1.44s}#mainTitle .char:nth-child(14){animation-delay:1.95s,1.56s}#mainTitle .char:nth-child(15){animation-delay:2.1s,1.68s}#mainTitle .char:nth-child(16){animation-delay:2.25s,1.8s}#mainTitle .char:nth-child(17){animation-delay:2.4s,1.92s}#mainTitle .char:nth-child(18){animation-delay:2.55s,2.04s}#mainTitle .char:nth-child(19){animation-delay:2.7s,2.16s}#mainTitle .char:nth-child(20){animation-delay:2.85s,2.28s}
+  @keyframes rainbowShift{0%{background-position:0% 50%}100%{background-position:400% 50%}}
+  @keyframes charFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  .sub-desc{display:flex;flex-direction:column;gap:4px;margin-bottom:6px;}
+  .sub-desc p{color:var(--text-dim);font-size:.82rem;letter-spacing:.5px;}
+  .sub-desc p.tiktok{color:var(--accent);font-size:.78rem;}
+  .scan-line{height:2px;background:linear-gradient(90deg,transparent,var(--red),transparent);margin:12px auto;max-width:500px;animation:scan 3s ease-in-out infinite;}
+  @keyframes scan{0%,100%{opacity:.3}50%{opacity:1}}
 
-  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
-  .btn {
-    padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;
-    font-family: 'Orbitron', monospace; font-size: 0.68rem; font-weight: 700;
-    letter-spacing: 1px; transition: all 0.2s; text-transform: uppercase; white-space: nowrap;
-  }
-  .btn-add { background: var(--accent); color: #000; }
-  .btn-add:hover { background: #00c8d4; box-shadow: 0 0 15px rgba(0,245,255,0.4); }
-  .btn-total { background: var(--surface2); color: var(--gold); border: 1px solid var(--gold); }
-  .btn-total:hover { background: rgba(255,215,0,0.1); }
-  .btn-danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
-  .btn-danger:hover { background: rgba(255,68,68,0.1); }
-  .btn-export { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-export:hover { border-color: var(--accent); color: var(--accent); }
+  /* TOP BAR */
+  .top-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;justify-content:space-between;}
 
-  .race-block {
-    margin-bottom: 20px;
-    border: 1px solid var(--border); border-radius: 10px;
-    overflow: hidden; background: var(--surface);
-    animation: fadeIn 0.3s ease;
+  /* GLOBE LANG DROPDOWN */
+  .lang-wrap{position:relative;}
+  .globe-btn{
+    display:flex;align-items:center;gap:6px;
+    padding:7px 14px;border:1px solid var(--border);background:var(--surface2);
+    color:var(--text);border-radius:8px;cursor:pointer;font-size:.8rem;
+    font-family:'Sarabun',sans-serif;transition:all .2s;white-space:nowrap;
   }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+  .globe-btn:hover,.globe-btn.open{border-color:var(--accent);color:var(--accent);background:rgba(0,245,255,.06);}
+  .globe-icon{font-size:1.1rem;line-height:1;}
+  .globe-arrow{font-size:.6rem;transition:transform .2s;opacity:.6;}
+  .globe-btn.open .globe-arrow{transform:rotate(180deg);}
+  .lang-dropdown{
+    position:absolute;top:calc(100% + 6px);left:0;
+    background:#1a1a2e;border:1px solid var(--accent);border-radius:10px;
+    min-width:170px;z-index:9999;box-shadow:0 8px 28px rgba(0,0,0,.7);
+    overflow:hidden;display:none;animation:ddFade .15s ease;
+  }
+  .lang-dropdown.open{display:block;}
+  @keyframes ddFade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .lang-option{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 16px;cursor:pointer;font-size:.85rem;
+    font-family:'Sarabun',sans-serif;transition:background .12s;
+  }
+  .lang-option:hover{background:rgba(0,245,255,.1);color:var(--accent);}
+  .lang-option.active{background:rgba(0,245,255,.08);color:var(--accent);}
+  .lang-option .flag{font-size:1.1rem;}
+  .lang-divider{height:1px;background:var(--border);margin:2px 0;}
 
-  .block-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 14px; background: var(--surface2);
-    border-bottom: 1px solid var(--border); gap: 10px;
-  }
-  .block-num { font-family: 'Orbitron', monospace; font-size: 0.68rem; color: var(--accent); letter-spacing: 2px; white-space: nowrap; }
-  .btn-remove {
-    background: none; border: 1px solid var(--border); color: var(--text-dim);
-    border-radius: 4px; padding: 3px 10px; cursor: pointer; font-size: 0.75rem; transition: all 0.2s;
-  }
-  .btn-remove:hover { border-color: var(--red); color: var(--red); }
+  /* CONTROLS */
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .btn{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-family:'Orbitron',monospace;font-size:.68rem;font-weight:700;letter-spacing:1px;transition:all .2s;text-transform:uppercase;white-space:nowrap;}
+  .btn-add{background:var(--red);color:#fff;}
+  .btn-add:hover{background:#cc0000;box-shadow:0 0 15px rgba(255,50,50,.4);}
+  .btn-total{background:var(--surface2);color:var(--gold);border:1px solid var(--gold);}
+  .btn-total:hover{background:rgba(255,215,0,.1);}
+  .btn-danger{background:transparent;color:var(--text-dim);border:1px solid var(--border);}
+  .btn-danger:hover{border-color:var(--red);color:var(--red);}
 
-  .table-scroll { overflow-x: auto; }
-  table {
-    width: 100%; border-collapse: collapse;
-    min-width: 900px; background: var(--surface);
-  }
-  thead tr { background: var(--surface2); }
-  th {
-    padding: 9px 6px;
-    font-family: 'Orbitron', monospace; font-size: 0.6rem; font-weight: 700;
-    letter-spacing: 1px; color: var(--text-dim); text-align: center;
-    border-bottom: 1px solid var(--border); text-transform: uppercase; white-space: nowrap;
-  }
-  th.th-round { text-align: left; padding-left: 10px; min-width: 60px; }
-  th.th-stage { min-width: 190px; }
-  td {
-    padding: 0;
-    border-bottom: 1px solid rgba(42,42,62,0.5);
-    border-right: 1px solid rgba(42,42,62,0.3);
-    vertical-align: middle;
-  }
-  td:last-child { border-right: none; }
-  tr:last-child td { border-bottom: none; }
+  /* RACE BLOCK */
+  .race-block{margin-bottom:20px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .block-header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--surface2);border-bottom:1px solid var(--border);gap:10px;flex-wrap:wrap;}
+  .block-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .block-num{font-family:'Orbitron',monospace;font-size:.68rem;color:var(--red);letter-spacing:2px;white-space:nowrap;}
 
-  /* Round label cell */
-  .round-label {
-    padding: 8px 12px; font-size: 0.65rem; color: var(--text-dim);
-    white-space: nowrap; font-family: 'Orbitron', monospace; letter-spacing: 0.5px;
-  }
-  .round-label.score-label { color: var(--gold); }
+  /* Per-table player count */
+  .block-pctrl{display:flex;align-items:center;gap:5px;}
+  .block-pctrl-label{font-size:.6rem;color:var(--text-dim);font-family:'Orbitron',monospace;letter-spacing:1px;white-space:nowrap;}
+  .bp-btn{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;padding:0;}
+  .bp-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .bp-val{font-family:'Orbitron',monospace;font-size:.75rem;color:var(--accent);min-width:16px;text-align:center;}
 
-  /* Stage selector in each row */
-  .stage-cell { min-width: 190px; padding: 4px 6px; position: relative; }
-  .stage-search-wrap { position: relative; }
-  .stage-input {
-    width: 100%; background: transparent; border: 1px solid transparent;
-    color: var(--accent); font-family: 'Sarabun', sans-serif;
-    font-size: 0.78rem; font-weight: 600;
-    padding: 5px 8px; border-radius: 4px; outline: none; transition: border-color 0.2s;
-  }
-  .stage-input:focus { border-color: var(--accent); background: rgba(0,245,255,0.05); }
-  .stage-input::placeholder { color: var(--text-dim); font-size: 0.7rem; font-weight: 400; }
+  .btn-remove{background:none;border:1px solid var(--border);color:var(--text-dim);border-radius:4px;padding:3px 10px;cursor:pointer;font-size:.75rem;transition:all .2s;white-space:nowrap;}
+  .btn-remove:hover{border-color:var(--red);color:var(--red);}
 
-  .stage-dropdown {
-    position: absolute; top: 100%; left: 0; right: 0;
-    background: #1a1a2e; border: 1px solid var(--accent);
-    border-radius: 6px; max-height: 200px; overflow-y: auto;
-    z-index: 9999; box-shadow: 0 8px 24px rgba(0,0,0,0.7);
-    display: none;
-  }
-  .stage-dropdown.open { display: block; }
-  .dropdown-group-label {
-    padding: 4px 10px; font-size: 0.58rem;
-    font-family: 'Orbitron', monospace; letter-spacing: 1px;
-    color: var(--text-dim); background: rgba(255,255,255,0.03);
-    border-top: 1px solid var(--border); text-transform: uppercase;
-  }
-  .dropdown-item {
-    padding: 6px 12px; font-size: 0.78rem; cursor: pointer;
-    transition: background 0.12s; display: flex; align-items: center; gap: 7px;
-  }
-  .dropdown-item:hover { background: rgba(0,245,255,0.12); color: var(--accent); }
-  .star-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  /* TABLE */
+  .table-scroll{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;min-width:600px;background:var(--surface);}
+  thead tr{background:var(--surface2);}
+  th{padding:9px 6px;font-family:'Orbitron',monospace;font-size:.6rem;font-weight:700;letter-spacing:1px;color:var(--text-dim);text-align:center;border-bottom:1px solid var(--border);text-transform:uppercase;white-space:nowrap;}
+  th.th-round{text-align:left;padding-left:10px;min-width:55px;}
+  th.th-stage{min-width:180px;}
+  td{padding:0;border-bottom:1px solid rgba(42,42,62,.5);border-right:1px solid rgba(42,42,62,.3);vertical-align:middle;}
+  td:last-child{border-right:none;}
+  tr:last-child td{border-bottom:none;}
 
-  /* Player row */
-  .player-row td { background: rgba(0,245,255,0.04); }
-  .player-input {
-    width: 100%; background: transparent; border: none;
-    color: var(--accent); font-family: 'Orbitron', monospace;
-    font-size: 0.68rem; font-weight: 700; text-align: center;
-    padding: 9px 5px; letter-spacing: 1px; outline: none;
-  }
-  .player-input::placeholder { color: rgba(0,245,255,0.22); font-size: 0.6rem; }
-  .player-input:focus { background: rgba(0,245,255,0.06); }
+  /* KING CELL */
+  .king-cell{position:relative;padding:0!important;}
+  .king-badge-top{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-family:'Orbitron',monospace;font-size:.52rem;font-weight:700;padding:2px 7px;border-radius:0 0 6px 6px;white-space:nowrap;letter-spacing:.5px;z-index:10;box-shadow:0 2px 10px rgba(255,50,50,.6);animation:kingPulse 2s ease-in-out infinite;}
+  @keyframes kingPulse{0%,100%{box-shadow:0 2px 10px rgba(255,50,50,.6)}50%{box-shadow:0 2px 22px rgba(255,50,50,1)}}
+  .king-cell .time-input{padding-top:18px!important;border:1.5px solid rgba(255,50,50,.5)!important;border-radius:4px;}
+  .king-cell .time-input:focus{border-color:var(--red)!important;background:rgba(255,50,50,.06)!important;}
 
-  /* Time input */
-  .time-input {
-    width: 100%; background: transparent; border: none;
-    color: var(--text); font-family: 'Orbitron', monospace;
-    font-size: 0.68rem; text-align: center; padding: 8px 3px; outline: none;
-  }
-  .time-input::placeholder { color: rgba(160,160,200,0.28); font-size: 0.58rem; }
-  .time-input:focus { background: rgba(0,245,255,0.05); }
-  .time-input.fastest { color: var(--gold); font-weight: 700; }
-  .time-input.has-time { color: var(--text); }
-  td.fastest-td { box-shadow: inset 0 0 8px rgba(255,215,0,0.15); }
+  /* ROWS */
+  .round-label{padding:8px 12px;font-size:.65rem;color:var(--text-dim);white-space:nowrap;font-family:'Orbitron',monospace;letter-spacing:.5px;}
+  .round-label.score-label{color:var(--gold);}
+  .player-row td{background:rgba(0,245,255,.04);}
+  .player-input{width:100%;background:transparent;border:none;color:var(--accent);font-family:'Orbitron',monospace;font-size:.68rem;font-weight:700;text-align:center;padding:9px 5px;letter-spacing:1px;outline:none;}
+  .player-input::placeholder{color:rgba(0,245,255,.22);font-size:.6rem;}
+  .player-input:focus{background:rgba(0,245,255,.06);}
+  .time-input{width:100%;background:transparent;border:none;color:var(--text);font-family:'Orbitron',monospace;font-size:.68rem;text-align:center;padding:8px 3px;outline:none;box-sizing:border-box;}
+  .time-input::placeholder{color:rgba(160,160,200,.28);font-size:.58rem;}
+  .time-input:focus{background:rgba(0,245,255,.05);}
+  .time-input.fastest{color:var(--gold);font-weight:700;}
+  .time-input.has-time{color:var(--text);}
+  td.fastest-td{box-shadow:inset 0 0 8px rgba(255,215,0,.15);}
 
-  /* Score row */
-  .score-row td { background: rgba(255,215,0,0.04); }
-  .score-cell {
-    text-align: center; padding: 9px 5px;
-    font-family: 'Orbitron', monospace; font-size: 0.78rem; font-weight: 900;
-  }
-  .s11 { color: var(--gold); text-shadow: 0 0 10px rgba(255,215,0,0.5); }
-  .s12 { color: #ff6bff; text-shadow: 0 0 14px rgba(255,107,255,0.7); font-size: 0.95rem; }
-  .s-high { color: var(--green); }
-  .s-mid { color: var(--text); }
-  .s-low { color: var(--accent2); }
-  .s-zero { color: var(--red); }
-  .s-empty { color: var(--text-dim); font-size: 0.6rem; }
+  /* STAGE SELECTOR */
+  .stage-cell{min-width:180px;padding:4px 6px;position:relative;}
+  .stage-search-wrap{position:relative;}
+  .stage-input{width:100%;background:transparent;border:1px solid transparent;color:var(--accent);font-family:'Sarabun',sans-serif;font-size:.78rem;font-weight:600;padding:5px 8px;border-radius:4px;outline:none;transition:border-color .2s;}
+  .stage-input:focus{border-color:var(--accent);background:rgba(0,245,255,.05);}
+  .stage-input::placeholder{color:var(--text-dim);font-size:.7rem;font-weight:400;}
+  .stage-dropdown{position:absolute;top:100%;left:0;right:0;background:#1a1a2e;border:1px solid var(--accent);border-radius:6px;max-height:200px;overflow-y:auto;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.7);display:none;}
+  .stage-dropdown.open{display:block;}
+  .dropdown-group-label{padding:4px 10px;font-size:.58rem;font-family:'Orbitron',monospace;letter-spacing:1px;color:var(--text-dim);background:rgba(255,255,255,.03);border-top:1px solid var(--border);}
+  .dropdown-item{padding:6px 12px;font-size:.78rem;cursor:pointer;transition:background .12s;display:flex;align-items:center;gap:7px;}
+  .dropdown-item:hover{background:rgba(0,245,255,.12);color:var(--accent);}
+  .star-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 
-  .king-badge {
-    display: inline-block;
-    background: rgba(255,107,255,0.15);
-    border: 1px solid rgba(255,107,255,0.4);
-    color: #ff6bff;
-    font-size: 0.6rem;
-    font-family: 'Orbitron', monospace;
-    padding: 1px 7px;
-    border-radius: 10px;
-    letter-spacing: 0.5px;
-    vertical-align: middle;
-  }
-  .king-owner-cell {
-    box-shadow: inset 0 0 10px rgba(255,107,255,0.2);
-    background: rgba(255,107,255,0.05) !important;
-  }
+  /* SCORE / TOTAL */
+  .score-row td{background:rgba(255,215,0,.04);}
+  .score-cell{text-align:center;padding:9px 5px;font-family:'Orbitron',monospace;font-size:.78rem;font-weight:900;}
+  .s12{color:#ff3232;text-shadow:0 0 14px rgba(255,50,50,.8);font-size:.95rem;}
+  .s11{color:var(--gold);text-shadow:0 0 10px rgba(255,215,0,.5);}
+  .s-high{color:var(--green);}.s-mid{color:var(--text);}.s-low{color:var(--accent2);}.s-zero{color:var(--red);}.s-empty{color:var(--text-dim);font-size:.6rem;}
+  .king-score-cell{background:rgba(255,50,50,.06)!important;}
+  .total-row td{background:rgba(0,245,255,.07);border-top:2px solid var(--accent);}
+  .total-row .round-label{color:var(--accent);font-size:.68rem;letter-spacing:1px;}
+  .total-cell{text-align:center;padding:11px 5px;font-family:'Orbitron',monospace;font-size:.9rem;font-weight:900;}
+  .total-top{color:var(--gold);text-shadow:0 0 12px rgba(255,215,0,.6);font-size:1rem;}
+  .total-val{color:var(--accent);}.total-zero{color:var(--text-dim);font-size:.65rem;}
 
-  /* Total row */
-  .total-row td {
-    background: rgba(0,245,255,0.07);
-    border-top: 2px solid var(--accent);
-  }
-  .total-row .round-label {
-    color: var(--accent);
-    font-size: 0.68rem;
-    letter-spacing: 1px;
-  }
-  .total-cell {
-    text-align: center; padding: 11px 5px;
-    font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 900;
-  }
-  .total-top { color: var(--gold); text-shadow: 0 0 12px rgba(255,215,0,0.6); font-size: 1rem; }
-  .total-val { color: var(--accent); }
-  .total-zero { color: var(--text-dim); font-size: 0.65rem; }
+  /* GLOBAL TOTAL */
+  .total-section{margin:20px 0;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
+  .total-section h2{font-family:'Orbitron',monospace;font-size:.85rem;color:var(--accent);letter-spacing:3px;margin-bottom:12px;text-align:center;}
+  .total-table{width:100%;border-collapse:collapse;}
+  .total-table th,.total-table td{padding:9px 14px;text-align:center;border:1px solid var(--border);font-family:'Orbitron',monospace;font-size:.75rem;}
+  .total-table th{background:var(--surface2);color:var(--text-dim);}
+  .rank-1{color:var(--gold);}.rank-2{color:#c0c0c0;}.rank-3{color:#cd7f32;}
 
-  /* Totals */
-  .total-section {
-    margin: 20px 0; padding: 16px;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-  }
-  .total-section h2 {
-    font-family: 'Orbitron', monospace; font-size: 0.85rem;
-    color: var(--accent); letter-spacing: 3px; margin-bottom: 12px; text-align: center;
-  }
-  .total-table { width: 100%; border-collapse: collapse; }
-  .total-table th, .total-table td {
-    padding: 9px 14px; text-align: center;
-    border: 1px solid var(--border); font-family: 'Orbitron', monospace; font-size: 0.75rem;
-  }
-  .total-table th { background: var(--surface2); color: var(--text-dim); }
-  .rank-1 { color: var(--gold); }
-  .rank-2 { color: #c0c0c0; }
-  .rank-3 { color: #cd7f32; }
-
-  .fab {
-    position: fixed; bottom: 22px; right: 22px;
-    width: 42px; height: 42px; background: var(--accent); color: #000;
-    border: none; border-radius: 50%; cursor: pointer; font-size: 1.1rem;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 18px rgba(0,245,255,0.4); z-index: 200; transition: transform 0.2s;
-  }
-  .fab:hover { transform: scale(1.1); }
-
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: var(--surface); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  .fab{position:fixed;bottom:22px;right:22px;width:42px;height:42px;background:var(--red);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(255,50,50,.4);z-index:200;transition:transform .2s;}
+  .fab:hover{transform:scale(1.1);}
+  ::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:var(--surface);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:var(--red);}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>🏁 RACE TIME TRACKER BY FLY04</h1>
-    <p>บันทึกเวลา · คำนวณแต้ม · จัดอันดับ</p>
-    <p>กรอกเวลาในแต่ละรอบ 15699 เวลาจะคำนวน 1:56:99</p>
-    <p>Tiktok: FLY04(@thefly2004)</p>
+    <h1 id="mainTitle"></h1>
+    <div class="sub-desc">
+      <p data-i18n="sub1"></p>
+      <p data-i18n="sub2"></p>
+      <p class="tiktok">TikTok: FLY04 (@thefly2004)</p>
+    </div>
     <div class="scan-line"></div>
   </header>
 
-  <div class="controls">
-    <button class="btn btn-add" onclick="addTable()">＋ เพิ่มตาราง</button>
-    <button class="btn btn-total" onclick="calcTotals()">🏆 คะแนนรวม</button>
-    <button class="btn btn-export" onclick="exportCSV()">📤 Export CSV</button>
-    <button class="btn btn-danger" onclick="confirmClear()">🗑 ล้างข้อมูล</button>
+  <div class="top-bar">
+    <!-- Globe language dropdown -->
+    <div class="lang-wrap" id="langWrap">
+      <button class="globe-btn" id="globeBtn">
+        <span class="globe-icon">🌐</span>
+        <span id="globeLabel">ไทย</span>
+        <span class="globe-arrow">▼</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <div class="lang-option active" data-lang="th"><span class="flag">🇹🇭</span>ภาษาไทย</div>
+        <div class="lang-divider"></div>
+        <div class="lang-option" data-lang="en"><span class="flag">🇬🇧</span>English</div>
+        <div class="lang-divider"></div>
+        <div class="lang-option" data-lang="zh"><span class="flag">🇨🇳</span>简体中文</div>
+        <div class="lang-divider"></div>
+        <div class="lang-option" data-lang="vi"><span class="flag">🇻🇳</span>Tiếng Việt</div>
+        <div class="lang-divider"></div>
+        <div class="lang-option" data-lang="tw"><span class="flag">🇹🇼</span>繁體中文</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-add" onclick="addMatch()">＋ <span data-i18n="addMatch">เพิ่มการแข่งขัน</span></button>
+      <button class="btn btn-total" onclick="calcTotals()">🏆 <span data-i18n="totalScore">คะแนนรวม</span></button>
+      <button class="btn btn-danger" onclick="confirmClear()">🗑 <span data-i18n="clearData">ล้างข้อมูล</span></button>
+    </div>
   </div>
 
   <div id="tablesArea"></div>
 
   <div class="total-section" id="totalSection" style="display:none">
-    <h2>🏆 คะแนนรวมทั้งหมด</h2>
-    <div style="overflow-x:auto">
-      <table class="total-table" id="totalTable"></table>
-    </div>
+    <h2>🏆 <span data-i18n="totalAll">คะแนนรวมทั้งหมด</span></h2>
+    <div style="overflow-x:auto"><table class="total-table" id="totalTable"></table></div>
   </div>
 </div>
 <button class="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-const STAGES_BY_STAR = {
-  3: ["City11","North Sea","TROY - Smeltery","All the way to Qian","Alpha Headquarters","Decisive Battle! Eye of the Sea","Dream of Heavenly Palace","Superstring Base","Dragon Crystal Lake","The Circular City of Troy","Stunning Jiangxi","Glimpses of Eden","Wushan Five Elements","Romantic Seaside","Polar Illusion","Endless Golden River","Travel to Tianfu","Foggy Mountain Maple","Winter Games","Loving Villa","Train Station","Nightless Sand City","Moonville","Dragon Gate","Forge Arena","King Inferno City","Blue and White Dreamland","320 Adventure Island","Star Dream Amusement Park","Winter Ancient","Moonlight Realm","Los Angeles","Train Station","City11 (Reversed)","Urban Chase","Magic Music City Holiday","Cologne Cathedral"],
-  4: ["Highway 1","Great Wall","West Lake","TROY - Experiment Field O","Thousand-House Miaozhai","Windy Airport","Decisive Battle! Snow Mountain","Back to Ancient Shu","Speed Aerospace City","Eternal Ancient Capital","Utopia","Dragon Boat Race","Titan's Peak","Clouds Heavenly Gate","Neuschwanstein","Eden Valley","Autumn Story","Dinosaur World","Flowers in the Summer Sea","Wind-Chased Green Meadow","Mermaid Island"],
-  5: ["Scenic Hills","Epic Legend","Atlantis","Atlantis(Reversed)","Mogao Grottoes","Old Street Construction","Crimson Leaves Town","Mars Base","Snow Chasm","Wild West","Sky City","Winter Gorge"],
-  6: ["Grand Canyon","Scotland Yard"],
-  7: ["Space Station","Painted Landscape"]
+// ── I18N ──
+const I18N = {
+  th:{title:'🏁 RACE TIME TRACKER',sub1:'บันทึกเวลา · คำนวณแต้ม · จัดอันดับ',sub2:'กรอกเวลาในแต่ละรอบ เช่น 15699 เวลาจะคำนวณเป็น 1:56:99',addMatch:'เพิ่มการแข่งขัน',totalScore:'คะแนนรวม',clearData:'ล้างข้อมูล',totalAll:'คะแนนรวมทั้งหมด',matchLabel:'การแข่งขัน',removeMatch:'✕ ลบ',round:'รอบ',playerLabel:'ผู้เล่น',score:'คะแนน',grandTotal:'🎯 แต้มรวม',stagePH:'🔍 เลือกด่าน...',rank:'อันดับ',player:'ผู้เล่น',confirmClear:'ล้างข้อมูลทั้งหมด?',confirmRemove:'ลบการแข่งขันนี้?',minPlayers:'ต้องมีผู้เล่นอย่างน้อย 2 คน',maxPlayers:'มีผู้เล่นสูงสุด 6 คนแล้ว',kingMap:'👑 KingMap',players:'ผู้เล่น',globeLabel:'ไทย'},
+  en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter time digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',clearData:'Clear Data',totalAll:'Overall Standings',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'🎯 Total',stagePH:'🔍 Select stage...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minPlayers:'Minimum 2 players required',maxPlayers:'Maximum 6 players reached',kingMap:'👑 KingMap',players:'Players',globeLabel:'English'},
+  zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入时间数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',clearData:'清除数据',totalAll:'总排行',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'🎯 总计',stagePH:'🔍 选择赛道...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minPlayers:'最少需要2名玩家',maxPlayers:'最多6名玩家',kingMap:'👑 王者地图',players:'玩家',globeLabel:'简体中文'},
+  vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số thời gian vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'🎯 Tổng',stagePH:'🔍 Chọn màn...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả dữ liệu?',confirmRemove:'Xóa trận này?',minPlayers:'Tối thiểu 2 người chơi',maxPlayers:'Tối đa 6 người chơi',kingMap:'👑 KingMap',players:'Người chơi',globeLabel:'Tiếng Việt'},
+  tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入時間數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',clearData:'清除資料',totalAll:'總排行',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'🎯 總計',stagePH:'🔍 選擇賽道...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minPlayers:'最少需要2名玩家',maxPlayers:'最多6名玩家',kingMap:'👑 王者地圖',players:'玩家',globeLabel:'繁體中文'}
 };
-const STAR_COLORS = { 3:'#4fc3f7', 4:'#81c784', 5:'#ffb74d', 6:'#f06292', 7:'#ce93d8' };
-const ALL_STAGES = [];
-for (const [stars, list] of Object.entries(STAGES_BY_STAR))
-  list.forEach(name => ALL_STAGES.push({ name, stars: parseInt(stars) }));
+let currentLang='th';
+function t(k){return(I18N[currentLang]||I18N.th)[k]||(I18N.th[k]||k);}
 
-const PLAYERS = 6;
-const TIME_ROWS = 9;
-
-// KingMap: rowIndex (0-based) → playerIndex (0-based) ที่เป็นเจ้าของ
-// P1→รอบ2(idx1), P2→รอบ3(idx2), P3→รอบ4(idx3), P4→รอบ5(idx4), P5→รอบ6(idx5), P6→รอบ7(idx6)
-const KING_MAP = { 1:0, 2:1, 3:2, 4:3, 5:4, 6:5 }; // rowIndex: playerIndex
-
-// State: tables[i] = { id, rows[r] = { stageName, times[p] } }
-let tables = [];
-let tableCounter = 0;
-let globalPlayers = Array(PLAYERS).fill('');
-
-function loadState() {
-  try { tables = JSON.parse(localStorage.getItem('rtTables2') || '[]'); } catch(e) { tables = []; }
-  try { globalPlayers = JSON.parse(localStorage.getItem('rtPlayers') || '[]'); } catch(e) { globalPlayers = []; }
-  while (globalPlayers.length < PLAYERS) globalPlayers.push('');
-  if (!tables.length) { tableCounter = 0; tables.push(newTableObj()); }
-  else tableCounter = Math.max(...tables.map(t => t.id)) + 1;
-}
-function saveState() {
-  localStorage.setItem('rtTables2', JSON.stringify(tables));
-  localStorage.setItem('rtPlayers', JSON.stringify(globalPlayers));
-}
-function newTableObj() {
-  return {
-    id: tableCounter++,
-    rows: Array.from({ length: TIME_ROWS }, () => ({
-      stageName: '',
-      times: Array(PLAYERS).fill('')
-    }))
-  };
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n; el.textContent=t(k);
+  });
+  document.getElementById('globeLabel').textContent=t('globeLabel');
+  document.querySelectorAll('.lang-option').forEach(o=>o.classList.toggle('active',o.dataset.lang===currentLang));
+  rebuildAll();
+  buildTitle();
 }
 
-// Time utils
-function parseTime(str) {
-  if (!str || !str.trim()) return null;
-  const p = str.split(':');
-  if (p.length === 3) return (parseInt(p[0])||0)*6000 + (parseInt(p[1])||0)*100 + (parseInt(p[2])||0);
+// ── STAGE DATA ──
+const STAGES_BY_STAR={3:["City11","North Sea","TROY - Smeltery","All the way to Qian","Alpha Headquarters","Decisive Battle! Eye of the Sea","Dream of Heavenly Palace","Superstring Base","Dragon Crystal Lake","The Circular City of Troy","Stunning Jiangxi","Glimpses of Eden","Wushan Five Elements","Romantic Seaside","Polar Illusion","Endless Golden River","Travel to Tianfu","Foggy Mountain Maple","Winter Games","Loving Villa","Train Station","Nightless Sand City","Moonville","Dragon Gate","Forge Arena","King Inferno City","Blue and White Dreamland","320 Adventure Island","Star Dream Amusement Park","Winter Ancient","Moonlight Realm","Los Angeles","Train Station","City11 (Reversed)","Urban Chase","Magic Music City Holiday","Cologne Cathedral"],4:["Highway 1","Great Wall","West Lake","TROY - Experiment Field O","Thousand-House Miaozhai","Windy Airport","Decisive Battle! Snow Mountain","Back to Ancient Shu","Speed Aerospace City","Eternal Ancient Capital","Utopia","Dragon Boat Race","Titan's Peak","Clouds Heavenly Gate","Neuschwanstein","Eden Valley","Autumn Story","Dinosaur World","Flowers in the Summer Sea","Wind-Chased Green Meadow","Mermaid Island"],5:["Scenic Hills","Epic Legend","Atlantis","Atlantis(Reversed)","Mogao Grottoes","Old Street Construction","Crimson Leaves Town","Mars Base","Snow Chasm","Wild West","Sky City","Winter Gorge"],6:["Grand Canyon","Scotland Yard"],7:["Space Station","Painted Landscape"]};
+const STAR_COLORS={3:'#4fc3f7',4:'#81c784',5:'#ffb74d',6:'#f06292',7:'#ce93d8'};
+const ALL_STAGES=[];
+for(const[stars,list]of Object.entries(STAGES_BY_STAR))list.forEach(name=>ALL_STAGES.push({name,stars:parseInt(stars)}));
+
+const MAX_P=6,MIN_P=2,TIME_ROWS=9;
+const KING_MAP_BASE={1:0,2:1,3:2,4:3,5:4,6:5};
+
+let tables=[],tableCounter=0;
+let globalPlayers=Array(MAX_P).fill('');
+
+function loadState(){
+  try{tables=JSON.parse(localStorage.getItem('rtTables4')||'[]');}catch(e){tables=[];}
+  try{globalPlayers=JSON.parse(localStorage.getItem('rtPlayers')||'[]');}catch(e){globalPlayers=[];}
+  try{currentLang=localStorage.getItem('rtLang')||'th';}catch(e){}
+  while(globalPlayers.length<MAX_P)globalPlayers.push('');
+  if(!tables.length){tableCounter=0;tables.push(newTableObj(4));}
+  else tableCounter=Math.max(...tables.map(t=>t.id))+1;
+}
+function saveState(){
+  localStorage.setItem('rtTables4',JSON.stringify(tables));
+  localStorage.setItem('rtPlayers',JSON.stringify(globalPlayers));
+  localStorage.setItem('rtLang',currentLang);
+}
+function newTableObj(pc){
+  return{id:tableCounter++,playerCount:pc||4,rows:Array.from({length:TIME_ROWS},()=>({stageName:'',times:Array(MAX_P).fill('')}))};
+}
+
+// ── TIME UTILS ──
+function parseTime(str){
+  if(!str||!str.trim())return null;
+  const p=str.split(':');
+  if(p.length===3)return(parseInt(p[0])||0)*6000+(parseInt(p[1])||0)*100+(parseInt(p[2])||0);
   return null;
 }
-function formatTimeInput(v) {
-  v = v.replace(/[^0-9:]/g, '');
-  if (!v) return '';
-  if (!v.includes(':')) {
-    const d = v.padStart(6,'0');
-    return `${d.slice(0,2)}:${d.slice(2,4)}:${d.slice(4,6)}`;
-  }
+function formatTimeInput(v){
+  v=v.replace(/[^0-9:]/g,'');if(!v)return'';
+  if(!v.includes(':')){const d=v.padStart(6,'0');return`${d.slice(0,2)}:${d.slice(2,4)}:${d.slice(4,6)}`;}
   return v;
 }
-function rowScores(row, rowIndex) {
-  // row = { stageName, times[PLAYERS] }, rowIndex = 0-based
-  const parsed = row.times.map(t => parseTime(t));
-  const valid = parsed.filter(t => t !== null);
-  if (!valid.length) return parsed.map(() => null);
-  const fastest = Math.min(...valid);
-  const kingPlayer = (rowIndex !== undefined && rowIndex in KING_MAP) ? KING_MAP[rowIndex] : -1;
-  return parsed.map((t, p) => {
-    if (t === null) return null;
-    const ds = (t - fastest) / 100;
-    let score;
-    if (ds === 0) score = 11;
-    else if (ds < 1) score = 10; else if (ds < 2) score = 9; else if (ds < 3) score = 8;
-    else if (ds < 4) score = 7;  else if (ds < 5) score = 6; else if (ds < 6) score = 5;
-    else if (ds < 7) score = 4;  else if (ds < 8) score = 3; else if (ds < 9) score = 2;
-    else if (ds < 10) score = 1; else score = 0;
-    // KingMap bonus: เจ้าของ KingMap ชนะ (fastest) → +1 = 12
-    if (p === kingPlayer && ds === 0) score = 12;
-    return score;
+function rowScores(row,rowIndex,pc){
+  const parsed=row.times.slice(0,pc).map(t=>parseTime(t));
+  const valid=parsed.filter(t=>t!==null);
+  if(!valid.length)return parsed.map(()=>null);
+  const fastest=Math.min(...valid);
+  const kingP=(rowIndex in KING_MAP_BASE&&KING_MAP_BASE[rowIndex]<pc)?KING_MAP_BASE[rowIndex]:-1;
+  return parsed.map((t,p)=>{
+    if(t===null)return null;
+    const ds=(t-fastest)/100;
+    let s;
+    if(ds===0)s=11;else if(ds<1)s=10;else if(ds<2)s=9;else if(ds<3)s=8;
+    else if(ds<4)s=7;else if(ds<5)s=6;else if(ds<6)s=5;
+    else if(ds<7)s=4;else if(ds<8)s=3;else if(ds<9)s=2;else if(ds<10)s=1;else s=0;
+    if(p===kingP&&ds===0)s=12;
+    return s;
   });
 }
-function scoreClass(s) {
-  if (s === null) return 's-empty';
-  if (s === 12) return 's12';
-  if (s === 11) return 's11';
-  if (s >= 8) return 's-high';
-  if (s >= 5) return 's-mid';
-  if (s >= 2) return 's-low';
-  return 's-zero';
+function scoreClass(s){
+  if(s===null)return 's-empty';if(s===12)return 's12';if(s===11)return 's11';
+  if(s>=8)return 's-high';if(s>=5)return 's-mid';if(s>=2)return 's-low';return 's-zero';
 }
 
-// Build stage selector (dropdown + search)
-function buildStageSelector(tObj, r) {
-  const wrap = document.createElement('div');
-  wrap.className = 'stage-search-wrap';
-
-  const inp = document.createElement('input');
-  inp.type = 'text';
-  inp.className = 'stage-input';
-  inp.placeholder = '🔍 เลือกด่าน...';
-  inp.value = tObj.rows[r].stageName || '';
-  inp.autocomplete = 'off';
-
-  const dd = document.createElement('div');
-  dd.className = 'stage-dropdown';
-
-  function populate(filter) {
-    dd.innerHTML = '';
-    const q = filter.toLowerCase();
-    let lastStar = null;
-    let count = 0;
-    for (const s of ALL_STAGES) {
-      if (q && !s.name.toLowerCase().includes(q)) continue;
-      if (s.stars !== lastStar) {
-        const grp = document.createElement('div');
-        grp.className = 'dropdown-group-label';
-        grp.textContent = `${'⭐'.repeat(s.stars)} ${s.stars} ดาว`;
-        grp.style.color = STAR_COLORS[s.stars];
-        dd.appendChild(grp);
-        lastStar = s.stars;
+// ── STAGE SELECTOR ──
+function buildStageSelector(tObj,r){
+  const wrap=document.createElement('div');wrap.className='stage-search-wrap';
+  const inp=document.createElement('input');inp.type='text';inp.className='stage-input';inp.placeholder=t('stagePH');inp.value=tObj.rows[r].stageName||'';inp.autocomplete='off';
+  const dd=document.createElement('div');dd.className='stage-dropdown';
+  function populate(filter){
+    dd.innerHTML='';const q=filter.toLowerCase();let lastStar=null,count=0;
+    for(const s of ALL_STAGES){
+      if(q&&!s.name.toLowerCase().includes(q))continue;
+      if(s.stars!==lastStar){
+        const grp=document.createElement('div');grp.className='dropdown-group-label';
+        grp.textContent=`${'⭐'.repeat(s.stars)} ${s.stars}★`;grp.style.color=STAR_COLORS[s.stars];
+        dd.appendChild(grp);lastStar=s.stars;
       }
-      const item = document.createElement('div');
-      item.className = 'dropdown-item';
-      const dot = document.createElement('span');
-      dot.className = 'star-dot';
-      dot.style.background = STAR_COLORS[s.stars];
-      item.appendChild(dot);
-      item.appendChild(document.createTextNode(s.name));
-      item.addEventListener('mousedown', e => {
-        e.preventDefault();
-        inp.value = s.name;
-        tObj.rows[r].stageName = s.name;
-        saveState();
-        dd.classList.remove('open');
-      });
-      dd.appendChild(item);
-      count++;
+      const item=document.createElement('div');item.className='dropdown-item';
+      const dot=document.createElement('span');dot.className='star-dot';dot.style.background=STAR_COLORS[s.stars];
+      item.appendChild(dot);item.appendChild(document.createTextNode(s.name));
+      item.addEventListener('mousedown',e=>{e.preventDefault();inp.value=s.name;tObj.rows[r].stageName=s.name;saveState();dd.classList.remove('open');});
+      dd.appendChild(item);count++;
     }
-    if (!count) {
-      const ni = document.createElement('div');
-      ni.className = 'dropdown-item';
-      ni.style.color = 'var(--text-dim)';
-      ni.textContent = 'ไม่พบด่านที่ค้นหา';
-      dd.appendChild(ni);
-    }
+    if(!count){const ni=document.createElement('div');ni.className='dropdown-item';ni.style.color='var(--text-dim)';ni.textContent='—';dd.appendChild(ni);}
   }
-
-  inp.addEventListener('focus', function() { populate(this.value); dd.classList.add('open'); });
-  inp.addEventListener('input', function() {
-    tObj.rows[r].stageName = this.value;
-    saveState();
-    populate(this.value);
-    dd.classList.add('open');
-  });
-  inp.addEventListener('blur', () => setTimeout(() => dd.classList.remove('open'), 160));
-
-  wrap.appendChild(inp);
-  wrap.appendChild(dd);
-  return wrap;
+  inp.addEventListener('focus',function(){populate(this.value);dd.classList.add('open');});
+  inp.addEventListener('input',function(){tObj.rows[r].stageName=this.value;saveState();populate(this.value);dd.classList.add('open');});
+  inp.addEventListener('blur',()=>setTimeout(()=>dd.classList.remove('open'),160));
+  wrap.appendChild(inp);wrap.appendChild(dd);return wrap;
 }
 
-// Build full table DOM
-function buildTableDOM(tObj) {
-  const block = document.createElement('div');
-  block.className = 'race-block';
-  block.dataset.tid = tObj.id;
+// ── BUILD TABLE DOM ──
+function buildTableDOM(tObj){
+  const pc=tObj.playerCount||4;
+  const block=document.createElement('div');block.className='race-block';block.dataset.tid=tObj.id;
 
   // Header
-  const hdr = document.createElement('div');
-  hdr.className = 'block-header';
-  const num = document.createElement('span');
-  num.className = 'block-num';
-  num.textContent = `TABLE #${tObj.id + 1}`;
-  const rmBtn = document.createElement('button');
-  rmBtn.className = 'btn-remove';
-  rmBtn.textContent = '✕ ลบตาราง';
-  rmBtn.onclick = () => removeTable(tObj.id);
-  hdr.appendChild(num);
+  const hdr=document.createElement('div');hdr.className='block-header';
+  const left=document.createElement('div');left.className='block-left';
+
+  const num=document.createElement('span');num.className='block-num';num.dataset.matchnum=tObj.id+1;
+  num.textContent=`${t('matchLabel')} #${tObj.id+1}`;
+  left.appendChild(num);
+
+  // Per-table player count control
+  const pctrl=document.createElement('div');pctrl.className='block-pctrl';
+  const plbl=document.createElement('span');plbl.className='block-pctrl-label';plbl.textContent=t('players');
+  const bpDec=document.createElement('button');bpDec.className='bp-btn';bpDec.textContent='−';
+  bpDec.onclick=()=>{
+    if(tObj.playerCount<=MIN_P){alert(t('minPlayers'));return;}
+    tObj.playerCount--;saveState();rebuildBlock(tObj);
+  };
+  const bpVal=document.createElement('span');bpVal.className='bp-val';bpVal.textContent=pc;
+  const bpInc=document.createElement('button');bpInc.className='bp-btn';bpInc.textContent='+';
+  bpInc.onclick=()=>{
+    if(tObj.playerCount>=MAX_P){alert(t('maxPlayers'));return;}
+    tObj.playerCount++;saveState();rebuildBlock(tObj);
+  };
+  pctrl.appendChild(plbl);pctrl.appendChild(bpDec);pctrl.appendChild(bpVal);pctrl.appendChild(bpInc);
+  left.appendChild(pctrl);
+  hdr.appendChild(left);
+
+  const rmBtn=document.createElement('button');rmBtn.className='btn-remove';rmBtn.textContent=t('removeMatch');
+  rmBtn.onclick=()=>removeMatch(tObj.id);
   hdr.appendChild(rmBtn);
   block.appendChild(hdr);
 
-  const scroll = document.createElement('div');
-  scroll.className = 'table-scroll';
-  const table = document.createElement('table');
+  // Table
+  const scroll=document.createElement('div');scroll.className='table-scroll';
+  const table=document.createElement('table');
+  const thead=document.createElement('thead');
+  const hRow=document.createElement('tr');
+  const thR=document.createElement('th');thR.className='th-round';thR.textContent=t('round');hRow.appendChild(thR);
+  const thS=document.createElement('th');thS.className='th-stage';thS.textContent='';hRow.appendChild(thS);
+  for(let p=0;p<pc;p++){const th=document.createElement('th');th.textContent=`P${p+1}`;hRow.appendChild(th);}
+  thead.appendChild(hRow);table.appendChild(thead);
 
-  // thead
-  const thead = document.createElement('thead');
-  const hRow = document.createElement('tr');
-  const thR = document.createElement('th');
-  thR.className = 'th-round';
-  thR.textContent = 'รอบ';
-  hRow.appendChild(thR);
-  const thS = document.createElement('th');
-  thS.className = 'th-stage';
-  thS.textContent = 'ด่าน';
-  hRow.appendChild(thS);
-  for (let p = 0; p < PLAYERS; p++) {
-    const th = document.createElement('th');
-    th.textContent = `P${p+1}`;
-    hRow.appendChild(th);
-  }
-  thead.appendChild(hRow);
-  table.appendChild(thead);
+  const tbody=document.createElement('tbody');
 
-  const tbody = document.createElement('tbody');
-
-  // Player name row (spans round + stage cols)
-  const pRow = document.createElement('tr');
-  pRow.className = 'player-row';
-  const pLabelTd = document.createElement('td');
-  pLabelTd.colSpan = 2;
-  pLabelTd.className = 'round-label';
-  pLabelTd.textContent = 'ผู้เล่น';
-  pRow.appendChild(pLabelTd);
-  for (let p = 0; p < PLAYERS; p++) {
-    const td = document.createElement('td');
-    const inp = document.createElement('input');
-    inp.type = 'text';
-    inp.className = 'player-input';
-    inp.placeholder = `P${p+1}`;
-    inp.value = globalPlayers[p] || '';
-    inp.dataset.player = p;
-    inp.addEventListener('input', function() {
-      globalPlayers[parseInt(this.dataset.player)] = this.value;
-      saveState();
-      document.querySelectorAll(`.player-input[data-player="${p}"]`).forEach(el => {
-        if (el !== this) el.value = this.value;
-      });
+  // Player row
+  const pRow=document.createElement('tr');pRow.className='player-row';
+  const pLbl=document.createElement('td');pLbl.colSpan=2;pLbl.className='round-label';pLbl.textContent=t('playerLabel');pRow.appendChild(pLbl);
+  for(let p=0;p<pc;p++){
+    const td=document.createElement('td');
+    const inp=document.createElement('input');inp.type='text';inp.className='player-input';
+    inp.placeholder=`P${p+1}`;inp.value=globalPlayers[p]||'';inp.dataset.player=p;
+    inp.addEventListener('input',function(){
+      globalPlayers[parseInt(this.dataset.player)]=this.value;saveState();
+      document.querySelectorAll(`.player-input[data-player="${p}"]`).forEach(el=>{if(el!==this)el.value=this.value;});
     });
-    td.appendChild(inp);
-    pRow.appendChild(td);
+    td.appendChild(inp);pRow.appendChild(td);
   }
   tbody.appendChild(pRow);
 
-  // Time rows — one per round, each with its own stage selector
-  for (let r = 0; r < TIME_ROWS; r++) {
-    const tr = document.createElement('tr');
-
-    // Round label
-    const rdTd = document.createElement('td');
-    rdTd.className = 'round-label';
-    rdTd.textContent = `รอบ ${r+1}`;
-    tr.appendChild(rdTd);
-
-    // Stage selector
-    const stageTd = document.createElement('td');
-    stageTd.className = 'stage-cell';
-    stageTd.appendChild(buildStageSelector(tObj, r));
-    tr.appendChild(stageTd);
-
-    // Time inputs
-    for (let p = 0; p < PLAYERS; p++) {
-      const td = document.createElement('td');
-      td.dataset.p = p; td.dataset.r = r;
-      const inp = document.createElement('input');
-      inp.type = 'text';
-      inp.className = 'time-input';
-      inp.placeholder = 'mm:ss:cs';
-      const v = tObj.rows[r].times[p] || '';
-      inp.value = v;
-      if (v) inp.classList.add('has-time');
-      inp.dataset.tid = tObj.id; inp.dataset.p = p; inp.dataset.r = r;
-      inp.addEventListener('change', function() {
-        const val = formatTimeInput(this.value.trim());
-        this.value = val;
-        const t = tables.find(x => x.id === parseInt(this.dataset.tid));
-        if (t) { t.rows[parseInt(this.dataset.r)].times[parseInt(this.dataset.p)] = val; saveState(); }
-        if (val) this.classList.add('has-time'); else this.classList.remove('has-time');
+  // Time rows
+  for(let r=0;r<TIME_ROWS;r++){
+    const isKing=r in KING_MAP_BASE&&KING_MAP_BASE[r]<pc;
+    const kingP=isKing?KING_MAP_BASE[r]:-1;
+    const tr=document.createElement('tr');
+    const rdTd=document.createElement('td');rdTd.className='round-label';rdTd.textContent=`${t('round')} ${r+1}`;tr.appendChild(rdTd);
+    const stageTd=document.createElement('td');stageTd.className='stage-cell';stageTd.appendChild(buildStageSelector(tObj,r));tr.appendChild(stageTd);
+    for(let p=0;p<pc;p++){
+      const td=document.createElement('td');td.dataset.p=p;td.dataset.r=r;
+      if(isKing&&p===kingP){
+        td.className='king-cell';
+        const badge=document.createElement('div');badge.className='king-badge-top';badge.textContent=t('kingMap');td.appendChild(badge);
+      }
+      const inp=document.createElement('input');inp.type='text';inp.className='time-input';inp.placeholder='mm:ss:cs';
+      const v=tObj.rows[r].times[p]||'';inp.value=v;if(v)inp.classList.add('has-time');
+      inp.dataset.tid=tObj.id;inp.dataset.p=p;inp.dataset.r=r;
+      inp.addEventListener('change',function(){
+        const val=formatTimeInput(this.value.trim());this.value=val;
+        const t2=tables.find(x=>x.id===parseInt(this.dataset.tid));
+        if(t2){t2.rows[parseInt(this.dataset.r)].times[parseInt(this.dataset.p)]=val;saveState();}
+        if(val)this.classList.add('has-time');else this.classList.remove('has-time');
         recalcBlock(parseInt(this.dataset.tid));
       });
-      inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); });
-      td.appendChild(inp);
-      tr.appendChild(td);
+      inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();});
+      td.appendChild(inp);tr.appendChild(td);
     }
     tbody.appendChild(tr);
 
-    // Score row immediately after each time row
-    const scoreRow = document.createElement('tr');
-    scoreRow.className = 'score-row';
-    scoreRow.id = `scores-${tObj.id}-${r}`;
-
-    const srLabel = document.createElement('td');
-    srLabel.colSpan = 2;
-    srLabel.className = 'round-label score-label';
-    const isKingRound = r in KING_MAP;
-    srLabel.innerHTML = isKingRound
-      ? `🏆 คะแนน &nbsp;<span class="king-badge">👑 KingMap P${KING_MAP[r]+1}</span>`
-      : '🏆 คะแนน';
-    scoreRow.appendChild(srLabel);
-
-    for (let p = 0; p < PLAYERS; p++) {
-      const td = document.createElement('td');
-      td.className = 'score-cell s-empty';
-      td.dataset.sp = p;
-      // mark king owner cell
-      if (isKingRound && KING_MAP[r] === p) td.classList.add('king-owner-cell');
-      td.textContent = '-';
-      scoreRow.appendChild(td);
+    // Score row
+    const sRow=document.createElement('tr');sRow.className='score-row';sRow.id=`scores-${tObj.id}-${r}`;
+    const sLbl=document.createElement('td');sLbl.colSpan=2;sLbl.className='round-label score-label';
+    sLbl.innerHTML=isKing?`${t('score')} <span style="display:inline-block;background:rgba(255,50,50,.15);border:1px solid rgba(255,50,50,.6);color:#ff3232;font-size:.55rem;padding:1px 6px;border-radius:4px;vertical-align:middle;font-weight:700;">${t('kingMap')}</span>`:t('score');
+    sRow.appendChild(sLbl);
+    for(let p=0;p<pc;p++){
+      const td=document.createElement('td');td.className=`score-cell s-empty${isKing&&p===kingP?' king-score-cell':''}`;td.dataset.sp=p;td.textContent='-';sRow.appendChild(td);
     }
-    tbody.appendChild(scoreRow);
+    tbody.appendChild(sRow);
   }
 
-  // Grand total row at the bottom
-  const totalRow = document.createElement('tr');
-  totalRow.className = 'total-row';
-  totalRow.id = `total-${tObj.id}`;
-  const tlLabel = document.createElement('td');
-  tlLabel.colSpan = 2;
-  tlLabel.className = 'round-label';
-  tlLabel.textContent = '🎯 แต้มรวม';
-  totalRow.appendChild(tlLabel);
-  for (let p = 0; p < PLAYERS; p++) {
-    const td = document.createElement('td');
-    td.className = 'total-cell total-zero';
-    td.dataset.tp = p;
-    td.textContent = '0';
-    totalRow.appendChild(td);
-  }
-  tbody.appendChild(totalRow);
+  // Grand total row
+  const totRow=document.createElement('tr');totRow.className='total-row';totRow.id=`total-${tObj.id}`;
+  const totLbl=document.createElement('td');totLbl.colSpan=2;totLbl.className='round-label';totLbl.textContent=t('grandTotal');totRow.appendChild(totLbl);
+  for(let p=0;p<pc;p++){const td=document.createElement('td');td.className='total-cell total-zero';td.dataset.tp=p;td.textContent='0';totRow.appendChild(td);}
+  tbody.appendChild(totRow);
 
-  table.appendChild(tbody);
-  scroll.appendChild(table);
-  block.appendChild(scroll);
+  table.appendChild(tbody);scroll.appendChild(table);block.appendChild(scroll);
   return block;
 }
 
-// Recalc scores for all rows in a block
-function recalcBlock(tid) {
-  const tObj = tables.find(t => t.id === tid);
-  if (!tObj) return;
-  const block = document.querySelector(`.race-block[data-tid="${tid}"]`);
-  if (!block) return;
-
-  for (let r = 0; r < TIME_ROWS; r++) {
-    const row = tObj.rows[r];
-    const scores = rowScores(row, r);
-    const parsed = row.times.map(t => parseTime(t));
-    const valid = parsed.filter(t => t !== null);
-    const fastest = valid.length ? Math.min(...valid) : null;
-
-    // Highlight fastest cell in this row
-    for (let p = 0; p < PLAYERS; p++) {
-      const inp = block.querySelector(`tr:has(td[data-r="${r}"][data-p="${p}"]) .time-input[data-p="${p}"][data-r="${r}"]`);
-      // simpler selector:
-      const allInps = block.querySelectorAll(`.time-input[data-r="${r}"]`);
-      allInps.forEach(el => { el.classList.remove('fastest'); el.parentElement.classList.remove('fastest-td'); });
-      if (fastest !== null) {
-        allInps.forEach(el => {
-          const t = parseTime(el.value);
-          if (t === fastest) { el.classList.add('fastest'); el.parentElement.classList.add('fastest-td'); }
-        });
-      }
-    }
-
-    const scoreRow = document.getElementById(`scores-${tid}-${r}`);
-    if (!scoreRow) continue;
-    scoreRow.querySelectorAll('[data-sp]').forEach((td, p) => {
-      const s = scores[p];
-      const isKingOwner = (r in KING_MAP && KING_MAP[r] === p);
-      td.className = `score-cell ${scoreClass(s)}${isKingOwner ? ' king-owner-cell' : ''}`;
-      td.textContent = s === null ? '-' : s;
+// ── RECALC ──
+function recalcBlock(tid){
+  const tObj=tables.find(t=>t.id===tid);if(!tObj)return;
+  const block=document.querySelector(`.race-block[data-tid="${tid}"]`);if(!block)return;
+  const pc=tObj.playerCount||4;
+  for(let r=0;r<TIME_ROWS;r++){
+    const row=tObj.rows[r];const scores=rowScores(row,r,pc);
+    const parsed=row.times.slice(0,pc).map(t=>parseTime(t));
+    const valid=parsed.filter(t=>t!==null);const fastest=valid.length?Math.min(...valid):null;
+    const allInps=block.querySelectorAll(`.time-input[data-r="${r}"]`);
+    allInps.forEach(el=>{el.classList.remove('fastest');el.parentElement.classList.remove('fastest-td');});
+    if(fastest!==null)allInps.forEach(el=>{if(parseTime(el.value)===fastest){el.classList.add('fastest');el.parentElement.classList.add('fastest-td');}});
+    const sRow=document.getElementById(`scores-${tid}-${r}`);if(!sRow)continue;
+    const isKing=r in KING_MAP_BASE&&KING_MAP_BASE[r]<pc;const kingP=isKing?KING_MAP_BASE[r]:-1;
+    sRow.querySelectorAll('[data-sp]').forEach((td,p)=>{
+      const s=scores[p];
+      td.className=`score-cell ${scoreClass(s)}${isKing&&p===kingP?' king-score-cell':''}`;td.textContent=s===null?'-':s;
     });
   }
-
-  // Update grand total row
-  const tableTotals = Array(PLAYERS).fill(0);
-  tObj.rows.forEach((row, r) => {
-    rowScores(row, r).forEach((s, p) => { if (s !== null) tableTotals[p] += s; });
+  const totals=Array(pc).fill(0);
+  tObj.rows.forEach((row,r)=>{rowScores(row,r,pc).forEach((s,p)=>{if(s!==null)totals[p]+=s;});});
+  const maxT=Math.max(...totals);
+  const totRow=document.getElementById(`total-${tid}`);if(!totRow)return;
+  totRow.querySelectorAll('[data-tp]').forEach((td,p)=>{
+    const v=totals[p];
+    td.className='total-cell '+(v===0?'total-zero':v===maxT?'total-top':'total-val');td.textContent=v||'0';
   });
-  const maxTotal = Math.max(...tableTotals);
-  const totalRow = document.getElementById(`total-${tid}`);
-  if (totalRow) {
-    totalRow.querySelectorAll('[data-tp]').forEach((td, p) => {
-      const v = tableTotals[p];
-      if (v === 0) { td.className = 'total-cell total-zero'; td.textContent = '0'; }
-      else if (v === maxTotal) { td.className = 'total-cell total-top'; td.textContent = v; }
-      else { td.className = 'total-cell total-val'; td.textContent = v; }
-    });
-  }
+}
+function recalcAll(){tables.forEach(t=>recalcBlock(t.id));}
+
+function rebuildBlock(tObj){
+  const old=document.querySelector(`.race-block[data-tid="${tObj.id}"]`);
+  if(old){const newDom=buildTableDOM(tObj);old.replaceWith(newDom);recalcBlock(tObj.id);}
+}
+function rebuildAll(){
+  const area=document.getElementById('tablesArea');area.innerHTML='';
+  tables.forEach(tObj=>{area.appendChild(buildTableDOM(tObj));});recalcAll();
 }
 
-function recalcAll() { tables.forEach(t => recalcBlock(t.id)); }
-
-function addTable() {
-  const tObj = newTableObj();
-  tables.push(tObj);
-  saveState();
-  const dom = buildTableDOM(tObj);
-  document.getElementById('tablesArea').appendChild(dom);
-  dom.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// ── MATCH ADD/REMOVE ──
+function addMatch(){
+  const tObj=newTableObj(4);tables.push(tObj);saveState();
+  const dom=buildTableDOM(tObj);document.getElementById('tablesArea').appendChild(dom);
+  dom.scrollIntoView({behavior:'smooth',block:'start'});recalcBlock(tObj.id);
 }
-
-function removeTable(tid) {
-  if (tables.length === 1) { alert('ต้องมีตารางอย่างน้อย 1 ตาราง'); return; }
-  if (!confirm('ลบตารางนี้?')) return;
-  tables = tables.filter(t => t.id !== tid);
-  saveState();
+function removeMatch(tid){
+  if(tables.length===1){alert(t('matchLabel')+': min 1');return;}
+  if(!confirm(t('confirmRemove')))return;
+  tables=tables.filter(t=>t.id!==tid);saveState();
   document.querySelector(`.race-block[data-tid="${tid}"]`)?.remove();
 }
 
-function calcTotals() {
-  const totals = Array(PLAYERS).fill(0);
-  tables.forEach(tObj => {
-    tObj.rows.forEach((row, r) => {
-      const scores = rowScores(row, r);
-      scores.forEach((s, p) => { if (s !== null) totals[p] += s; });
-    });
+// ── TOTALS ──
+function calcTotals(){
+  // collect all unique player count across tables
+  const totals=Array(MAX_P).fill(0);
+  tables.forEach(tObj=>{
+    const pc=tObj.playerCount||4;
+    tObj.rows.forEach((row,r)=>{rowScores(row,r,pc).forEach((s,p)=>{if(s!==null)totals[p]+=s;});});
   });
-  const sec = document.getElementById('totalSection');
-  sec.style.display = 'block';
-  sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  const indexed = totals.map((s, i) => ({ name: globalPlayers[i] || `P${i+1}`, score: s }));
-  indexed.sort((a, b) => b.score - a.score);
-  let html = '<thead><tr><th>อันดับ</th><th>ผู้เล่น</th><th>คะแนนรวม</th></tr></thead><tbody>';
-  indexed.forEach((item, rank) => {
-    const cls = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : '';
-    const medal = ['🥇','🥈','🥉'][rank] || `#${rank+1}`;
-    html += `<tr><td class="${cls}">${medal}</td><td class="${cls}">${item.name}</td><td class="${cls}">${item.score}</td></tr>`;
+  const maxPc=Math.max(...tables.map(t=>t.playerCount||4));
+  const sec=document.getElementById('totalSection');sec.style.display='block';
+  sec.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const indexed=totals.slice(0,maxPc).map((s,i)=>({name:globalPlayers[i]||`P${i+1}`,score:s}));
+  indexed.sort((a,b)=>b.score-a.score);
+  let html=`<thead><tr><th>${t('rank')}</th><th>${t('player')}</th><th>${t('score')}</th></tr></thead><tbody>`;
+  indexed.forEach((item,rank)=>{
+    const cls=rank===0?'rank-1':rank===1?'rank-2':rank===2?'rank-3':'';
+    const medal=['🥇','🥈','🥉'][rank]||`#${rank+1}`;
+    html+=`<tr><td class="${cls}">${medal}</td><td class="${cls}">${item.name}</td><td class="${cls}">${item.score}</td></tr>`;
   });
-  html += '</tbody>';
-  document.getElementById('totalTable').innerHTML = html;
+  html+='</tbody>';document.getElementById('totalTable').innerHTML=html;
 }
 
-function confirmClear() {
-  if (confirm('ล้างข้อมูลทั้งหมด?')) {
-    localStorage.removeItem('rtTables2');
-    localStorage.removeItem('rtPlayers');
-    location.reload();
+function confirmClear(){
+  if(confirm(t('confirmClear'))){
+    ['rtTables4','rtPlayers','rtLang'].forEach(k=>localStorage.removeItem(k));location.reload();
   }
 }
 
-function exportCSV() {
-  let csv = 'ตาราง,รอบ,ด่าน';
-  for (let p = 0; p < PLAYERS; p++) csv += `,${globalPlayers[p] || 'P'+(p+1)} เวลา,คะแนน`;
-  csv += '\n';
-  tables.forEach((tObj, ti) => {
-    tObj.rows.forEach((row, r) => {
-      const scores = rowScores(row);
-      csv += `${ti+1},${r+1},"${row.stageName || '-'}"`;
-      for (let p = 0; p < PLAYERS; p++) {
-        csv += `,${row.times[p] || ''},${scores[p] ?? ''}`;
-      }
-      csv += '\n';
-    });
-  });
-  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'race_tracker.csv';
-  a.click();
+// ── TITLE ──
+function buildTitle(){
+  const titleText=t('title');const h1=document.getElementById('mainTitle');h1.innerHTML='';
+  [...titleText].forEach(ch=>{const span=document.createElement('span');span.className='char';span.textContent=ch===' '?'\u00A0':ch;h1.appendChild(span);});
 }
 
-// Init
+// ── GLOBE DROPDOWN ──
+const globeBtn=document.getElementById('globeBtn');
+const langDropdown=document.getElementById('langDropdown');
+globeBtn.addEventListener('click',function(e){
+  e.stopPropagation();
+  const isOpen=langDropdown.classList.contains('open');
+  langDropdown.classList.toggle('open',!isOpen);
+  globeBtn.classList.toggle('open',!isOpen);
+});
+document.addEventListener('click',()=>{langDropdown.classList.remove('open');globeBtn.classList.remove('open');});
+langDropdown.addEventListener('click',function(e){
+  const opt=e.target.closest('.lang-option');if(!opt)return;
+  currentLang=opt.dataset.lang;saveState();applyLang();
+  langDropdown.classList.remove('open');globeBtn.classList.remove('open');
+});
+
+// ── INIT ──
 loadState();
-const area = document.getElementById('tablesArea');
-tables.forEach(tObj => area.appendChild(buildTableDOM(tObj)));
+document.querySelectorAll('.lang-option').forEach(o=>o.classList.toggle('active',o.dataset.lang===currentLang));
+document.getElementById('globeLabel').textContent=t('globeLabel');
+buildTitle();
+document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+const area=document.getElementById('tablesArea');
+tables.forEach(tObj=>area.appendChild(buildTableDOM(tObj)));
 recalcAll();
 </script>
 </body>
