@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏁 Race Time Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3e;
+    --accent: #00f5ff;
+    --accent2: #ff6b35;
+    --gold: #ffd700;
+    --text: #e0e0f0;
+    --text-dim: #6a6a8a;
+    --red: #ff4444;
+    --green: #00e676;
+    --star3: #4fc3f7;
+    --star4: #81c784;
+    --star5: #ffb74d;
+    --star6: #f06292;
+    --star7: #ce93d8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+  .container { position: relative; z-index: 1; padding: 20px; }
+
+  header { text-align: center; padding: 28px 20px 16px; }
+  header h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    font-weight: 900; letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+  }
+  header p { color: var(--text-dim); font-size: 0.82rem; letter-spacing: 1px; }
+  .scan-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 12px auto; max-width: 500px;
+    animation: scan 3s ease-in-out infinite;
+  }
+  @keyframes scan { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
+  .btn {
+    padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;
+    font-family: 'Orbitron', monospace; font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 1px; transition: all 0.2s; text-transform: uppercase; white-space: nowrap;
+  }
+  .btn-add { background: var(--accent); color: #000; }
+  .btn-add:hover { background: #00c8d4; box-shadow: 0 0 15px rgba(0,245,255,0.4); }
+  .btn-total { background: var(--surface2); color: var(--gold); border: 1px solid var(--gold); }
+  .btn-total:hover { background: rgba(255,215,0,0.1); }
+  .btn-danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
+  .btn-danger:hover { background: rgba(255,68,68,0.1); }
+  .btn-export { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-export:hover { border-color: var(--accent); color: var(--accent); }
+
+  .race-block {
+    margin-bottom: 20px;
+    border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; background: var(--surface);
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  .block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px; background: var(--surface2);
+    border-bottom: 1px solid var(--border); gap: 10px;
+  }
+  .block-num { font-family: 'Orbitron', monospace; font-size: 0.68rem; color: var(--accent); letter-spacing: 2px; white-space: nowrap; }
+  .btn-remove {
+    background: none; border: 1px solid var(--border); color: var(--text-dim);
+    border-radius: 4px; padding: 3px 10px; cursor: pointer; font-size: 0.75rem; transition: all 0.2s;
+  }
+  .btn-remove:hover { border-color: var(--red); color: var(--red); }
+
+  .table-scroll { overflow-x: auto; }
+  table {
+    width: 100%; border-collapse: collapse;
+    min-width: 900px; background: var(--surface);
+  }
+  thead tr { background: var(--surface2); }
+  th {
+    padding: 9px 6px;
+    font-family: 'Orbitron', monospace; font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 1px; color: var(--text-dim); text-align: center;
+    border-bottom: 1px solid var(--border); text-transform: uppercase; white-space: nowrap;
+  }
+  th.th-round { text-align: left; padding-left: 10px; min-width: 60px; }
+  th.th-stage { min-width: 190px; }
+  td {
+    padding: 0;
+    border-bottom: 1px solid rgba(42,42,62,0.5);
+    border-right: 1px solid rgba(42,42,62,0.3);
+    vertical-align: middle;
+  }
+  td:last-child { border-right: none; }
+  tr:last-child td { border-bottom: none; }
+
+  /* Round label cell */
+  .round-label {
+    padding: 8px 12px; font-size: 0.65rem; color: var(--text-dim);
+    white-space: nowrap; font-family: 'Orbitron', monospace; letter-spacing: 0.5px;
+  }
+  .round-label.score-label { color: var(--gold); }
+
+  /* Stage selector in each row */
+  .stage-cell { min-width: 190px; padding: 4px 6px; position: relative; }
+  .stage-search-wrap { position: relative; }
+  .stage-input {
+    width: 100%; background: transparent; border: 1px solid transparent;
+    color: var(--accent); font-family: 'Sarabun', sans-serif;
+    font-size: 0.78rem; font-weight: 600;
+    padding: 5px 8px; border-radius: 4px; outline: none; transition: border-color 0.2s;
+  }
+  .stage-input:focus { border-color: var(--accent); background: rgba(0,245,255,0.05); }
+  .stage-input::placeholder { color: var(--text-dim); font-size: 0.7rem; font-weight: 400; }
+
+  .stage-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: #1a1a2e; border: 1px solid var(--accent);
+    border-radius: 6px; max-height: 200px; overflow-y: auto;
+    z-index: 9999; box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+    display: none;
+  }
+  .stage-dropdown.open { display: block; }
+  .dropdown-group-label {
+    padding: 4px 10px; font-size: 0.58rem;
+    font-family: 'Orbitron', monospace; letter-spacing: 1px;
+    color: var(--text-dim); background: rgba(255,255,255,0.03);
+    border-top: 1px solid var(--border); text-transform: uppercase;
+  }
+  .dropdown-item {
+    padding: 6px 12px; font-size: 0.78rem; cursor: pointer;
+    transition: background 0.12s; display: flex; align-items: center; gap: 7px;
+  }
+  .dropdown-item:hover { background: rgba(0,245,255,0.12); color: var(--accent); }
+  .star-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Player row */
+  .player-row td { background: rgba(0,245,255,0.04); }
+  .player-input {
+    width: 100%; background: transparent; border: none;
+    color: var(--accent); font-family: 'Orbitron', monospace;
+    font-size: 0.68rem; font-weight: 700; text-align: center;
+    padding: 9px 5px; letter-spacing: 1px; outline: none;
+  }
+  .player-input::placeholder { color: rgba(0,245,255,0.22); font-size: 0.6rem; }
+  .player-input:focus { background: rgba(0,245,255,0.06); }
+
+  /* Time input */
+  .time-input {
+    width: 100%; background: transparent; border: none;
+    color: var(--text); font-family: 'Orbitron', monospace;
+    font-size: 0.68rem; text-align: center; padding: 8px 3px; outline: none;
+  }
+  .time-input::placeholder { color: rgba(160,160,200,0.28); font-size: 0.58rem; }
+  .time-input:focus { background: rgba(0,245,255,0.05); }
+  .time-input.fastest { color: var(--gold); font-weight: 700; }
+  .time-input.has-time { color: var(--text); }
+  td.fastest-td { box-shadow: inset 0 0 8px rgba(255,215,0,0.15); }
+
+  /* Score row */
+  .score-row td { background: rgba(255,215,0,0.04); }
+  .score-cell {
+    text-align: center; padding: 9px 5px;
+    font-family: 'Orbitron', monospace; font-size: 0.78rem; font-weight: 900;
+  }
+  .s11 { color: var(--gold); text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+  .s-high { color: var(--green); }
+  .s-mid { color: var(--text); }
+  .s-low { color: var(--accent2); }
+  .s-zero { color: var(--red); }
+  .s-empty { color: var(--text-dim); font-size: 0.6rem; }
+
+  /* Total row */
+  .total-row td {
+    background: rgba(0,245,255,0.07);
+    border-top: 2px solid var(--accent);
+  }
+  .total-row .round-label {
+    color: var(--accent);
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+  }
+  .total-cell {
+    text-align: center; padding: 11px 5px;
+    font-family: 'Orbitron', monospace; font-size: 0.9rem; font-weight: 900;
+  }
+  .total-top { color: var(--gold); text-shadow: 0 0 12px rgba(255,215,0,0.6); font-size: 1rem; }
+  .total-val { color: var(--accent); }
+  .total-zero { color: var(--text-dim); font-size: 0.65rem; }
+
+  /* Totals */
+  .total-section {
+    margin: 20px 0; padding: 16px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  }
+  .total-section h2 {
+    font-family: 'Orbitron', monospace; font-size: 0.85rem;
+    color: var(--accent); letter-spacing: 3px; margin-bottom: 12px; text-align: center;
+  }
+  .total-table { width: 100%; border-collapse: collapse; }
+  .total-table th, .total-table td {
+    padding: 9px 14px; text-align: center;
+    border: 1px solid var(--border); font-family: 'Orbitron', monospace; font-size: 0.75rem;
+  }
+  .total-table th { background: var(--surface2); color: var(--text-dim); }
+  .rank-1 { color: var(--gold); }
+  .rank-2 { color: #c0c0c0; }
+  .rank-3 { color: #cd7f32; }
+
+  .fab {
+    position: fixed; bottom: 22px; right: 22px;
+    width: 42px; height: 42px; background: var(--accent); color: #000;
+    border: none; border-radius: 50%; cursor: pointer; font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 18px rgba(0,245,255,0.4); z-index: 200; transition: transform 0.2s;
+  }
+  .fab:hover { transform: scale(1.1); }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🏁 RACE TIME TRACKER BY FLY04</h1>
+    <p>บันทึกเวลา · คำนวณแต้ม · จัดอันดับ</p>
+    <p>Tiktok:FLY04(@thefly2004)</p>
+    <div class="scan-line"></div>
+  </header>
+
+  <div class="controls">
+    <button class="btn btn-add" onclick="addTable()">＋ เพิ่มตาราง</button>
+    <button class="btn btn-total" onclick="calcTotals()">🏆 คะแนนรวม</button>
+    <button class="btn btn-export" onclick="exportCSV()">📤 Export CSV</button>
+    <button class="btn btn-danger" onclick="confirmClear()">🗑 ล้างข้อมูล</button>
+  </div>
+
+  <div id="tablesArea"></div>
+
+  <div class="total-section" id="totalSection" style="display:none">
+    <h2>🏆 คะแนนรวมทั้งหมด</h2>
+    <div style="overflow-x:auto">
+      <table class="total-table" id="totalTable"></table>
+    </div>
+  </div>
+</div>
+<button class="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const STAGES_BY_STAR = {
+  3: ["City11","North Sea","TROY - Smeltery","All the way to Qian","Alpha Headquarters","Decisive Battle! Eye of the Sea","Dream of Heavenly Palace","Superstring Base","Dragon Crystal Lake","The Circular City of Troy","Stunning Jiangxi","Glimpses of Eden","Wushan Five Elements","Romantic Seaside","Polar Illusion","Endless Golden River","Travel to Tianfu","Foggy Mountain Maple","Winter Games","Loving Villa","Train Station","Nightless Sand City","Moonville","Dragon Gate","Forge Arena","King Inferno City","Blue and White Dreamland","320 Adventure Island","Star Dream Amusement Park","Winter Ancient","Moonlight Realm","Los Angeles","Train Station","City11 (Reversed)","Urban Chase","Magic Music City Holiday","Cologne Cathedral"],
+  4: ["Highway 1","Great Wall","West Lake","TROY - Experiment Field O","Thousand-House Miaozhai","Windy Airport","Decisive Battle! Snow Mountain","Back to Ancient Shu","Speed Aerospace City","Eternal Ancient Capital","Utopia","Dragon Boat Race","Titan's Peak","Clouds Heavenly Gate","Neuschwanstein","Eden Valley","Autumn Story","Dinosaur World","Flowers in the Summer Sea","Wind-Chased Green Meadow","Mermaid Island"],
+  5: ["Scenic Hills","Epic Legend","Atlantis","Atlantis(Reversed)","Mogao Grottoes","Old Street Construction","Crimson Leaves Town","Mars Base","Snow Chasm","Wild West","Sky City","Winter Gorge"],
+  6: ["Grand Canyon","Scotland Yard"],
+  7: ["Space Station","Painted Landscape"]
+};
+const STAR_COLORS = { 3:'#4fc3f7', 4:'#81c784', 5:'#ffb74d', 6:'#f06292', 7:'#ce93d8' };
+const ALL_STAGES = [];
+for (const [stars, list] of Object.entries(STAGES_BY_STAR))
+  list.forEach(name => ALL_STAGES.push({ name, stars: parseInt(stars) }));
+
+const PLAYERS = 6;
+const TIME_ROWS = 9;
+
+// State: tables[i] = { id, rows[r] = { stageName, times[p] } }
+let tables = [];
+let tableCounter = 0;
+let globalPlayers = Array(PLAYERS).fill('');
+
+function loadState() {
+  try { tables = JSON.parse(localStorage.getItem('rtTables2') || '[]'); } catch(e) { tables = []; }
+  try { globalPlayers = JSON.parse(localStorage.getItem('rtPlayers') || '[]'); } catch(e) { globalPlayers = []; }
+  while (globalPlayers.length < PLAYERS) globalPlayers.push('');
+  if (!tables.length) { tableCounter = 0; tables.push(newTableObj()); }
+  else tableCounter = Math.max(...tables.map(t => t.id)) + 1;
+}
+function saveState() {
+  localStorage.setItem('rtTables2', JSON.stringify(tables));
+  localStorage.setItem('rtPlayers', JSON.stringify(globalPlayers));
+}
+function newTableObj() {
+  return {
+    id: tableCounter++,
+    rows: Array.from({ length: TIME_ROWS }, () => ({
+      stageName: '',
+      times: Array(PLAYERS).fill('')
+    }))
+  };
+}
+
+// Time utils
+function parseTime(str) {
+  if (!str || !str.trim()) return null;
+  const p = str.split(':');
+  if (p.length === 3) return (parseInt(p[0])||0)*6000 + (parseInt(p[1])||0)*100 + (parseInt(p[2])||0);
+  return null;
+}
+function formatTimeInput(v) {
+  v = v.replace(/[^0-9:]/g, '');
+  if (!v) return '';
+  if (!v.includes(':')) {
+    const d = v.padStart(6,'0');
+    return `${d.slice(0,2)}:${d.slice(2,4)}:${d.slice(4,6)}`;
+  }
+  return v;
+}
+function rowScores(row) {
+  // row = { stageName, times[PLAYERS] }
+  const parsed = row.times.map(t => parseTime(t));
+  const valid = parsed.filter(t => t !== null);
+  if (!valid.length) return parsed.map(() => null);
+  const fastest = Math.min(...valid);
+  return parsed.map(t => {
+    if (t === null) return null;
+    const ds = (t - fastest) / 100;
+    if (ds === 0) return 11;
+    if (ds < 1) return 10; if (ds < 2) return 9; if (ds < 3) return 8;
+    if (ds < 4) return 7;  if (ds < 5) return 6; if (ds < 6) return 5;
+    if (ds < 7) return 4;  if (ds < 8) return 3; if (ds < 9) return 2;
+    if (ds < 10) return 1; return 0;
+  });
+}
+function scoreClass(s) {
+  if (s === null) return 's-empty';
+  if (s === 11) return 's11';
+  if (s >= 8) return 's-high';
+  if (s >= 5) return 's-mid';
+  if (s >= 2) return 's-low';
+  return 's-zero';
+}
+
+// Build stage selector (dropdown + search)
+function buildStageSelector(tObj, r) {
+  const wrap = document.createElement('div');
+  wrap.className = 'stage-search-wrap';
+
+  const inp = document.createElement('input');
+  inp.type = 'text';
+  inp.className = 'stage-input';
+  inp.placeholder = '🔍 เลือกด่าน...';
+  inp.value = tObj.rows[r].stageName || '';
+  inp.autocomplete = 'off';
+
+  const dd = document.createElement('div');
+  dd.className = 'stage-dropdown';
+
+  function populate(filter) {
+    dd.innerHTML = '';
+    const q = filter.toLowerCase();
+    let lastStar = null;
+    let count = 0;
+    for (const s of ALL_STAGES) {
+      if (q && !s.name.toLowerCase().includes(q)) continue;
+      if (s.stars !== lastStar) {
+        const grp = document.createElement('div');
+        grp.className = 'dropdown-group-label';
+        grp.textContent = `${'⭐'.repeat(s.stars)} ${s.stars} ดาว`;
+        grp.style.color = STAR_COLORS[s.stars];
+        dd.appendChild(grp);
+        lastStar = s.stars;
+      }
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      const dot = document.createElement('span');
+      dot.className = 'star-dot';
+      dot.style.background = STAR_COLORS[s.stars];
+      item.appendChild(dot);
+      item.appendChild(document.createTextNode(s.name));
+      item.addEventListener('mousedown', e => {
+        e.preventDefault();
+        inp.value = s.name;
+        tObj.rows[r].stageName = s.name;
+        saveState();
+        dd.classList.remove('open');
+      });
+      dd.appendChild(item);
+      count++;
+    }
+    if (!count) {
+      const ni = document.createElement('div');
+      ni.className = 'dropdown-item';
+      ni.style.color = 'var(--text-dim)';
+      ni.textContent = 'ไม่พบด่านที่ค้นหา';
+      dd.appendChild(ni);
+    }
+  }
+
+  inp.addEventListener('focus', function() { populate(this.value); dd.classList.add('open'); });
+  inp.addEventListener('input', function() {
+    tObj.rows[r].stageName = this.value;
+    saveState();
+    populate(this.value);
+    dd.classList.add('open');
+  });
+  inp.addEventListener('blur', () => setTimeout(() => dd.classList.remove('open'), 160));
+
+  wrap.appendChild(inp);
+  wrap.appendChild(dd);
+  return wrap;
+}
+
+// Build full table DOM
+function buildTableDOM(tObj) {
+  const block = document.createElement('div');
+  block.className = 'race-block';
+  block.dataset.tid = tObj.id;
+
+  // Header
+  const hdr = document.createElement('div');
+  hdr.className = 'block-header';
+  const num = document.createElement('span');
+  num.className = 'block-num';
+  num.textContent = `TABLE #${tObj.id + 1}`;
+  const rmBtn = document.createElement('button');
+  rmBtn.className = 'btn-remove';
+  rmBtn.textContent = '✕ ลบตาราง';
+  rmBtn.onclick = () => removeTable(tObj.id);
+  hdr.appendChild(num);
+  hdr.appendChild(rmBtn);
+  block.appendChild(hdr);
+
+  const scroll = document.createElement('div');
+  scroll.className = 'table-scroll';
+  const table = document.createElement('table');
+
+  // thead
+  const thead = document.createElement('thead');
+  const hRow = document.createElement('tr');
+  const thR = document.createElement('th');
+  thR.className = 'th-round';
+  thR.textContent = 'รอบ';
+  hRow.appendChild(thR);
+  const thS = document.createElement('th');
+  thS.className = 'th-stage';
+  thS.textContent = 'ด่าน';
+  hRow.appendChild(thS);
+  for (let p = 0; p < PLAYERS; p++) {
+    const th = document.createElement('th');
+    th.textContent = `P${p+1}`;
+    hRow.appendChild(th);
+  }
+  thead.appendChild(hRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+
+  // Player name row (spans round + stage cols)
+  const pRow = document.createElement('tr');
+  pRow.className = 'player-row';
+  const pLabelTd = document.createElement('td');
+  pLabelTd.colSpan = 2;
+  pLabelTd.className = 'round-label';
+  pLabelTd.textContent = 'ผู้เล่น';
+  pRow.appendChild(pLabelTd);
+  for (let p = 0; p < PLAYERS; p++) {
+    const td = document.createElement('td');
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'player-input';
+    inp.placeholder = `P${p+1}`;
+    inp.value = globalPlayers[p] || '';
+    inp.dataset.player = p;
+    inp.addEventListener('input', function() {
+      globalPlayers[parseInt(this.dataset.player)] = this.value;
+      saveState();
+      document.querySelectorAll(`.player-input[data-player="${p}"]`).forEach(el => {
+        if (el !== this) el.value = this.value;
+      });
+    });
+    td.appendChild(inp);
+    pRow.appendChild(td);
+  }
+  tbody.appendChild(pRow);
+
+  // Time rows — one per round, each with its own stage selector
+  for (let r = 0; r < TIME_ROWS; r++) {
+    const tr = document.createElement('tr');
+
+    // Round label
+    const rdTd = document.createElement('td');
+    rdTd.className = 'round-label';
+    rdTd.textContent = `รอบ ${r+1}`;
+    tr.appendChild(rdTd);
+
+    // Stage selector
+    const stageTd = document.createElement('td');
+    stageTd.className = 'stage-cell';
+    stageTd.appendChild(buildStageSelector(tObj, r));
+    tr.appendChild(stageTd);
+
+    // Time inputs
+    for (let p = 0; p < PLAYERS; p++) {
+      const td = document.createElement('td');
+      td.dataset.p = p; td.dataset.r = r;
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.className = 'time-input';
+      inp.placeholder = 'mm:ss:cs';
+      const v = tObj.rows[r].times[p] || '';
+      inp.value = v;
+      if (v) inp.classList.add('has-time');
+      inp.dataset.tid = tObj.id; inp.dataset.p = p; inp.dataset.r = r;
+      inp.addEventListener('change', function() {
+        const val = formatTimeInput(this.value.trim());
+        this.value = val;
+        const t = tables.find(x => x.id === parseInt(this.dataset.tid));
+        if (t) { t.rows[parseInt(this.dataset.r)].times[parseInt(this.dataset.p)] = val; saveState(); }
+        if (val) this.classList.add('has-time'); else this.classList.remove('has-time');
+        recalcBlock(parseInt(this.dataset.tid));
+      });
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); });
+      td.appendChild(inp);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+
+    // Score row immediately after each time row
+    const scoreRow = document.createElement('tr');
+    scoreRow.className = 'score-row';
+    scoreRow.id = `scores-${tObj.id}-${r}`;
+
+    const srLabel = document.createElement('td');
+    srLabel.colSpan = 2;
+    srLabel.className = 'round-label score-label';
+    srLabel.textContent = '🏆 คะแนน';
+    scoreRow.appendChild(srLabel);
+
+    for (let p = 0; p < PLAYERS; p++) {
+      const td = document.createElement('td');
+      td.className = 'score-cell s-empty';
+      td.dataset.sp = p;
+      td.textContent = '-';
+      scoreRow.appendChild(td);
+    }
+    tbody.appendChild(scoreRow);
+  }
+
+  // Grand total row at the bottom
+  const totalRow = document.createElement('tr');
+  totalRow.className = 'total-row';
+  totalRow.id = `total-${tObj.id}`;
+  const tlLabel = document.createElement('td');
+  tlLabel.colSpan = 2;
+  tlLabel.className = 'round-label';
+  tlLabel.textContent = '🎯 แต้มรวม';
+  totalRow.appendChild(tlLabel);
+  for (let p = 0; p < PLAYERS; p++) {
+    const td = document.createElement('td');
+    td.className = 'total-cell total-zero';
+    td.dataset.tp = p;
+    td.textContent = '0';
+    totalRow.appendChild(td);
+  }
+  tbody.appendChild(totalRow);
+
+  table.appendChild(tbody);
+  scroll.appendChild(table);
+  block.appendChild(scroll);
+  return block;
+}
+
+// Recalc scores for all rows in a block
+function recalcBlock(tid) {
+  const tObj = tables.find(t => t.id === tid);
+  if (!tObj) return;
+  const block = document.querySelector(`.race-block[data-tid="${tid}"]`);
+  if (!block) return;
+
+  for (let r = 0; r < TIME_ROWS; r++) {
+    const row = tObj.rows[r];
+    const scores = rowScores(row);
+    const parsed = row.times.map(t => parseTime(t));
+    const valid = parsed.filter(t => t !== null);
+    const fastest = valid.length ? Math.min(...valid) : null;
+
+    // Highlight fastest cell in this row
+    for (let p = 0; p < PLAYERS; p++) {
+      const inp = block.querySelector(`tr:has(td[data-r="${r}"][data-p="${p}"]) .time-input[data-p="${p}"][data-r="${r}"]`);
+      // simpler selector:
+      const allInps = block.querySelectorAll(`.time-input[data-r="${r}"]`);
+      allInps.forEach(el => { el.classList.remove('fastest'); el.parentElement.classList.remove('fastest-td'); });
+      if (fastest !== null) {
+        allInps.forEach(el => {
+          const t = parseTime(el.value);
+          if (t === fastest) { el.classList.add('fastest'); el.parentElement.classList.add('fastest-td'); }
+        });
+      }
+    }
+
+    const scoreRow = document.getElementById(`scores-${tid}-${r}`);
+    if (!scoreRow) continue;
+    scoreRow.querySelectorAll('[data-sp]').forEach((td, p) => {
+      const s = scores[p];
+      td.className = `score-cell ${scoreClass(s)}`;
+      td.textContent = s === null ? '-' : s;
+    });
+  }
+
+  // Update grand total row
+  const tableTotals = Array(PLAYERS).fill(0);
+  tObj.rows.forEach(row => {
+    rowScores(row).forEach((s, p) => { if (s !== null) tableTotals[p] += s; });
+  });
+  const maxTotal = Math.max(...tableTotals);
+  const totalRow = document.getElementById(`total-${tid}`);
+  if (totalRow) {
+    totalRow.querySelectorAll('[data-tp]').forEach((td, p) => {
+      const v = tableTotals[p];
+      if (v === 0) { td.className = 'total-cell total-zero'; td.textContent = '0'; }
+      else if (v === maxTotal) { td.className = 'total-cell total-top'; td.textContent = v; }
+      else { td.className = 'total-cell total-val'; td.textContent = v; }
+    });
+  }
+}
+
+function recalcAll() { tables.forEach(t => recalcBlock(t.id)); }
+
+function addTable() {
+  const tObj = newTableObj();
+  tables.push(tObj);
+  saveState();
+  const dom = buildTableDOM(tObj);
+  document.getElementById('tablesArea').appendChild(dom);
+  dom.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function removeTable(tid) {
+  if (tables.length === 1) { alert('ต้องมีตารางอย่างน้อย 1 ตาราง'); return; }
+  if (!confirm('ลบตารางนี้?')) return;
+  tables = tables.filter(t => t.id !== tid);
+  saveState();
+  document.querySelector(`.race-block[data-tid="${tid}"]`)?.remove();
+}
+
+function calcTotals() {
+  const totals = Array(PLAYERS).fill(0);
+  tables.forEach(tObj => {
+    tObj.rows.forEach(row => {
+      const scores = rowScores(row);
+      scores.forEach((s, p) => { if (s !== null) totals[p] += s; });
+    });
+  });
+  const sec = document.getElementById('totalSection');
+  sec.style.display = 'block';
+  sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  const indexed = totals.map((s, i) => ({ name: globalPlayers[i] || `P${i+1}`, score: s }));
+  indexed.sort((a, b) => b.score - a.score);
+  let html = '<thead><tr><th>อันดับ</th><th>ผู้เล่น</th><th>คะแนนรวม</th></tr></thead><tbody>';
+  indexed.forEach((item, rank) => {
+    const cls = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : '';
+    const medal = ['🥇','🥈','🥉'][rank] || `#${rank+1}`;
+    html += `<tr><td class="${cls}">${medal}</td><td class="${cls}">${item.name}</td><td class="${cls}">${item.score}</td></tr>`;
+  });
+  html += '</tbody>';
+  document.getElementById('totalTable').innerHTML = html;
+}
+
+function confirmClear() {
+  if (confirm('ล้างข้อมูลทั้งหมด?')) {
+    localStorage.removeItem('rtTables2');
+    localStorage.removeItem('rtPlayers');
+    location.reload();
+  }
+}
+
+function exportCSV() {
+  let csv = 'ตาราง,รอบ,ด่าน';
+  for (let p = 0; p < PLAYERS; p++) csv += `,${globalPlayers[p] || 'P'+(p+1)} เวลา,คะแนน`;
+  csv += '\n';
+  tables.forEach((tObj, ti) => {
+    tObj.rows.forEach((row, r) => {
+      const scores = rowScores(row);
+      csv += `${ti+1},${r+1},"${row.stageName || '-'}"`;
+      for (let p = 0; p < PLAYERS; p++) {
+        csv += `,${row.times[p] || ''},${scores[p] ?? ''}`;
+      }
+      csv += '\n';
+    });
+  });
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'race_tracker.csv';
+  a.click();
+}
+
+// Init
+loadState();
+const area = document.getElementById('tablesArea');
+tables.forEach(tObj => area.appendChild(buildTableDOM(tObj)));
+recalcAll();
+</script>
+</body>
+</html>
