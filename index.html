@@ -490,25 +490,43 @@ function removeMatch(tid){
 
 // ── TOTALS ──
 function calcTotals(){
-  const totals=Array(MAX_P).fill(0);
-  tables.forEach(tObj=>{
-    const pc=tObj.playerCount||4;
-    tObj.rows.forEach((row,r)=>{rowScores(row,r,pc).forEach((s,p)=>{if(s!==null)totals[p]+=s;});});
+  // รวมคะแนนตามชื่อผู้เล่น (case-insensitive trim)
+  // ถ้าชื่อซ้ำกันข้ามตาราง → รวมกัน / ถ้าไม่มีชื่อ → ใช้ "P{n}" เป็น fallback ของตารางนั้น
+  const scoreMap = {}; // key: ชื่อ → คะแนนรวม
+
+  tables.forEach(tObj => {
+    const pc = tObj.playerCount || 4;
+    const players = tObj.players || [];
+
+    // คำนวณคะแนนของแต่ละผู้เล่นในตารางนี้
+    const tableScores = Array(pc).fill(0);
+    tObj.rows.forEach((row, r) => {
+      rowScores(row, r, pc).forEach((s, p) => { if (s !== null) tableScores[p] += s; });
+    });
+
+    // รวมเข้า scoreMap ตามชื่อ
+    for (let p = 0; p < pc; p++) {
+      const name = (players[p] || '').trim() || `P${p + 1}`;
+      if (!scoreMap[name]) scoreMap[name] = 0;
+      scoreMap[name] += tableScores[p];
+    }
   });
-  const maxPc=Math.max(...tables.map(t=>t.playerCount||4));
-  // use names from first table as default; fallback to P1..P6
-  const refPlayers=(tables[0]&&tables[0].players)||[];
-  const sec=document.getElementById('totalSection');sec.style.display='block';
-  sec.scrollIntoView({behavior:'smooth',block:'nearest'});
-  const indexed=totals.slice(0,maxPc).map((s,i)=>({name:refPlayers[i]||`P${i+1}`,score:s}));
-  indexed.sort((a,b)=>b.score-a.score);
-  let html=`<thead><tr><th>${t('rank')}</th><th>${t('player')}</th><th>${t('score')}</th></tr></thead><tbody>`;
-  indexed.forEach((item,rank)=>{
-    const cls=rank===0?'rank-1':rank===1?'rank-2':rank===2?'rank-3':'';
-    const medal=['🥇','🥈','🥉'][rank]||`#${rank+1}`;
-    html+=`<tr><td class="${cls}">${medal}</td><td class="${cls}">${item.name}</td><td class="${cls}">${item.score}</td></tr>`;
+
+  const indexed = Object.entries(scoreMap).map(([name, score]) => ({ name, score }));
+  indexed.sort((a, b) => b.score - a.score);
+
+  const sec = document.getElementById('totalSection');
+  sec.style.display = 'block';
+  sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  let html = `<thead><tr><th>${t('rank')}</th><th>${t('player')}</th><th>${t('score')}</th></tr></thead><tbody>`;
+  indexed.forEach((item, rank) => {
+    const cls = rank === 0 ? 'rank-1' : rank === 1 ? 'rank-2' : rank === 2 ? 'rank-3' : '';
+    const medal = ['🥇', '🥈', '🥉'][rank] || `#${rank + 1}`;
+    html += `<tr><td class="${cls}">${medal}</td><td class="${cls}">${item.name}</td><td class="${cls}">${item.score}</td></tr>`;
   });
-  html+='</tbody>';document.getElementById('totalTable').innerHTML=html;
+  html += '</tbody>';
+  document.getElementById('totalTable').innerHTML = html;
 }
 
 function confirmClear(){
