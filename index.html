@@ -242,23 +242,21 @@ const MAX_P=6,MIN_P=2,TIME_ROWS=9;
 const KING_MAP_BASE={1:0,2:1,3:2,4:3,5:4,6:5};
 
 let tables=[],tableCounter=0;
-let globalPlayers=Array(MAX_P).fill('');
 
 function loadState(){
   try{tables=JSON.parse(localStorage.getItem('rtTables4')||'[]');}catch(e){tables=[];}
-  try{globalPlayers=JSON.parse(localStorage.getItem('rtPlayers')||'[]');}catch(e){globalPlayers=[];}
+  // migrate old data: inject players array if missing
+  tables.forEach(tObj=>{if(!tObj.players)tObj.players=Array(MAX_P).fill('');});
   try{currentLang=localStorage.getItem('rtLang')||'th';}catch(e){}
-  while(globalPlayers.length<MAX_P)globalPlayers.push('');
   if(!tables.length){tableCounter=0;tables.push(newTableObj(4));}
   else tableCounter=Math.max(...tables.map(t=>t.id))+1;
 }
 function saveState(){
   localStorage.setItem('rtTables4',JSON.stringify(tables));
-  localStorage.setItem('rtPlayers',JSON.stringify(globalPlayers));
   localStorage.setItem('rtLang',currentLang);
 }
 function newTableObj(pc){
-  return{id:tableCounter++,playerCount:pc||4,rows:Array.from({length:TIME_ROWS},()=>({stageName:'',times:Array(MAX_P).fill('')}))};
+  return{id:tableCounter++,playerCount:pc||4,players:Array(MAX_P).fill(''),rows:Array.from({length:TIME_ROWS},()=>({stageName:'',times:Array(MAX_P).fill('')}))};
 }
 
 // ── TIME UTILS ──
@@ -377,10 +375,13 @@ function buildTableDOM(tObj){
   for(let p=0;p<pc;p++){
     const td=document.createElement('td');
     const inp=document.createElement('input');inp.type='text';inp.className='player-input';
-    inp.placeholder=`P${p+1}`;inp.value=globalPlayers[p]||'';inp.dataset.player=p;
+    inp.placeholder=`P${p+1}`;
+    if(!tObj.players)tObj.players=Array(MAX_P).fill('');
+    inp.value=tObj.players[p]||'';
+    inp.dataset.player=p;
     inp.addEventListener('input',function(){
-      globalPlayers[parseInt(this.dataset.player)]=this.value;saveState();
-      document.querySelectorAll(`.player-input[data-player="${p}"]`).forEach(el=>{if(el!==this)el.value=this.value;});
+      tObj.players[parseInt(this.dataset.player)]=this.value;
+      saveState();
     });
     td.appendChild(inp);pRow.appendChild(td);
   }
@@ -489,16 +490,17 @@ function removeMatch(tid){
 
 // ── TOTALS ──
 function calcTotals(){
-  // collect all unique player count across tables
   const totals=Array(MAX_P).fill(0);
   tables.forEach(tObj=>{
     const pc=tObj.playerCount||4;
     tObj.rows.forEach((row,r)=>{rowScores(row,r,pc).forEach((s,p)=>{if(s!==null)totals[p]+=s;});});
   });
   const maxPc=Math.max(...tables.map(t=>t.playerCount||4));
+  // use names from first table as default; fallback to P1..P6
+  const refPlayers=(tables[0]&&tables[0].players)||[];
   const sec=document.getElementById('totalSection');sec.style.display='block';
   sec.scrollIntoView({behavior:'smooth',block:'nearest'});
-  const indexed=totals.slice(0,maxPc).map((s,i)=>({name:globalPlayers[i]||`P${i+1}`,score:s}));
+  const indexed=totals.slice(0,maxPc).map((s,i)=>({name:refPlayers[i]||`P${i+1}`,score:s}));
   indexed.sort((a,b)=>b.score-a.score);
   let html=`<thead><tr><th>${t('rank')}</th><th>${t('player')}</th><th>${t('score')}</th></tr></thead><tbody>`;
   indexed.forEach((item,rank)=>{
