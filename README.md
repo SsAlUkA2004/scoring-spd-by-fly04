@@ -10,7 +10,7 @@
 ## ภาษาที่ Support 
 5 ภาษา(ไม่รวมชื่อด่าน)
 ```sh
-Thai,Eng,Vn,Taiwan,China
+Thai, English, Vietnamese, Taiwanese, Chinese
 ```
 
 This website was created to keep score in a game. It uses a group scoring system, but each person's data is tracked separately on their own device.
