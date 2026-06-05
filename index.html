@@ -397,6 +397,7 @@ header::after{
 }
 .rt-btn.active{background:var(--blue);color:#fff;box-shadow:0 0 8px rgba(29,111,232,.3);}
 .rt-btn:not(.active):hover{color:var(--blue2);}
+
 /* Extra rounds (10-13) styling — dimmed to show they don't count for score */
 .row-extra td{opacity:.75;}
 .row-extra .rnd-lbl{color:var(--dim);}
@@ -406,6 +407,49 @@ header::after{
   color:var(--dim);border-radius:3px;padding:0 4px;margin-left:4px;
   font-family:'Rajdhani',monospace;letter-spacing:.5px;
 }
+
+/* ── COLLAPSE / EXPAND ── */
+.collapse-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 10px;border:1px solid var(--card-border);
+  background:var(--input-bg);color:var(--text2);
+  border-radius:6px;cursor:pointer;font-size:.72rem;
+  font-family:'Rajdhani',monospace;font-weight:700;
+  transition:all .2s;white-space:nowrap;letter-spacing:.5px;
+}
+.collapse-btn:hover{border-color:var(--blue2);color:var(--blue2);}
+.collapse-icon{display:inline-block;transition:transform .3s;font-style:normal;font-size:.8rem;}
+.match-block.collapsed .collapse-icon{transform:rotate(-90deg);}
+
+/* Collapsible body */
+.block-body{
+  overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+  max-height:2000px;
+  opacity:1;
+}
+.match-block.collapsed .block-body{
+  max-height:0;
+  opacity:0;
+}
+
+/* Collapsed header: show mini score summary */
+.collapsed-summary{
+  display:none;
+  align-items:center;gap:8px;flex-wrap:wrap;
+  padding:6px 14px 8px;
+  background:var(--hdr-bg);
+  border-top:1px solid var(--card-border);
+  font-family:'Rajdhani',monospace;font-size:.72rem;
+}
+.match-block.collapsed .collapsed-summary{display:flex;}
+.cs-player{
+  display:flex;align-items:center;gap:4px;
+  background:var(--input-bg);border:1px solid var(--card-border);
+  border-radius:6px;padding:3px 9px;
+}
+.cs-name{color:var(--text2);font-weight:600;}
+.cs-score{font-weight:700;color:var(--gold);font-size:.82rem;}
 
 /* ── BUTTONS ── */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:7px;border:1px solid transparent;cursor:pointer;font-family:'Rajdhani',monospace;font-size:.8rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;transition:all .2s;white-space:nowrap;backdrop-filter:blur(6px);}
@@ -848,6 +892,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
       </div>
       <button class="btn btn-add" onclick="addMatch()">＋ <span class="btn-txt" data-i18n="addMatch">เพิ่มการแข่งขัน</span></button>
       <button class="btn btn-score" onclick="showTotals()">🏆 <span class="btn-txt" data-i18n="totalScore">คะแนนรวม</span></button>
+      <button class="btn" id="btnCollapseAll" style="background:var(--input-bg);border-color:var(--card-border);color:var(--text2);" onclick="collapseAll()">⊟ <span class="btn-txt">ย่อทั้งหมด</span></button>
       <button class="btn btn-excel" id="btnExcel">📊 <span class="btn-txt" data-i18n="exportExcel">Export</span></button>
       <button class="btn btn-clear" onclick="confirmClear()">🗑 <span class="btn-txt" data-i18n="clearData">ล้างข้อมูล</span></button>
     </div>
@@ -936,7 +981,7 @@ function loadState(){
 function save(){localStorage.setItem('rt6',JSON.stringify(tables));localStorage.setItem('rtLang',lang);}
 function mkTable(pc){
   return{
-    id:tc++,playerCount:pc||4,rowCount:ROWS_BASE,
+    id:tc++,playerCount:pc||4,rowCount:ROWS_BASE,collapsed:false,
     players:Array(MAX_P).fill(''),
     rows:Array.from({length:ROWS_MAX},()=>({stage:'',times:Array(MAX_P).fill('')}))
   };
@@ -1102,22 +1147,32 @@ function buildStageSelector(tObj,r){
 
 function buildTable(tObj){
   const pc=tObj.playerCount||4;
-  const block=document.createElement('div');block.className='match-block';block.dataset.tid=tObj.id;
+  const block=document.createElement('div');
+  block.className='match-block'+(tObj.collapsed?' collapsed':'');
+  block.dataset.tid=tObj.id;
 
-  // Header bar
+  // ── Header bar ──
   const hdr=document.createElement('div');hdr.className='block-hdr';
   const left=document.createElement('div');left.className='block-hdr-left';
-  const num=document.createElement('span');num.className='block-num';num.textContent=`${T('matchLabel')} #${tObj.id+1}`;left.appendChild(num);
+
+  // Collapse button (chevron)
+  const colBtn=document.createElement('button');colBtn.className='collapse-btn';
+  colBtn.innerHTML=`<i class="collapse-icon">▼</i><span>${tObj.collapsed?T('matchLabel')+' #'+(tObj.id+1):T('matchLabel')+' #'+(tObj.id+1)}</span>`;
+  colBtn.onclick=()=>toggleCollapse(tObj.id);
+
+  const num=document.createElement('span');num.className='block-num';num.textContent=`${T('matchLabel')} #${tObj.id+1}`;
+
   const pctrl=document.createElement('div');pctrl.className='pctrl';
   const plbl=document.createElement('span');plbl.className='pctrl-lbl';plbl.textContent=T('playerLabel');
   const bDec=document.createElement('button');bDec.className='pc-btn';bDec.textContent='−';bDec.onclick=()=>{if(tObj.playerCount<=MIN_P){alert(T('minP'));return;}tObj.playerCount--;save();rebuildBlock(tObj);};
   const bVal=document.createElement('span');bVal.className='pc-val';bVal.textContent=pc;
   const bInc=document.createElement('button');bInc.className='pc-btn';bInc.textContent='+';bInc.onclick=()=>{if(tObj.playerCount>=MAX_P){alert(T('maxP'));return;}tObj.playerCount++;save();rebuildBlock(tObj);};
-  pctrl.append(plbl,bDec,bVal,bInc);left.append(num,pctrl);hdr.appendChild(left);
+  pctrl.append(plbl,bDec,bVal,bInc);
 
-  // Right buttons group
+  left.append(colBtn,num,pctrl);hdr.appendChild(left);
+
+  // Right buttons
   const btnGroup=document.createElement('div');btnGroup.style.cssText='display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
-  // Row count toggle
   const rowToggle=document.createElement('div');rowToggle.className='row-toggle';
   [ROWS_BASE,ROWS_MAX].forEach(n=>{
     const b=document.createElement('button');b.className='rt-btn'+(tObj.rowCount===n?' active':'');
@@ -1125,14 +1180,18 @@ function buildTable(tObj){
     b.onclick=()=>{tObj.rowCount=n;save();rebuildBlock(tObj);};
     rowToggle.appendChild(b);
   });
-  // Save image button
   const imgBtn=document.createElement('button');imgBtn.className='btn-rm btn-img';imgBtn.innerHTML='📷';imgBtn.title='บันทึกรูปตาราง';imgBtn.onclick=()=>openSaveImageModal(tObj.id);
-  // Reset this table button
   const rstBtn=document.createElement('button');rstBtn.className='btn-rm btn-rst';rstBtn.innerHTML='🔄';rstBtn.title='รีเซ็ตตารางนี้';rstBtn.onclick=()=>resetTable(tObj.id);
-  // Remove button
   const rmBtn=document.createElement('button');rmBtn.className='btn-rm';rmBtn.textContent=T('removeMatch');rmBtn.onclick=()=>removeMatch(tObj.id);
   btnGroup.append(rowToggle,imgBtn,rstBtn,rmBtn);hdr.appendChild(btnGroup);
   block.appendChild(hdr);
+
+  // ── Collapsed mini-summary ──
+  const summary=document.createElement('div');summary.className='collapsed-summary';summary.id=`summary-${tObj.id}`;
+  block.appendChild(summary);
+
+  // ── Collapsible body ──
+  const bodyWrap=document.createElement('div');bodyWrap.className='block-body';
 
   const wrap=document.createElement('div');wrap.className='tbl-wrap';
   const table=document.createElement('table');
@@ -1219,8 +1278,9 @@ function buildTable(tObj){
   tbody.appendChild(document.createElement('tr'));// spacer so table structure is valid
 
   table.appendChild(tbody);wrap.appendChild(table);
-  block.appendChild(wrap);
-  block.appendChild(outerDiv);
+  bodyWrap.appendChild(wrap);
+  bodyWrap.appendChild(outerDiv);
+  block.appendChild(bodyWrap);
   // Sync horizontal scroll between table and total row
   wrap.addEventListener('scroll',()=>{outerDiv.scrollLeft=wrap.scrollLeft;});
   outerDiv.addEventListener('scroll',()=>{wrap.scrollLeft=outerDiv.scrollLeft;});
@@ -1259,8 +1319,10 @@ function recalcBlock(tid){
     const v=tots[p];const sp=td.querySelector('.total-val');if(!sp)return;
     sp.className='total-val '+(v===0?'tv-zero':v===maxT?'tv-top':'tv-val');sp.textContent=v||'0';
   });
+  // Update collapsed summary too
+  updateCollapsedSummary(tid);
 }
-function recalcAll(){tables.forEach(t=>recalcBlock(t.id));}
+function recalcAll(){tables.forEach(t=>{recalcBlock(t.id);});}
 function rebuildBlock(tObj){const old=document.querySelector(`.match-block[data-tid="${tObj.id}"]`);if(old){const nd=buildTable(tObj);old.replaceWith(nd);recalcBlock(tObj.id);updateLeaderboard();}}
 function rebuildAll(){const a=document.getElementById('tablesArea');a.innerHTML='';tables.forEach(t=>a.appendChild(buildTable(t)));recalcAll();updateLeaderboard();}
 
@@ -1381,7 +1443,45 @@ function removeMatch(tid){
 }
 function addMatch(){const t=mkTable(4);tables.push(t);save();const dom=buildTable(t);document.getElementById('tablesArea').appendChild(dom);dom.scrollIntoView({behavior:'smooth',block:'start'});recalcBlock(t.id);updateLeaderboard();}
 
-// ── RESET SINGLE TABLE ──
+function collapseAll(){
+  const allCollapsed=tables.every(t=>t.collapsed);
+  tables.forEach(t=>{t.collapsed=!allCollapsed;});save();
+  // Update DOM without full rebuild
+  tables.forEach(t=>{
+    const block=document.querySelector(`.match-block[data-tid="${t.id}"]`);
+    if(block){block.classList.toggle('collapsed',t.collapsed);updateCollapsedSummary(t.id);}
+  });
+  const btn=document.getElementById('btnCollapseAll');
+  if(btn){const sp=btn.querySelector('.btn-txt');if(sp)sp.textContent=allCollapsed?'ย่อทั้งหมด':'ขยายทั้งหมด';}
+}
+function toggleCollapse(tid){
+  const tObj=tables.find(t=>t.id===tid);if(!tObj)return;
+  tObj.collapsed=!tObj.collapsed;save();
+  const block=document.querySelector(`.match-block[data-tid="${tid}"]`);
+  if(block){
+    block.classList.toggle('collapsed',tObj.collapsed);
+    updateCollapsedSummary(tid);
+  }
+}
+
+function updateCollapsedSummary(tid){
+  const tObj=tables.find(t=>t.id===tid);if(!tObj)return;
+  const summary=document.getElementById(`summary-${tid}`);if(!summary)return;
+  const pc=tObj.playerCount||4;
+  const activeRows=tObj.rowCount||ROWS_BASE;
+  const tots=Array(pc).fill(0);
+  tObj.rows.forEach((row,r)=>{if(r<activeRows)calcScores(row,r,pc).forEach((s,p)=>{if(s!==null)tots[p]+=s;});});
+  const maxT=Math.max(...tots,0);
+  summary.innerHTML='';
+  for(let p=0;p<pc;p++){
+    const name=(tObj.players[p]||'').trim()||`P${p+1}`;
+    const div=document.createElement('div');div.className='cs-player';
+    const isTop=tots[p]===maxT&&tots[p]>0;
+    div.style.borderColor=isTop?'var(--gold)':'';
+    div.innerHTML=`<span class="cs-name">${name}</span><span class="cs-score" style="color:${isTop?'var(--gold)':'var(--blue2)'}">${tots[p]}</span>`;
+    summary.appendChild(div);
+  }
+}
 function resetTable(tid){
   if(!confirm('รีเซ็ตข้อมูลในตารางนี้?')) return;
   const tObj=tables.find(t=>t.id===tid);if(!tObj)return;
