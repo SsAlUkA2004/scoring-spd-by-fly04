@@ -99,9 +99,15 @@ header{text-align:center;padding:28px 16px 14px;margin-bottom:18px;}
 .tbl-wrap{
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
-  /* Force touch scroll on iOS */
   touch-action:pan-x pan-y;
+  /* Show scrollbar on mobile */
+  scrollbar-width:thin;
+  scrollbar-color:rgba(239,68,68,.5) rgba(15,23,42,.6);
 }
+.tbl-wrap::-webkit-scrollbar{height:5px;}
+.tbl-wrap::-webkit-scrollbar-track{background:rgba(15,23,42,.6);border-radius:3px;}
+.tbl-wrap::-webkit-scrollbar-thumb{background:rgba(239,68,68,.5);border-radius:3px;}
+.tbl-wrap::-webkit-scrollbar-thumb:hover{background:var(--red);}
 /* Table always has a minimum width so it scrolls properly on mobile */
 table{width:100%;border-collapse:collapse;min-width:480px;}
 thead{position:sticky;top:0;z-index:20;background:rgba(9,18,36,.97);backdrop-filter:blur(8px);}
@@ -273,6 +279,90 @@ tr:hover td{background:rgba(30,41,59,.35);}
 .gp-tbl th{background:var(--s2);color:var(--dim);}
 .gr1{color:var(--gold);}.gr2{color:#cbd5e1;}.gr3{color:#cd7f32;}
 
+/* ── GRAND TOTAL MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  padding:16px;
+  animation:modalFadeIn .25s ease;
+}
+@keyframes modalFadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{
+  background:linear-gradient(135deg,rgba(15,23,42,.98),rgba(9,12,28,.98));
+  border:1px solid rgba(239,68,68,.3);
+  border-radius:18px;
+  width:100%;max-width:520px;
+  max-height:85vh;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 0 40px rgba(239,68,68,.15),0 20px 60px rgba(0,0,0,.8);
+  animation:modalSlideUp .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes modalSlideUp{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+.modal-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;
+  background:rgba(0,0,0,.4);
+  border-bottom:1px solid rgba(239,68,68,.2);
+  flex-shrink:0;
+}
+.modal-title{
+  font-family:'Orbitron',monospace;font-size:.85rem;font-weight:900;
+  letter-spacing:2px;
+  background:linear-gradient(90deg,#ef4444,#f97316,#fbbf24);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.modal-close{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);
+  color:var(--red);cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.modal-close:hover{background:var(--red);color:#fff;transform:rotate(90deg);}
+.modal-body{overflow-y:auto;padding:16px;flex:1;}
+.modal-body::-webkit-scrollbar{width:4px;}
+.modal-body::-webkit-scrollbar-thumb{background:rgba(239,68,68,.4);border-radius:2px;}
+
+/* Podium display */
+.podium-row{display:flex;gap:10px;margin-bottom:14px;justify-content:center;}
+.podium-card{
+  flex:1;max-width:140px;
+  border-radius:12px;padding:14px 10px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  border:1px solid transparent;
+  position:relative;overflow:hidden;
+  transition:transform .2s;
+}
+.podium-card:hover{transform:translateY(-3px);}
+.podium-1{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.4);box-shadow:0 0 20px rgba(251,191,36,.15);}
+.podium-2{background:rgba(148,163,184,.07);border-color:rgba(148,163,184,.3);}
+.podium-3{background:rgba(205,127,50,.07);border-color:rgba(205,127,50,.3);}
+.podium-medal{font-size:1.6rem;line-height:1;}
+.podium-name{font-family:'Orbitron',monospace;font-size:.62rem;font-weight:700;color:#fff;text-align:center;word-break:break-all;}
+.podium-score{font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:900;}
+.p1-score{color:var(--gold);text-shadow:0 0 16px rgba(251,191,36,.8);}
+.p2-score{color:#cbd5e1;}
+.p3-score{color:#cd7f32;}
+.podium-pts{font-size:.55rem;color:var(--dim);font-family:'Orbitron',monospace;letter-spacing:1px;}
+
+/* Rest of standings */
+.standings-list{display:flex;flex-direction:column;gap:6px;}
+.standing-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:10px;
+  background:rgba(30,41,59,.4);border:1px solid rgba(51,65,85,.4);
+  transition:all .2s;
+}
+.standing-item:hover{background:rgba(30,41,59,.7);border-color:var(--s3);}
+.si-rank{font-family:'Orbitron',monospace;font-size:.65rem;color:var(--dim);min-width:24px;}
+.si-name{flex:1;font-weight:700;font-size:.82rem;color:#cbd5e1;}
+.si-bar-wrap{flex:1;max-width:100px;height:4px;background:rgba(51,65,85,.5);border-radius:2px;overflow:hidden;}
+.si-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red),var(--cyan));transition:width .6s ease;}
+.si-score{font-family:'Orbitron',monospace;font-weight:900;font-size:.9rem;color:var(--cyan);min-width:32px;text-align:right;}
+
 /* ── FAB ── */
 .fab{position:fixed;bottom:18px;right:18px;width:40px;height:40px;background:var(--red2);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(220,38,38,.45);z-index:300;transition:transform .2s;}
 .fab:hover{transform:scale(1.12);}
@@ -415,9 +505,14 @@ tr:hover td{background:rgba(30,41,59,.35);}
     </div>
   </div>
 
-  <div id="grandPanel" class="grand-panel" style="display:none">
-    <h2>🏆 <span data-i18n="totalAll">คะแนนรวมทั้งหมด</span></h2>
-    <div style="overflow-x:auto"><table class="gp-tbl" id="gpTbl"></table></div>
+  <div id="grandModal" class="modal-overlay" style="display:none" onclick="closeModal(event)">
+    <div class="modal-box" id="modalBox">
+      <div class="modal-hdr">
+        <span class="modal-title" data-i18n="totalAll">🏆 คะแนนรวมทั้งหมด</span>
+        <button class="modal-close" onclick="closeTotals()">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
   </div>
 </div>
 <button class="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -681,15 +776,73 @@ function showTotals(){
     for(let p=0;p<pc;p++){const n=(tObj.players[p]||'').trim()||`P${p+1}`;sm[n]=(sm[n]||0)+tots[p];}
   });
   const sorted=Object.entries(sm).map(([n,s])=>({name:n,score:s})).sort((a,b)=>b.score-a.score);
-  const sec=document.getElementById('grandPanel');sec.style.display='block';sec.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const maxScore=sorted.length?sorted[0].score:1;
+
+  const modal=document.getElementById('grandModal');
+  const body=document.getElementById('modalBody');
+  body.innerHTML='';
   document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=T(el.dataset.i18n));
-  let html=`<thead><tr><th>${T('rank')}</th><th>${T('player')}</th><th>${T('score')}</th></tr></thead><tbody>`;
-  sorted.forEach((item,i)=>{
-    const cls=i===0?'gr1':i===1?'gr2':i===2?'gr3':'';
-    const medal=['🥇','🥈','🥉'][i]||`#${i+1}`;
-    html+=`<tr><td class="${cls}">${medal}</td><td class="${cls}">${item.name}</td><td class="${cls}">${item.score}</td></tr>`;
-  });
-  html+='</tbody>';document.getElementById('gpTbl').innerHTML=html;
+
+  if(!sorted.length){
+    body.innerHTML=`<div style="text-align:center;color:var(--dim);padding:40px;font-family:'Orbitron',monospace;font-size:.75rem;">— ${T('score')} —</div>`;
+  } else {
+    // Podium (top 3)
+    const top3=sorted.slice(0,Math.min(3,sorted.length));
+    if(top3.length>0){
+      const podium=document.createElement('div');podium.className='podium-row';
+      // Reorder: 2nd left, 1st center, 3rd right
+      const order=top3.length===1?[0]:top3.length===2?[1,0]:[1,0,2];
+      order.forEach(idx=>{
+        if(idx>=top3.length)return;
+        const item=top3[idx];const rank=idx+1;
+        const card=document.createElement('div');
+        card.className=`podium-card podium-${rank}`;
+        const medal=['🥇','🥈','🥉'][idx];
+        card.innerHTML=`
+          <div class="podium-medal">${medal}</div>
+          <div class="podium-name">${item.name}</div>
+          <div class="podium-score p${rank}-score">${item.score}</div>
+          <div class="podium-pts">${T('pts').toUpperCase()}</div>
+        `;
+        // Make 1st place slightly bigger
+        if(rank===1)card.style.transform='scale(1.05)';
+        podium.appendChild(card);
+      });
+      body.appendChild(podium);
+    }
+
+    // Rest of standings (4th+)
+    if(sorted.length>3){
+      const sep=document.createElement('div');
+      sep.style.cssText='text-align:center;color:var(--dim);font-family:Orbitron,monospace;font-size:.55rem;letter-spacing:2px;margin:8px 0;';
+      sep.textContent='─── OTHER RANKINGS ───';
+      body.appendChild(sep);
+      const list=document.createElement('div');list.className='standings-list';
+      sorted.slice(3).forEach((item,i)=>{
+        const div=document.createElement('div');div.className='standing-item';
+        const barPct=maxScore>0?Math.round((item.score/maxScore)*100):0;
+        div.innerHTML=`
+          <span class="si-rank">#${i+4}</span>
+          <span class="si-name">${item.name}</span>
+          <div class="si-bar-wrap"><div class="si-bar" style="width:${barPct}%"></div></div>
+          <span class="si-score">${item.score}</span>
+        `;
+        list.appendChild(div);
+      });
+      body.appendChild(list);
+    }
+  }
+
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeTotals(){
+  document.getElementById('grandModal').style.display='none';
+  document.body.style.overflow='';
+}
+function closeModal(e){
+  if(e.target===document.getElementById('grandModal'))closeTotals();
 }
 
 function confirmClear(){if(confirm(T('confirmClear'))){['rt6','rtLang'].forEach(k=>localStorage.removeItem(k));location.reload();}}
@@ -757,6 +910,7 @@ function buildTitle(){
 }
 
 // ── INIT ──
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTotals();});
 loadState();
 document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('active',o.dataset.lang===lang));
 document.getElementById('globeLabel').textContent=T('globeLabel');
