@@ -175,7 +175,7 @@ header::after{
 /* ── MATCH BLOCK — racing card style ── */
 .match-block{
   margin-bottom:14px;
-  border-radius:14px;overflow:hidden;
+  border-radius:14px;overflow:visible;
   background:linear-gradient(160deg,rgba(13,30,74,.9),rgba(4,8,26,.95));
   border:1px solid rgba(29,111,232,.4);
   box-shadow:0 0 0 1px rgba(59,157,255,.1),0 8px 32px rgba(0,0,10,.6),inset 0 1px 0 rgba(255,255,255,.06);
@@ -288,12 +288,13 @@ td.stage-td{width:145px;}
 .si:focus{border-color:var(--blue2);background:rgba(29,111,232,.1);box-shadow:0 0 8px rgba(29,111,232,.2);}
 .si::placeholder{color:var(--dim);font-size:.68rem;font-weight:400;}
 .sdd{
-  position:absolute;top:100%;left:0;right:0;
   background:#071230;border:1px solid var(--blue);
-  border-radius:8px;max-height:210px;overflow-y:auto;
-  z-index:9999;box-shadow:0 8px 24px rgba(0,10,40,.9);display:none;
+  border-radius:8px;overflow-y:auto;
+  box-shadow:0 8px 24px rgba(0,10,40,.9);display:none;
 }
 .sdd.open{display:block;}
+/* Portal dropdown: position:fixed set inline by JS */
+.sdd-portal{position:fixed;z-index:99999;}
 .sdd-grp{
   padding:4px 10px;font-size:.54rem;font-family:'Orbitron',monospace;color:var(--dim);
   background:rgba(29,111,232,.08);border-top:1px solid rgba(29,111,232,.2);text-transform:uppercase;
@@ -700,29 +701,102 @@ function scClass(s){
   if(s>=8)return'sch';if(s>=5)return'scm';if(s>=2)return'scl';return'sc0';
 }
 
+// Global dropdown element — single shared instance mounted on body
+let _activeDd = null;
+let _activeDdInp = null;
+function _closeDd(){
+  if(_activeDd){_activeDd.classList.remove('open');_activeDd=null;_activeDdInp=null;}
+}
+document.addEventListener('click', e=>{
+  if(_activeDd && !_activeDd.contains(e.target) && e.target!==_activeDdInp) _closeDd();
+}, true);
+// Only close on scroll if it's the page/table scrolling, NOT the dropdown itself
+document.addEventListener('scroll', e=>{
+  if(_activeDd && !_activeDd.contains(e.target)){
+    // Reposition instead of closing when table scrolls
+    if(_activeDdInp){
+      const rect=_activeDdInp.getBoundingClientRect();
+      // If input scrolled off screen, close; otherwise reposition
+      if(rect.bottom<0||rect.top>window.innerHeight){
+        _closeDd();
+      } else {
+        _activeDd.style.top=(rect.bottom+2)+'px';
+        _activeDd.style.left=rect.left+'px';
+        _activeDd.style.width=Math.max(rect.width,180)+'px';
+      }
+    }
+  }
+}, true);
+
 function buildStageSelector(tObj,r){
   const wrap=document.createElement('div');wrap.className='sw';
-  const inp=document.createElement('input');inp.type='text';inp.className='si';inp.placeholder=T('stagePH');inp.value=tObj.rows[r].stage||'';inp.autocomplete='off';
-  const dd=document.createElement('div');dd.className='sdd';
+  const inp=document.createElement('input');inp.type='text';inp.className='si';
+  inp.placeholder=T('stagePH');inp.value=tObj.rows[r].stage||'';inp.autocomplete='off';
+
+  // Create a shared dropdown appended to body for each selector
+  const dd=document.createElement('div');dd.className='sdd sdd-portal';
+  document.body.appendChild(dd);
+
+  function positionDd(){
+    const rect=inp.getBoundingClientRect();
+    dd.style.position='fixed';
+    dd.style.top=(rect.bottom+2)+'px';
+    dd.style.left=rect.left+'px';
+    dd.style.width=Math.max(rect.width,180)+'px';
+    dd.style.maxHeight='220px';
+    dd.style.zIndex='99999';
+    // Flip up if not enough room below
+    const spaceBelow=window.innerHeight-rect.bottom;
+    if(spaceBelow<230&&rect.top>230){
+      dd.style.top='auto';
+      dd.style.bottom=(window.innerHeight-rect.top+2)+'px';
+    } else {
+      dd.style.bottom='auto';
+    }
+  }
+
   function pop(q){
     dd.innerHTML='';q=(q||'').toLowerCase();let ls=null;
     for(const s of ALL_S){
       if(q&&!s.name.toLowerCase().includes(q))continue;
       if(s.stars!==ls){
-        const g=document.createElement('div');g.className='sdd-grp';g.textContent=`${'⭐'.repeat(s.stars)} ${s.stars}★`;g.style.color=SC[s.stars];dd.appendChild(g);ls=s.stars;
+        const g=document.createElement('div');g.className='sdd-grp';
+        g.textContent=`${'⭐'.repeat(s.stars)} ${s.stars}★`;g.style.color=SC[s.stars];dd.appendChild(g);ls=s.stars;
       }
       const item=document.createElement('div');item.className='sdd-item';
       const dot=document.createElement('span');dot.className='sdot';dot.style.background=SC[s.stars];
       item.appendChild(dot);item.appendChild(document.createTextNode(s.name));
-      item.addEventListener('mousedown',e=>{e.preventDefault();inp.value=s.name;tObj.rows[r].stage=s.name;save();dd.classList.remove('open');});
+      item.addEventListener('mousedown',e=>{
+        e.preventDefault();inp.value=s.name;tObj.rows[r].stage=s.name;save();_closeDd();
+      });
       dd.appendChild(item);
     }
-    if(!dd.children.length){const ni=document.createElement('div');ni.className='sdd-item';ni.style.color='var(--dim)';ni.textContent='—';dd.appendChild(ni);}
+    if(!dd.children.length){
+      const ni=document.createElement('div');ni.className='sdd-item';ni.style.color='var(--dim)';ni.textContent='—';dd.appendChild(ni);
+    }
   }
-  inp.addEventListener('focus',()=>{pop(inp.value);dd.classList.add('open');});
-  inp.addEventListener('input',()=>{tObj.rows[r].stage=inp.value;save();pop(inp.value);dd.classList.add('open');});
-  inp.addEventListener('blur',()=>setTimeout(()=>dd.classList.remove('open'),160));
-  wrap.appendChild(inp);wrap.appendChild(dd);return wrap;
+
+  inp.addEventListener('focus',()=>{
+    _closeDd();
+    pop(inp.value);
+    positionDd();
+    dd.classList.add('open');
+    _activeDd=dd;_activeDdInp=inp;
+  });
+  inp.addEventListener('input',()=>{
+    tObj.rows[r].stage=inp.value;save();
+    pop(inp.value);
+    positionDd();
+    dd.classList.add('open');
+    _activeDd=dd;_activeDdInp=inp;
+  });
+  inp.addEventListener('blur',()=>setTimeout(()=>{if(_activeDd===dd)_closeDd();},160));
+
+  // Cleanup when element is removed from DOM
+  const obs=new MutationObserver(()=>{if(!document.body.contains(inp)){dd.remove();obs.disconnect();}});
+  obs.observe(document.body,{childList:true,subtree:true});
+
+  wrap.appendChild(inp);return wrap;
 }
 
 function buildTable(tObj){
