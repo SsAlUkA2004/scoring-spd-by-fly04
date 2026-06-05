@@ -286,15 +286,30 @@ tr:hover td{background:rgba(29,111,232,.06);}
 .sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 
 /* ── TIME CELL ── */
-.tc-wrap{padding:4px 3px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;}
-.king-badge{
-  position:absolute;top:-1px;left:50%;transform:translateX(-50%);
-  background:linear-gradient(135deg,#c0392b,#e74c3c);
-  color:#fff;font-family:'Orbitron',monospace;font-size:.48rem;font-weight:700;
-  padding:2px 7px;border-radius:0 0 6px 6px;white-space:nowrap;letter-spacing:.4px;
-  box-shadow:0 2px 12px rgba(220,38,38,.6);animation:kPulse 2s ease-in-out infinite;z-index:3;
+/* King cell: extra top padding so badge doesn't overlap input */
+td.king-td{padding-top:18px !important;vertical-align:top;}
+.tc-wrap{
+  padding:4px 4px 6px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  position:relative;
 }
-@keyframes kPulse{0%,100%{box-shadow:0 2px 10px rgba(220,38,38,.5)}50%{box-shadow:0 2px 20px rgba(220,38,38,.95)}}
+/* King badge sits ABOVE the cell (outside td), injected as absolute sibling */
+.king-badge{
+  display:block;
+  width:calc(100% - 6px);
+  margin:3px auto 0;
+  text-align:center;
+  background:linear-gradient(135deg,#9b1c1c,#dc2626,#ef4444);
+  color:#fff;font-family:'Orbitron',monospace;font-size:.48rem;font-weight:700;
+  padding:3px 6px;border-radius:5px 5px 0 0;white-space:nowrap;letter-spacing:.5px;
+  box-shadow:0 0 10px rgba(220,38,38,.5);
+  animation:kPulse 2s ease-in-out infinite;
+  position:relative; /* not absolute — flows above the wrap */
+  z-index:2;
+}
+@keyframes kPulse{0%,100%{box-shadow:0 0 10px rgba(220,38,38,.4)}50%{box-shadow:0 0 20px rgba(220,38,38,.9)}}
+
+/* ── TIME INPUT ── */
 .ti{
   width:100%;text-align:center;
   border:1px solid rgba(29,111,232,.3);border-radius:6px;
@@ -302,10 +317,37 @@ tr:hover td{background:rgba(29,111,232,.06);}
   font-family:'Orbitron',monospace;font-size:.65rem;padding:5px 2px;outline:none;transition:all .2s;
 }
 .ti:focus{border-color:var(--blue2);box-shadow:0 0 8px rgba(59,157,255,.25);}
-.ti.best{border-color:var(--gold);background:rgba(245,197,24,.08);color:var(--gold);font-weight:700;}
-.ti.best-king{border-color:var(--red);background:rgba(239,68,68,.12);color:#fca5a5;font-weight:700;}
 .ti::placeholder{color:rgba(104,136,187,.3);font-size:.56rem;}
 .ti.has-v{color:var(--text);}
+
+/* ── WINNER CARD — gold frame for fastest time ── */
+.ti.best{
+  border:2px solid var(--gold) !important;
+  background:linear-gradient(160deg,rgba(245,197,24,.12),rgba(13,30,74,.6)) !important;
+  color:var(--gold) !important;font-weight:700;
+  box-shadow:0 0 14px rgba(245,197,24,.35),inset 0 0 8px rgba(245,197,24,.08);
+}
+/* Winner chip glow */
+.tc-wrap.is-best{
+  background:linear-gradient(160deg,rgba(245,197,24,.08),rgba(7,18,48,.3));
+  border-radius:8px;
+  outline:1.5px solid rgba(245,197,24,.4);
+  box-shadow:0 0 16px rgba(245,197,24,.2);
+}
+
+/* ── KING WINNER CARD — red frame for king+fastest ── */
+.ti.best-king{
+  border:2px solid var(--red) !important;
+  background:linear-gradient(160deg,rgba(239,68,68,.18),rgba(13,30,74,.6)) !important;
+  color:#fca5a5 !important;font-weight:700;
+  box-shadow:0 0 16px rgba(239,68,68,.45),inset 0 0 8px rgba(239,68,68,.1);
+}
+.tc-wrap.is-best-king{
+  background:linear-gradient(160deg,rgba(239,68,68,.12),rgba(7,18,48,.3));
+  border-radius:8px;
+  outline:1.5px solid rgba(239,68,68,.5);
+  box-shadow:0 0 20px rgba(239,68,68,.25);
+}
 
 .score-chip{font-family:'Orbitron',monospace;font-size:.68rem;font-weight:900;padding:2px 7px;border-radius:10px;min-width:32px;text-align:center;}
 .sc12{background:rgba(239,68,68,.2);color:#fca5a5;box-shadow:0 0 8px rgba(239,68,68,.3);}
@@ -697,8 +739,12 @@ function buildTable(tObj){
     // Time cells
     for(let p=0;p<pc;p++){
       const td=document.createElement('td');td.dataset.p=p;td.dataset.r=r;
+      // King badge goes ABOVE tc-wrap so it never overlaps the input
+      if(isKing&&p===kp){
+        td.classList.add('king-td');
+        const b=document.createElement('div');b.className='king-badge';b.textContent=T('kingMap');td.appendChild(b);
+      }
       const cw=document.createElement('div');cw.className='tc-wrap';
-      if(isKing&&p===kp){const b=document.createElement('div');b.className='king-badge';b.textContent=T('kingMap');cw.appendChild(b);}
       const inp=document.createElement('input');inp.type='text';inp.className='ti';inp.placeholder='mm:ss:cs';
       const v=tObj.rows[r].times[p]||'';inp.value=v;if(v)inp.classList.add('has-v');
       inp.dataset.tid=tObj.id;inp.dataset.p=p;inp.dataset.r=r;
@@ -756,9 +802,15 @@ function recalcBlock(tid){
     const isKing=r in KM&&KM[r]<pc;const kp=isKing?KM[r]:-1;
     for(let p=0;p<pc;p++){
       const td=block.querySelector(`td[data-p="${p}"][data-r="${r}"]`);if(!td)continue;
+      const cw=td.querySelector('.tc-wrap');
       const inp=td.querySelector('.ti');const chip=td.querySelector('[data-chip]');if(!inp||!chip)continue;
       const t=parseTime(inp.value);const isB=t!==null&&t===best;const isKC=isKing&&p===kp;
       inp.className='ti'+(inp.value?' has-v':'')+(isB?(isKC?' best-king':' best'):'');
+      // Winner card frame on tc-wrap
+      if(cw){
+        cw.classList.remove('is-best','is-best-king');
+        if(isB) cw.classList.add(isKC?'is-best-king':'is-best');
+      }
       const s=scores[p];chip.className=`score-chip ${scClass(s)}`;chip.textContent=s===null?'—':`+${s}`;
     }
   }
