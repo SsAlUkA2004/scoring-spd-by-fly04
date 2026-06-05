@@ -468,8 +468,30 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 .si-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--gold));transition:width .6s ease;}
 .si-score{font-family:'Orbitron',monospace;font-weight:900;font-size:.9rem;color:var(--blue2);min-width:32px;text-align:right;}
 
-/* ── GRAND TOTAL PANEL (legacy, unused) ── */
+/* ── GRAND TOTAL PANEL (legacy) ── */
 .grand-panel{display:none;}
+
+/* ── SAVE IMAGE MODAL FIELDS ── */
+.img-field{display:flex;flex-direction:column;gap:6px;}
+.img-label{font-family:'Rajdhani',monospace;font-size:.72rem;font-weight:700;color:var(--blue3);letter-spacing:1px;text-transform:uppercase;}
+.img-input{
+  background:var(--input-bg);border:1px solid var(--input-border);
+  color:var(--text);font-family:'Exo 2','Sarabun',sans-serif;font-size:.9rem;
+  padding:9px 12px;border-radius:8px;outline:none;transition:all .2s;
+  width:100%;
+}
+.img-input:focus{border-color:var(--blue2);box-shadow:0 0 8px rgba(29,111,232,.2);}
+.img-input::placeholder{color:var(--dim);font-size:.82rem;}
+.img-textarea{resize:vertical;min-height:70px;font-family:'Exo 2','Sarabun',sans-serif;}
+
+/* ── BLOCK ACTION BUTTONS ── */
+.btn-img,.btn-rst{
+  background:none;border:1px solid var(--s3);color:var(--dim);
+  border-radius:5px;padding:4px 8px;cursor:pointer;font-size:.82rem;
+  transition:all .2s;line-height:1;
+}
+.btn-img:hover{border-color:var(--blue2);color:var(--blue2);background:rgba(29,111,232,.08);}
+.btn-rst:hover{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,.08);}
 
 /* ── FAB ── */
 .fab{position:fixed;bottom:18px;right:18px;width:44px;height:44px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(29,111,232,.5);z-index:300;transition:transform .2s;}
@@ -602,6 +624,30 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
         <button class="modal-close" onclick="closeTotals()">✕</button>
       </div>
       <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Save Image Modal -->
+  <div id="saveImgModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeSaveImgModal()">
+    <div class="modal-box" style="max-width:420px">
+      <div class="modal-hdr">
+        <span class="modal-title">📷 บันทึกรูปตาราง</span>
+        <button class="modal-close" onclick="closeSaveImgModal()">✕</button>
+      </div>
+      <div class="modal-body" style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+        <div class="img-field">
+          <label class="img-label">หัวข้อ / ชื่อการแข่งขัน</label>
+          <input type="text" id="imgModalTitle" class="img-input" placeholder="เช่น การแข่งขัน #1 รอบที่ 3...">
+        </div>
+        <div class="img-field">
+          <label class="img-label">รายละเอียด (ไม่บังคับ)</label>
+          <textarea id="imgModalDesc" class="img-input img-textarea" placeholder="เช่น วันที่ 5 มิ.ย. 2026 รอบชิงชนะเลิศ..." rows="3"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
+          <button class="btn btn-clear" onclick="closeSaveImgModal()">ยกเลิก</button>
+          <button class="btn btn-score" onclick="captureTableImage()" style="gap:7px;">📥 บันทึกรูป</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -783,7 +829,16 @@ function buildTable(tObj){
   const bVal=document.createElement('span');bVal.className='pc-val';bVal.textContent=pc;
   const bInc=document.createElement('button');bInc.className='pc-btn';bInc.textContent='+';bInc.onclick=()=>{if(tObj.playerCount>=MAX_P){alert(T('maxP'));return;}tObj.playerCount++;save();rebuildBlock(tObj);};
   pctrl.append(plbl,bDec,bVal,bInc);left.append(num,pctrl);hdr.appendChild(left);
-  const rmBtn=document.createElement('button');rmBtn.className='btn-rm';rmBtn.textContent=T('removeMatch');rmBtn.onclick=()=>removeMatch(tObj.id);hdr.appendChild(rmBtn);
+
+  // Right buttons group
+  const btnGroup=document.createElement('div');btnGroup.style.cssText='display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
+  // Save image button
+  const imgBtn=document.createElement('button');imgBtn.className='btn-rm btn-img';imgBtn.innerHTML='📷';imgBtn.title='บันทึกรูปตาราง';imgBtn.onclick=()=>openSaveImageModal(tObj.id);
+  // Reset this table button
+  const rstBtn=document.createElement('button');rstBtn.className='btn-rm btn-rst';rstBtn.innerHTML='🔄';rstBtn.title='รีเซ็ตตารางนี้';rstBtn.onclick=()=>resetTable(tObj.id);
+  // Remove button
+  const rmBtn=document.createElement('button');rmBtn.className='btn-rm';rmBtn.textContent=T('removeMatch');rmBtn.onclick=()=>removeMatch(tObj.id);
+  btnGroup.append(imgBtn,rstBtn,rmBtn);hdr.appendChild(btnGroup);
   block.appendChild(hdr);
 
   const wrap=document.createElement('div');wrap.className='tbl-wrap';
@@ -1025,6 +1080,194 @@ function removeMatch(tid){
   tables=tables.filter(t=>t.id!==tid);save();document.querySelector(`.match-block[data-tid="${tid}"]`)?.remove();updateLeaderboard();
 }
 function addMatch(){const t=mkTable(4);tables.push(t);save();const dom=buildTable(t);document.getElementById('tablesArea').appendChild(dom);dom.scrollIntoView({behavior:'smooth',block:'start'});recalcBlock(t.id);updateLeaderboard();}
+
+// ── RESET SINGLE TABLE ──
+function resetTable(tid){
+  if(!confirm('รีเซ็ตข้อมูลในตารางนี้?')) return;
+  const tObj=tables.find(t=>t.id===tid);if(!tObj)return;
+  tObj.players=Array(MAX_P).fill('');
+  tObj.rows=Array.from({length:ROWS},()=>({stage:'',times:Array(MAX_P).fill('')}));
+  save();rebuildBlock(tObj);updateLeaderboard();
+}
+
+// ── SAVE IMAGE MODAL ──
+let _saveImageTid=null;
+function openSaveImageModal(tid){
+  _saveImageTid=tid;
+  const tObj=tables.find(t=>t.id===tid);
+  document.getElementById('imgModalTitle').value=`${T('matchLabel')} #${tObj.id+1}`;
+  document.getElementById('imgModalDesc').value='';
+  document.getElementById('saveImgModal').style.display='flex';
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('imgModalTitle').focus(),100);
+}
+function closeSaveImgModal(){
+  document.getElementById('saveImgModal').style.display='none';
+  document.body.style.overflow='';_saveImageTid=null;
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+}
+
+async function captureTableImage(){
+  if(_saveImageTid===null) return;
+  const titleTxt=document.getElementById('imgModalTitle').value.trim()||'Race Table';
+  const descTxt=document.getElementById('imgModalDesc').value.trim();
+  const tObj=tables.find(t=>t.id===_saveImageTid);if(!tObj)return;
+  const isLight=currentTheme==='light';
+  const pc=tObj.playerCount||4;
+
+  // Theme colors
+  const bgColor   =isLight?'#dde8f8':'#04081a';
+  const cardBg    =isLight?'#ffffff':'#0d1e4a';
+  const hdrBg     =isLight?'#c8daf5':'#071230';
+  const rowAlt    =isLight?'#eef4ff':'#060f20';
+  const textColor =isLight?'#0a1a3a':'#e8f0ff';
+  const dimColor  =isLight?'#4a6898':'#5a78aa';
+  const goldColor =isLight?'#b8860b':'#f5c518';
+  const blueColor =isLight?'#1558c0':'#3b9dff';
+  const borderClr =isLight?'rgba(21,88,192,.3)':'rgba(29,111,232,.3)';
+  const greenClr  =isLight?'#16a34a':'#22c55e';
+  const redClr    ='#ef4444';
+
+  // Layout
+  const PAD=28,RND=38,STAGE=165,PCOL=108;
+  const ROW_H=54,HEAD_H=60,TITLE_H=54,DESC_H=descTxt?38:0,TOTAL_H=52,FOOT=28;
+  const W=PAD*2+RND+STAGE+PCOL*pc;
+  const H=PAD+TITLE_H+DESC_H+HEAD_H+ROW_H*ROWS+TOTAL_H+FOOT;
+
+  const canvas=document.createElement('canvas');canvas.width=W*2;canvas.height=H*2;
+  const ctx=canvas.getContext('2d');ctx.scale(2,2);
+
+  // BG
+  ctx.fillStyle=bgColor;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=cardBg;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.fill();
+  ctx.strokeStyle=blueColor;ctx.lineWidth=1;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.stroke();
+
+  // Top accent
+  const acc=ctx.createLinearGradient(PAD/2,0,W-PAD/2,0);
+  acc.addColorStop(0,'transparent');acc.addColorStop(.3,blueColor);acc.addColorStop(.5,goldColor);acc.addColorStop(.7,blueColor);acc.addColorStop(1,'transparent');
+  ctx.fillStyle=acc;ctx.fillRect(PAD/2,PAD/2,W-PAD,3);
+
+  // Title
+  let y=PAD+6;
+  ctx.textAlign='center';ctx.fillStyle=goldColor;
+  ctx.font=`bold 20px Rajdhani,Orbitron,sans-serif`;ctx.fillText(titleTxt,W/2,y+22);
+  y+=TITLE_H;
+
+  // Desc
+  if(descTxt){
+    ctx.font=`600 12px "Exo 2",Sarabun,sans-serif`;ctx.fillStyle=dimColor;
+    ctx.fillText(descTxt,W/2,y+16);y+=DESC_H;
+  }
+
+  // Table header
+  ctx.fillStyle=hdrBg;ctx.fillRect(PAD,y,W-PAD*2,HEAD_H);
+  ctx.strokeStyle=isLight?'rgba(21,88,192,.3)':'rgba(29,111,232,.4)';ctx.lineWidth=1;
+  ctx.strokeRect(PAD,y,W-PAD*2,HEAD_H);
+
+  ctx.textAlign='center';ctx.font=`700 11px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
+  ctx.fillText(T('round'),PAD+RND/2,y+HEAD_H/2+4);
+  ctx.textAlign='left';ctx.fillText(T('stageLabel'),PAD+RND+8,y+HEAD_H/2+4);
+
+  for(let p=0;p<pc;p++){
+    const cx=PAD+RND+STAGE+PCOL*p+PCOL/2;
+    ctx.textAlign='center';ctx.font=`600 9px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
+    ctx.fillText(`${T('playerLabel')} ${p+1}`,cx,y+18);
+    const name=(tObj.players[p]||'').trim()||`P${p+1}`;
+    ctx.font=`700 14px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;ctx.fillText(name,cx,y+HEAD_H-10);
+  }
+  y+=HEAD_H;
+
+  // Data rows
+  for(let r=0;r<ROWS;r++){
+    const row=tObj.rows[r];const scores=calcScores(row,r,pc);
+    const parsed=row.times.slice(0,pc).map(t=>parseTime(t));
+    const valid=parsed.filter(t=>t!==null);const best=valid.length?Math.min(...valid):null;
+    const isKing=r in KM&&KM[r]<pc;const kp=isKing?KM[r]:-1;
+    const ry=y+r*ROW_H;
+
+    ctx.fillStyle=r%2===1?rowAlt:cardBg;ctx.fillRect(PAD,ry,W-PAD*2,ROW_H);
+    ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(PAD,ry,W-PAD*2,ROW_H);
+
+    // Round
+    ctx.textAlign='center';ctx.font=`700 13px Rajdhani,sans-serif`;ctx.fillStyle=blueColor;
+    ctx.fillText(r+1,PAD+RND/2,ry+ROW_H/2+5);
+
+    // Stage
+    ctx.textAlign='left';ctx.font=`600 10px "Exo 2",Sarabun,sans-serif`;ctx.fillStyle=textColor;
+    ctx.fillText((row.stage||'—').substring(0,24),PAD+RND+6,ry+ROW_H/2+4);
+
+    // Player cells
+    for(let p=0;p<pc;p++){
+      const cx=PAD+RND+STAGE+PCOL*p;
+      const isB=parsed[p]!==null&&parsed[p]===best;const isKC=isKing&&p===kp;
+      const hasKingBadge=isKing&&p===kp;
+
+      // Winner frame
+      if(isB){
+        ctx.strokeStyle=isKC?redClr:goldColor;ctx.lineWidth=2;
+        roundRect(ctx,cx+4,ry+3,PCOL-8,ROW_H-6,5);ctx.stroke();
+        ctx.fillStyle=isKC?'rgba(239,68,68,.09)':'rgba(245,197,24,.09)';
+        roundRect(ctx,cx+4,ry+3,PCOL-8,ROW_H-6,5);ctx.fill();
+      }
+
+      // King badge
+      if(hasKingBadge){
+        ctx.fillStyle=redClr;roundRect(ctx,cx+10,ry+2,PCOL-20,13,3);ctx.fill();
+        ctx.fillStyle='#fff';ctx.font=`700 7px Rajdhani,sans-serif`;ctx.textAlign='center';
+        ctx.fillText('👑 KING',cx+PCOL/2,ry+12);
+      }
+
+      // Time value
+      const ty=hasKingBadge?ry+ROW_H/2+6:ry+ROW_H/2+2;
+      ctx.fillStyle=isB?(isKC?redClr:goldColor):textColor;
+      ctx.font=`700 13px Rajdhani,monospace`;ctx.textAlign='center';
+      ctx.fillText(row.times[p]||'—',cx+PCOL/2,ty);
+
+      // Score chip
+      const s=scores[p];if(s!==null){
+        const cW=34,cH=14,cX=cx+PCOL/2-cW/2,cY=ty+4;
+        ctx.fillStyle=s===12?'rgba(239,68,68,.2)':s===11?'rgba(245,197,24,.2)':s>=8?'rgba(34,197,94,.15)':'rgba(90,120,170,.1)';
+        roundRect(ctx,cX,cY,cW,cH,7);ctx.fill();
+        ctx.fillStyle=s===12?redClr:s===11?goldColor:s>=8?greenClr:dimColor;
+        ctx.font=`700 9px Rajdhani,monospace`;ctx.textAlign='center';
+        ctx.fillText(`+${s}`,cx+PCOL/2,cY+cH/2+3);
+      }
+    }
+  }
+  y+=ROW_H*ROWS;
+
+  // Total row
+  const tots=Array(pc).fill(0);
+  tObj.rows.forEach((row2,r2)=>{calcScores(row2,r2,pc).forEach((s,p)=>{if(s!==null)tots[p]+=s;});});
+  const maxT=Math.max(...tots,0);
+  ctx.fillStyle=isLight?'rgba(21,88,192,.08)':'rgba(4,8,26,.8)';ctx.fillRect(PAD,y,W-PAD*2,TOTAL_H);
+  const tbg=ctx.createLinearGradient(PAD,y,W-PAD,y);
+  tbg.addColorStop(0,blueColor);tbg.addColorStop(.5,goldColor);tbg.addColorStop(1,blueColor);
+  ctx.strokeStyle=tbg;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(PAD,y);ctx.lineTo(W-PAD,y);ctx.stroke();
+  ctx.textAlign='left';ctx.font=`700 11px Rajdhani,monospace`;ctx.fillStyle=goldColor;
+  ctx.fillText(T('grandTotal'),PAD+RND+8,y+TOTAL_H/2+5);
+  for(let p=0;p<pc;p++){
+    const cx=PAD+RND+STAGE+PCOL*p+PCOL/2;
+    ctx.textAlign='center';ctx.font=`bold 17px Rajdhani,monospace`;
+    ctx.fillStyle=tots[p]===maxT&&tots[p]>0?goldColor:blueColor;
+    ctx.fillText(tots[p],cx,y+TOTAL_H/2+6);
+  }
+
+  // Watermark
+  ctx.font=`500 9px "Exo 2",sans-serif`;ctx.fillStyle=dimColor;ctx.textAlign='right';
+  ctx.fillText('🏁 Race Time Tracker',W-PAD,H-10);
+
+  const link=document.createElement('a');
+  link.download=`race_match_${tObj.id+1}_${Date.now()}.png`;
+  link.href=canvas.toDataURL('image/png');link.click();
+  closeSaveImgModal();
+}
 
 // ── EXPORT EXCEL ──
 async function exportExcel(){
