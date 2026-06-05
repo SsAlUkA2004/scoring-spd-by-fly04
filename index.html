@@ -225,17 +225,28 @@ header::after{
 .tbl-wrap::-webkit-scrollbar{height:5px;}
 .tbl-wrap::-webkit-scrollbar-track{background:rgba(7,18,48,.6);border-radius:3px;}
 .tbl-wrap::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:3px;}
-table{width:100%;border-collapse:collapse;min-width:480px;}
+
+/* Fixed layout so columns are equally sized */
+table{
+  width:100%;border-collapse:collapse;
+  min-width:520px;
+  table-layout:fixed; /* KEY: forces equal player columns */
+}
 thead{position:sticky;top:0;z-index:20;background:rgba(7,18,48,.97);backdrop-filter:blur(8px);}
 th{
   padding:0;
   border-bottom:2px solid rgba(29,111,232,.4);
   vertical-align:middle;
+  overflow:hidden;
 }
-th.th-rnd{min-width:40px;width:40px;}
-th.th-stage{min-width:140px;width:140px;}
-th.th-p{min-width:88px;}
-.th-player-wrap{display:flex;flex-direction:column;align-items:center;padding:4px 4px 6px;}
+/* Round col: fixed narrow */
+th.th-rnd{width:36px;}
+/* Stage col: fixed medium */
+th.th-stage{width:145px;}
+/* Player cols: all equal — browser divides remaining width */
+th.th-p{/* auto-distributed equally via table-layout:fixed */}
+
+.th-player-wrap{display:flex;flex-direction:column;align-items:center;padding:4px 6px 6px;}
 .th-player-lbl{
   font-family:'Orbitron',monospace;font-size:.5rem;color:var(--blue3);
   letter-spacing:1px;margin-bottom:4px;text-transform:uppercase;
@@ -248,11 +259,17 @@ th.th-p{min-width:88px;}
 }
 .th-pi:focus{border-bottom-color:var(--gold);}
 .th-pi::placeholder{color:rgba(59,157,255,.25);font-size:.58rem;}
-.th-rnd-inner{padding:10px 8px;font-family:'Orbitron',monospace;font-size:.52rem;font-weight:700;letter-spacing:1px;color:var(--dim);text-align:left;text-transform:uppercase;}
-.th-stage-inner{padding:10px 8px;font-family:'Orbitron',monospace;font-size:.52rem;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase;}
+.th-rnd-inner{padding:10px 6px;font-family:'Orbitron',monospace;font-size:.5rem;font-weight:700;letter-spacing:1px;color:var(--dim);text-align:center;text-transform:uppercase;}
+.th-stage-inner{padding:10px 8px;font-family:'Orbitron',monospace;font-size:.5rem;font-weight:700;letter-spacing:1px;color:var(--dim);text-transform:uppercase;}
 
-td{padding:0;border-bottom:1px solid rgba(29,111,232,.12);vertical-align:middle;}
+td{padding:0;border-bottom:1px solid rgba(29,111,232,.12);vertical-align:middle;overflow:hidden;}
 tr:hover td{background:rgba(29,111,232,.06);}
+
+/* Round td — fixed */
+td.rnd-td{width:36px;}
+/* Stage td — fixed */
+td.stage-td{width:145px;}
+/* Player tds auto-equal */
 
 /* ── ROUND LABEL ── */
 .rnd-lbl{
@@ -286,28 +303,38 @@ tr:hover td{background:rgba(29,111,232,.06);}
 .sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 
 /* ── TIME CELL ── */
-/* King cell: extra top padding so badge doesn't overlap input */
-td.king-td{padding-top:18px !important;vertical-align:top;}
+/* ALL tds in player columns: same fixed height, no extra padding for king */
+td.king-td{padding-top:0 !important;vertical-align:middle;}
+
+/* tc-wrap: same size in ALL cells — king badge floats outside via absolute */
 .tc-wrap{
-  padding:4px 4px 6px;
-  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 5px 8px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
   position:relative;
+  box-sizing:border-box;
+  width:100%;
+  min-height:58px; /* uniform height so all rows align */
 }
-/* King badge sits ABOVE the cell (outside td), injected as absolute sibling */
+
+/* King badge: absolutely positioned ABOVE the tc-wrap, overflows upward */
 .king-badge{
-  display:block;
-  width:calc(100% - 6px);
-  margin:3px auto 0;
-  text-align:center;
+  position:absolute;
+  top:-14px;       /* float above the cell */
+  left:50%;
+  transform:translateX(-50%);
   background:linear-gradient(135deg,#9b1c1c,#dc2626,#ef4444);
-  color:#fff;font-family:'Orbitron',monospace;font-size:.48rem;font-weight:700;
-  padding:3px 6px;border-radius:5px 5px 0 0;white-space:nowrap;letter-spacing:.5px;
-  box-shadow:0 0 10px rgba(220,38,38,.5);
+  color:#fff;font-family:'Orbitron',monospace;font-size:.46rem;font-weight:700;
+  padding:2px 8px;border-radius:4px;white-space:nowrap;letter-spacing:.5px;
+  box-shadow:0 0 10px rgba(220,38,38,.6);
   animation:kPulse 2s ease-in-out infinite;
-  position:relative; /* not absolute — flows above the wrap */
-  z-index:2;
+  z-index:5;
+  pointer-events:none;
+  width:max-content;
 }
-@keyframes kPulse{0%,100%{box-shadow:0 0 10px rgba(220,38,38,.4)}50%{box-shadow:0 0 20px rgba(220,38,38,.9)}}
+@keyframes kPulse{0%,100%{box-shadow:0 0 8px rgba(220,38,38,.4)}50%{box-shadow:0 0 18px rgba(220,38,38,.9)}}
+
+/* Give the TR extra top space so absolute badge has room above */
+.has-king-row td{padding-top:14px !important;}
 
 /* ── TIME INPUT ── */
 .ti{
@@ -490,12 +517,15 @@ td.king-td{padding-top:18px !important;vertical-align:top;}
 /* ════════════════════════ RESPONSIVE ════════════════════════ */
 @media(max-width:400px){
   .app{padding:6px 6px 70px;}#mainTitle{letter-spacing:2px;}
-  .th-rnd-inner,.th-stage-inner{padding:7px 4px;font-size:.46rem;}
-  .th-player-lbl{font-size:.42rem;}.th-pi{font-size:.56rem;padding:3px 2px;}
-  .si{font-size:.65rem;padding:4px 4px;}.ti{font-size:.56rem;padding:3px 1px;}
-  .score-chip{font-size:.56rem;padding:1px 4px;min-width:24px;}
-  .king-badge{font-size:.42rem;padding:1px 4px;}.rnd-lbl{padding:7px 5px;font-size:.54rem;}
-  .tr-lbl{font-size:.52rem;padding:9px 6px;}.total-val{font-size:.8rem;padding:9px 2px;}
+  table{min-width:360px!important;}
+  th.th-rnd,td.rnd-td{width:28px!important;}
+  th.th-stage,td.stage-td{width:100px!important;}
+  .th-rnd-inner,.th-stage-inner{padding:7px 4px;font-size:.44rem;}
+  .th-player-lbl{font-size:.4rem;}.th-pi{font-size:.54rem;padding:3px 2px;}
+  .si{font-size:.62rem;padding:4px 4px;}.ti{font-size:.54rem;padding:3px 1px;}
+  .score-chip{font-size:.54rem;padding:1px 4px;min-width:22px;}
+  .king-badge{font-size:.4rem;padding:2px 4px;}.rnd-lbl{padding:7px 4px;font-size:.52rem;}
+  .tr-lbl{font-size:.5rem;padding:9px 6px;}.total-val{font-size:.78rem;padding:9px 2px;}
 }
 @media(max-width:640px){
   .app{padding:8px 8px 70px;}header{padding:14px 8px 10px;}
@@ -503,15 +533,17 @@ td.king-td{padding-top:18px !important;vertical-align:top;}
   .btn .btn-txt{display:none;}.btn{padding:7px 10px;font-size:.6rem;}
   .globe-btn{padding:7px 10px;font-size:.76rem;}.block-hdr{padding:7px 10px;}
   .block-num{font-size:.58rem;}.pctrl-lbl{display:none;}.btn-rm{font-size:.62rem;padding:3px 7px;}
-  table{min-width:480px!important;}
-  .th-rnd-inner,.th-stage-inner{padding:8px 5px;font-size:.48rem;}
-  .th-player-lbl{font-size:.44rem;}.th-pi{font-size:.58rem;padding:4px 2px;}
-  .rnd-lbl{padding:8px 6px;font-size:.56rem;}.stage-cell{padding:2px 3px;}
-  .si{font-size:.68rem;padding:5px 5px;}.tc-wrap{padding:3px 2px 5px;}
-  .ti{font-size:.6rem;padding:4px 1px;}.score-chip{font-size:.6rem;padding:1px 5px;min-width:26px;}
-  .king-badge{font-size:.44rem;padding:1px 5px;}
-  .tr-lbl{font-size:.56rem;padding:10px 8px;letter-spacing:.8px;}
-  .total-val{font-size:.85rem;padding:10px 2px;}.tv-top{font-size:1rem;}
+  table{min-width:440px!important;}
+  th.th-rnd,td.rnd-td{width:30px!important;}
+  th.th-stage,td.stage-td{width:120px!important;}
+  .th-rnd-inner,.th-stage-inner{padding:8px 4px;font-size:.46rem;}
+  .th-player-lbl{font-size:.42rem;}.th-pi{font-size:.56rem;padding:4px 2px;}
+  .rnd-lbl{padding:8px 5px;font-size:.54rem;}.stage-cell{padding:2px 3px;}
+  .si{font-size:.66rem;padding:5px 4px;}.tc-wrap{padding:3px 2px 5px;}
+  .ti{font-size:.58rem;padding:4px 1px;}.score-chip{font-size:.58rem;padding:1px 4px;min-width:24px;}
+  .king-badge{font-size:.42rem;padding:2px 5px;}
+  .tr-lbl{font-size:.54rem;padding:10px 8px;letter-spacing:.8px;}
+  .total-val{font-size:.82rem;padding:10px 2px;}.tv-top{font-size:.98rem;}
 }
 @media(max-width:960px){
   .main-grid{grid-template-columns:1fr;}
@@ -523,7 +555,14 @@ td.king-td{padding-top:18px !important;vertical-align:top;}
   .main-grid{grid-template-columns:1fr 270px;}
   .lb-body{display:block;padding:8px 0;}.lb-item{margin:0 6px 6px;}
 }
-@media(min-width:1400px){.main-grid{grid-template-columns:1fr 300px;}th.th-p{min-width:110px;}}
+@media(min-width:1200px){
+  th.th-rnd,td.rnd-td{width:40px!important;}
+  th.th-stage,td.stage-td{width:160px!important;}
+}
+@media(min-width:1400px){
+  .main-grid{grid-template-columns:1fr 300px;}
+  th.th-stage,td.stage-td{width:180px!important;}
+}
 </style>
 </head>
 <body>
@@ -732,19 +771,20 @@ function buildTable(tObj){
   for(let r=0;r<ROWS;r++){
     const isKing=r in KM&&KM[r]<pc;const kp=isKing?KM[r]:-1;
     const tr=document.createElement('tr');
+    // Mark the whole row if it has a king round → uniform top padding
+    if(isKing) tr.classList.add('has-king-row');
     // Round label
-    const rTd=document.createElement('td');rTd.className='rnd-lbl';rTd.textContent=`${r+1}`;tr.appendChild(rTd);
+    const rTd=document.createElement('td');rTd.className='rnd-lbl rnd-td';rTd.textContent=`${r+1}`;tr.appendChild(rTd);
     // Stage selector
-    const sTd=document.createElement('td');sTd.className='stage-cell';sTd.appendChild(buildStageSelector(tObj,r));tr.appendChild(sTd);
+    const sTd=document.createElement('td');sTd.className='stage-cell stage-td';sTd.appendChild(buildStageSelector(tObj,r));tr.appendChild(sTd);
     // Time cells
     for(let p=0;p<pc;p++){
       const td=document.createElement('td');td.dataset.p=p;td.dataset.r=r;
-      // King badge goes ABOVE tc-wrap so it never overlaps the input
-      if(isKing&&p===kp){
-        td.classList.add('king-td');
-        const b=document.createElement('div');b.className='king-badge';b.textContent=T('kingMap');td.appendChild(b);
-      }
       const cw=document.createElement('div');cw.className='tc-wrap';
+      // King badge inside tc-wrap as absolute, won't push layout
+      if(isKing&&p===kp){
+        const b=document.createElement('div');b.className='king-badge';b.textContent=T('kingMap');cw.appendChild(b);
+      }
       const inp=document.createElement('input');inp.type='text';inp.className='ti';inp.placeholder='mm:ss:cs';
       const v=tObj.rows[r].times[p]||'';inp.value=v;if(v)inp.classList.add('has-v');
       inp.dataset.tid=tObj.id;inp.dataset.p=p;inp.dataset.r=r;
