@@ -279,9 +279,23 @@ td.rnd-td{width:36px;}td.stage-td{width:145px;}
 /* ── STAGE SELECTOR ── */
 .stage-cell{padding:3px 5px;position:relative;}
 .sw{position:relative;}
-.si{width:100%;background:var(--input-bg);border:1px solid var(--input-border);color:var(--blue2);font-family:'Exo 2','Sarabun',sans-serif;font-size:.82rem;font-weight:600;padding:6px 7px;border-radius:5px;outline:none;transition:all .2s;}
+.si{
+  width:100%;
+  background:var(--input-bg);border:1px solid var(--input-border);
+  color:var(--blue2);font-family:'Exo 2','Sarabun',sans-serif;font-size:.82rem;font-weight:600;
+  padding:6px 7px;border-radius:5px;outline:none;transition:all .2s;
+  /* Wrap to show full name — no ellipsis */
+  white-space:normal;
+  word-break:break-word;
+  overflow:hidden;
+  resize:none;
+  /* Min height for 1 line, auto-grows */
+  min-height:32px;
+  line-height:1.35;
+  display:block;
+}
 .si:focus{border-color:var(--blue2);box-shadow:0 0 8px rgba(29,111,232,.2);}
-.si::placeholder{color:var(--dim);font-size:.75rem;font-weight:500;}
+.si::placeholder{color:var(--dim);font-size:.75rem;font-weight:500;white-space:nowrap;}
 .sdd{background:var(--s1);border:1px solid var(--blue);border-radius:8px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,10,40,.9);display:none;}
 .sdd.open{display:block;}
 .sdd-portal{position:fixed;z-index:99999;}
@@ -746,8 +760,19 @@ document.addEventListener('scroll', e=>{
 
 function buildStageSelector(tObj,r){
   const wrap=document.createElement('div');wrap.className='sw';
-  const inp=document.createElement('input');inp.type='text';inp.className='si';
+  // Use textarea instead of input so text wraps to show full name
+  const inp=document.createElement('textarea');
+  inp.className='si';inp.rows=1;
   inp.placeholder=T('stagePH');inp.value=tObj.rows[r].stage||'';inp.autocomplete='off';
+  inp.spellcheck=false;
+  // Auto-resize height to content
+  function autoResize(){
+    inp.style.height='auto';
+    inp.style.height=inp.scrollHeight+'px';
+  }
+  if(inp.value) setTimeout(autoResize,0);
+  inp.addEventListener('input',autoResize);
+  inp.addEventListener('focus',autoResize);
 
   // Create a shared dropdown appended to body for each selector
   const dd=document.createElement('div');dd.className='sdd sdd-portal';
@@ -783,7 +808,13 @@ function buildStageSelector(tObj,r){
       const dot=document.createElement('span');dot.className='sdot';dot.style.background=SC[s.stars];
       item.appendChild(dot);item.appendChild(document.createTextNode(s.name));
       item.addEventListener('mousedown',e=>{
-        e.preventDefault();inp.value=s.name;tObj.rows[r].stage=s.name;save();_closeDd();
+        e.preventDefault();
+        inp.value=s.name;
+        tObj.rows[r].stage=s.name;
+        inp.title=s.name;
+        save();_closeDd();
+        // Resize after selection
+        setTimeout(()=>{inp.style.height='auto';inp.style.height=inp.scrollHeight+'px';},0);
       });
       dd.appendChild(item);
     }
@@ -793,6 +824,7 @@ function buildStageSelector(tObj,r){
   }
 
   inp.addEventListener('focus',()=>{
+    autoResize();
     _closeDd();
     pop(inp.value);
     positionDd();
@@ -801,12 +833,19 @@ function buildStageSelector(tObj,r){
   });
   inp.addEventListener('input',()=>{
     tObj.rows[r].stage=inp.value;save();
+    inp.title=inp.value;
+    autoResize();
     pop(inp.value);
     positionDd();
     dd.classList.add('open');
     _activeDd=dd;_activeDdInp=inp;
   });
+  // Prevent Enter from inserting newline — just close dropdown
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){e.preventDefault();inp.blur();}
+  });
   inp.addEventListener('blur',()=>setTimeout(()=>{if(_activeDd===dd)_closeDd();},160));
+  if(tObj.rows[r].stage) inp.title=tObj.rows[r].stage;
 
   // Cleanup when element is removed from DOM
   const obs=new MutationObserver(()=>{if(!document.body.contains(inp)){dd.remove();obs.disconnect();}});
@@ -1113,6 +1152,20 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
 }
 
+// Draw text with ellipsis if too wide
+function fillTextEllipsis(ctx, text, x, y, maxWidth){
+  if(!text) return;
+  if(ctx.measureText(text).width <= maxWidth){
+    ctx.fillText(text, x, y);
+    return;
+  }
+  let truncated = text;
+  while(truncated.length > 1 && ctx.measureText(truncated + '…').width > maxWidth){
+    truncated = truncated.slice(0, -1);
+  }
+  ctx.fillText(truncated + '…', x, y);
+}
+
 async function captureTableImage(){
   if(_saveImageTid===null) return;
   const titleTxt=document.getElementById('imgModalTitle').value.trim()||'Race Table';
@@ -1156,7 +1209,8 @@ async function captureTableImage(){
   // Title
   let y=PAD+6;
   ctx.textAlign='center';ctx.fillStyle=goldColor;
-  ctx.font=`bold 20px Rajdhani,Orbitron,sans-serif`;ctx.fillText(titleTxt,W/2,y+22);
+  ctx.font=`bold 20px Rajdhani,Orbitron,sans-serif`;
+  fillTextEllipsis(ctx, titleTxt, W/2, y+22, W-PAD*2-20);
   y+=TITLE_H;
 
   // Desc
@@ -1198,9 +1252,15 @@ async function captureTableImage(){
     ctx.textAlign='center';ctx.font=`700 13px Rajdhani,sans-serif`;ctx.fillStyle=blueColor;
     ctx.fillText(r+1,PAD+RND/2,ry+ROW_H/2+5);
 
-    // Stage
-    ctx.textAlign='left';ctx.font=`600 10px "Exo 2",Sarabun,sans-serif`;ctx.fillStyle=textColor;
-    ctx.fillText((row.stage||'—').substring(0,24),PAD+RND+6,ry+ROW_H/2+4);
+    // Stage name — fit full text into column, auto-reduce font if needed
+    ctx.textAlign='left';ctx.fillStyle=textColor;
+    const stageText=row.stage||'—';
+    // Try to fit in column: start at 10px, reduce to 8px if still too wide
+    ctx.font=`600 10px "Exo 2",Sarabun,sans-serif`;
+    if(ctx.measureText(stageText).width>STAGE-10){
+      ctx.font=`600 8.5px "Exo 2",Sarabun,sans-serif`;
+    }
+    fillTextEllipsis(ctx, stageText, PAD+RND+6, ry+ROW_H/2+4, STAGE-10);
 
     // Player cells
     for(let p=0;p<pc;p++){
