@@ -464,9 +464,43 @@ header::after{
 .btn-clear{background:var(--card-bg);border-color:var(--s3);color:var(--dim);}
 .btn-clear:hover{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.08);}
 
-/* ── MAIN GRID ── */
-.main-grid{display:grid;grid-template-columns:1fr 270px;gap:14px;align-items:start;}
-@media(max-width:960px){.main-grid{grid-template-columns:1fr;}}
+/* ── MAIN GRID — full width now (no sidebar) ── */
+.main-grid{display:block;}
+
+/* ── CATEGORY INNER GRID — tables left, leaderboard right ── */
+.cat-inner-grid{
+  display:grid;
+  grid-template-columns:1fr 240px;
+  gap:10px;
+  align-items:start;
+}
+@media(max-width:800px){.cat-inner-grid{grid-template-columns:1fr;}}
+
+/* ── CAT LEADERBOARD (inside category) ── */
+.cat-lb{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:12px;overflow:hidden;
+  backdrop-filter:blur(10px);
+  position:relative;
+  box-shadow:0 4px 18px rgba(0,0,10,.25);
+  transition:background .35s;
+}
+.cat-lb::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--blue),var(--gold),var(--blue),transparent);
+  animation:scanAnim 4s ease-in-out infinite;
+}
+.cat-lb-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:var(--hdr-bg);
+  border-bottom:1px solid var(--card-border);
+}
+.cat-lb-title{
+  font-family:'Rajdhani',monospace;font-size:.78rem;font-weight:700;
+  letter-spacing:.12em;color:var(--gold);
+  transform:skewX(-6deg);display:inline-block;
+}
+.cat-lb-body{padding:6px 0;}
 
 /* ── MATCH BLOCK ── */
 .match-block{margin-bottom:14px;border-radius:14px;overflow:visible;background:var(--card-bg);border:1px solid var(--card-border);box-shadow:0 0 0 1px rgba(59,157,255,.05),0 8px 28px rgba(0,0,10,.3),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(14px);position:relative;transition:background .35s,border-color .35s;}
@@ -734,8 +768,130 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 .si-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--gold));transition:width .6s ease;}
 .si-score{font-family:'Orbitron',monospace;font-weight:900;font-size:.9rem;color:var(--blue2);min-width:32px;text-align:right;}
 
-/* ── GRAND TOTAL PANEL (legacy) ── */
-.grand-panel{display:none;}
+/* ── CATEGORY SYSTEM ── */
+.cat-section{margin-bottom:12px;}
+.cat-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;
+  background:linear-gradient(90deg,rgba(var(--_ac1r),.15),var(--hdr-bg));
+  border:1px solid var(--card-border);
+  border-radius:10px 10px 0 0;
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+}
+.cat-header::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg,var(--blue),var(--gold));
+  border-radius:4px 0 0 4px;
+}
+.cat-header.collapsed{border-radius:10px;}
+.cat-header-left{display:flex;align-items:center;gap:8px;}
+.cat-chevron{font-size:.72rem;transition:transform .3s;display:inline-block;color:var(--blue2);}
+.cat-header.collapsed .cat-chevron{transform:rotate(-90deg);}
+.cat-name{font-family:'Rajdhani',monospace;font-weight:700;font-size:.9rem;color:var(--text);letter-spacing:.5px;}
+.cat-count{font-size:.65rem;color:var(--dim);font-family:'Rajdhani',monospace;background:var(--input-bg);padding:2px 8px;border-radius:10px;border:1px solid var(--card-border);}
+.cat-actions{display:flex;gap:5px;align-items:center;}
+.cat-btn{background:none;border:1px solid var(--s3);color:var(--dim);border-radius:5px;padding:3px 8px;cursor:pointer;font-size:.7rem;transition:all .2s;font-family:'Exo 2',sans-serif;font-weight:600;}
+.cat-btn:hover{border-color:var(--blue2);color:var(--blue2);}
+.cat-btn.danger:hover{border-color:var(--red);color:var(--red);}
+.cat-body{
+  border:1px solid var(--card-border);border-top:none;
+  border-radius:0 0 10px 10px;
+  padding:8px;
+  background:rgba(0,0,0,.1);
+  overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .3s,padding .35s;
+  max-height:5000px;opacity:1;
+}
+.cat-body.hidden{max-height:0;opacity:0;padding:0 8px;}
+
+/* No-category zone */
+.no-cat-zone{margin-bottom:12px;}
+
+/* Category selector in block header */
+.cat-select-wrap{position:relative;}
+.cat-select-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:3px 9px;border:1px solid var(--card-border);
+  background:var(--input-bg);color:var(--text2);
+  border-radius:5px;cursor:pointer;font-size:.68rem;
+  font-family:'Rajdhani',monospace;font-weight:600;
+  transition:all .2s;white-space:nowrap;max-width:120px;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.cat-select-btn:hover{border-color:var(--blue2);color:var(--blue2);}
+.cat-dd{
+  position:fixed;min-width:160px;
+  background:var(--s1);border:1px solid var(--blue);
+  border-radius:8px;z-index:99999;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+  display:none;overflow:hidden;
+}
+[data-mode="light"] .cat-dd{background:#f0f5ff;}
+.cat-dd.open{display:block;}
+.cat-dd-item{
+  padding:9px 14px;font-size:.82rem;cursor:pointer;
+  font-family:'Exo 2',sans-serif;font-weight:600;
+  color:var(--text2);transition:background .1s;
+  display:flex;align-items:center;gap:7px;
+}
+.cat-dd-item:hover,.cat-dd-item.active{background:rgba(29,111,232,.15);color:var(--blue2);}
+.cat-dd-item .cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.cat-dd-divider{height:1px;background:var(--input-border);}
+
+/* Category score panel */
+.cat-score-panel{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:12px;padding:14px;margin-top:14px;
+  backdrop-filter:blur(10px);
+}
+.cat-score-title{
+  font-family:'Rajdhani',monospace;font-size:.78rem;font-weight:700;
+  color:var(--gold);letter-spacing:1.5px;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.cat-score-row{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 0;border-bottom:1px solid var(--tbl-row-border);
+}
+.cat-score-row:last-child{border-bottom:none;}
+.cat-rank-badge{
+  width:24px;height:24px;border-radius:5px;
+  background:var(--input-bg);display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',monospace;font-size:.65rem;font-weight:700;
+  color:var(--dim);flex-shrink:0;
+}
+.cat-player-name{flex:1;font-family:'Exo 2',sans-serif;font-weight:600;font-size:.8rem;color:var(--text2);}
+.cat-player-score{font-family:'Rajdhani',monospace;font-weight:700;font-size:.95rem;color:var(--blue2);}
+
+/* Best time table */
+.best-time-panel{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:12px;overflow:hidden;margin-top:10px;
+}
+.best-time-hdr{
+  padding:10px 14px;background:var(--hdr-bg);
+  border-bottom:1px solid var(--card-border);
+  font-family:'Rajdhani',monospace;font-size:.78rem;font-weight:700;
+  color:var(--gold);display:flex;align-items:center;gap:6px;
+}
+.best-time-tbl{width:100%;border-collapse:collapse;font-size:.75rem;}
+.best-time-tbl th{
+  padding:7px 10px;font-family:'Rajdhani',monospace;font-size:.65rem;
+  color:var(--dim);font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  background:var(--tbl-head);border-bottom:1px solid var(--card-border);text-align:left;
+}
+.best-time-tbl td{
+  padding:6px 10px;border-bottom:1px solid var(--tbl-row-border);
+  font-family:'Rajdhani',monospace;color:var(--text2);
+}
+.best-time-tbl tr:last-child td{border-bottom:none;}
+.best-time-tbl tr:hover td{background:var(--card-hover);}
+.bt-stage{font-family:'Exo 2',sans-serif;font-weight:600;font-size:.78rem;}
+.bt-time{color:var(--gold);font-weight:700;}
+.bt-player{color:var(--blue2);font-size:.7rem;}
 
 /* ── SAVE IMAGE MODAL FIELDS ── */
 .img-field{display:flex;flex-direction:column;gap:6px;}
@@ -891,7 +1047,9 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
         </div>
       </div>
       <button class="btn btn-add" onclick="addMatch()">＋ <span class="btn-txt" data-i18n="addMatch">เพิ่มการแข่งขัน</span></button>
-      <button class="btn btn-score" onclick="showTotals()">🏆 <span class="btn-txt" data-i18n="totalScore">คะแนนรวม</span></button>
+      <button class="btn" style="background:rgba(245,197,24,.1);border-color:rgba(245,197,24,.35);color:var(--gold);" onclick="openCatModal()">📁 <span class="btn-txt">หมวดหมู่</span></button>
+      <button class="btn" style="background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.35);color:var(--cyan);" onclick="openBestTimeModal(null)">⚡ <span class="btn-txt">เวลาด่านทั้งหมด</span></button>
+      <button class="btn" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#c084fc;" onclick="openScoreModal(null)">🏆 <span class="btn-txt">คะแนนรวมทั้งหมด</span></button>
       <button class="btn" id="btnCollapseAll" style="background:var(--input-bg);border-color:var(--card-border);color:var(--text2);" onclick="collapseAll()">⊟ <span class="btn-txt">ย่อทั้งหมด</span></button>
       <button class="btn btn-excel" id="btnExcel">📊 <span class="btn-txt" data-i18n="exportExcel">Export</span></button>
       <button class="btn btn-clear" onclick="confirmClear()">🗑 <span class="btn-txt" data-i18n="clearData">ล้างข้อมูล</span></button>
@@ -900,13 +1058,6 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 
   <div class="main-grid">
     <div id="tablesArea"></div>
-    <div class="sidebar" id="sidebar">
-      <div class="sb-hdr">
-        <h2 data-i18n="leaderboard">🏆 LEADERBOARD</h2>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:scanAnim 2s infinite"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
-      </div>
-      <div class="lb-body" id="lbList"></div>
-    </div>
   </div>
 
   <div id="grandModal" class="modal-overlay" style="display:none" onclick="closeModal(event)">
@@ -942,6 +1093,50 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
       </div>
     </div>
   </div>
+  <!-- Best Time Modal -->
+  <div id="bestTimeModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeBestTimeModal()">
+    <div class="modal-box" style="max-width:620px">
+      <div class="modal-hdr">
+        <span class="modal-title" id="bestTimeTitle">⚡ เวลาเร็วสุดต่อด่าน</span>
+        <button class="modal-close" onclick="closeBestTimeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="bestTimeBody" style="padding:0;overflow-y:auto;max-height:65vh;"></div>
+    </div>
+  </div>
+
+  <!-- Score Modal -->
+  <div id="scoreModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeScoreModal()">
+    <div class="modal-box" style="max-width:480px">
+      <div class="modal-hdr">
+        <span class="modal-title" id="scoreModalTitle">🏆 คะแนนรวม</span>
+        <button class="modal-close" onclick="closeScoreModal()">✕</button>
+      </div>
+      <div class="modal-body" id="scoreModalBody" style="padding:16px;overflow-y:auto;max-height:65vh;"></div>
+    </div>
+  </div>
+
+  <!-- Category Create Modal -->
+  <div id="catModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeCatModal()">
+    <div class="modal-box" style="max-width:380px">
+      <div class="modal-hdr">
+        <span class="modal-title" id="catModalTitle">📁 สร้างหมวดหมู่</span>
+        <button class="modal-close" onclick="closeCatModal()">✕</button>
+      </div>
+      <div class="modal-body" style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+        <div class="img-field">
+          <label class="img-label">ชื่อหมวดหมู่</label>
+          <input type="text" id="catNameInput" class="img-input" placeholder="เช่น รอบแรก, รอบชิงชนะเลิศ..." onkeydown="if(event.key==='Enter')saveCat()">
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+          <button class="btn btn-clear" onclick="closeCatModal()">ยกเลิก</button>
+          <button class="btn btn-add" onclick="saveCat()">💾 บันทึก</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- (catScoreModal removed — replaced by bestTimeModal + scoreModal) -->
+
 </div>
 <button class="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
@@ -963,22 +1158,30 @@ const SC={3:'#4fc3f7',4:'#81c784',5:'#ffb74d',6:'#f06292',7:'#ce93d8'};
 const ALL_S=[];for(const[s,l]of Object.entries(SBS))l.forEach(n=>ALL_S.push({name:n,stars:parseInt(s)}));
 
 const MAX_P=6,MIN_P=2,ROWS_BASE=9,ROWS_MAX=13;
-const KM={1:0,2:1,3:2,4:3,5:4,6:5}; // rowIndex(0-based) → playerIndex for KingMap
+const KM={1:0,2:1,3:2,4:3,5:4,6:5};
 let tables=[],tc=0;
+let categories=[],catCounter=0; // {id, name, collapsed}
 
 function loadState(){
   try{tables=JSON.parse(localStorage.getItem('rt6')||'[]');}catch(e){tables=[];}
+  try{categories=JSON.parse(localStorage.getItem('rtCats')||'[]');}catch(e){categories=[];}
   tables.forEach(t=>{
     if(!t.players)t.players=Array(MAX_P).fill('');
     if(!t.rowCount)t.rowCount=ROWS_BASE;
-    // ensure rows array is long enough
+    if(!t.collapsed)t.collapsed=false;
+    if(!t.catId)t.catId=null;
     while(t.rows.length<ROWS_MAX)t.rows.push({stage:'',times:Array(MAX_P).fill('')});
   });
   try{lang=localStorage.getItem('rtLang')||'th';}catch(e){}
   if(!tables.length){tc=0;tables.push(mkTable(4));}
   else tc=Math.max(...tables.map(t=>t.id))+1;
+  if(categories.length) catCounter=Math.max(...categories.map(c=>c.id))+1;
 }
-function save(){localStorage.setItem('rt6',JSON.stringify(tables));localStorage.setItem('rtLang',lang);}
+function save(){
+  localStorage.setItem('rt6',JSON.stringify(tables));
+  localStorage.setItem('rtCats',JSON.stringify(categories));
+  localStorage.setItem('rtLang',lang);
+}
 function mkTable(pc){
   return{
     id:tc++,playerCount:pc||4,rowCount:ROWS_BASE,collapsed:false,
@@ -1183,7 +1386,12 @@ function buildTable(tObj){
   const imgBtn=document.createElement('button');imgBtn.className='btn-rm btn-img';imgBtn.innerHTML='📷';imgBtn.title='บันทึกรูปตาราง';imgBtn.onclick=()=>openSaveImageModal(tObj.id);
   const rstBtn=document.createElement('button');rstBtn.className='btn-rm btn-rst';rstBtn.innerHTML='🔄';rstBtn.title='รีเซ็ตตารางนี้';rstBtn.onclick=()=>resetTable(tObj.id);
   const rmBtn=document.createElement('button');rmBtn.className='btn-rm';rmBtn.textContent=T('removeMatch');rmBtn.onclick=()=>removeMatch(tObj.id);
-  btnGroup.append(rowToggle,imgBtn,rstBtn,rmBtn);hdr.appendChild(btnGroup);
+  // Category button
+  const cat=tObj.catId!==null&&tObj.catId!==undefined?categories.find(c=>c.id===tObj.catId):null;
+  const catBtn=document.createElement('button');catBtn.className='cat-select-btn';
+  catBtn.innerHTML=`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${cat?getCatColor(cat.id):'var(--dim)'};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;max-width:90px;white-space:nowrap;">${cat?cat.name:'หมวดหมู่'}</span>▾`;
+  catBtn.onclick=(e)=>{e.stopPropagation();openCatDd(catBtn,tObj.id);};
+  btnGroup.append(rowToggle,catBtn,imgBtn,rstBtn,rmBtn);hdr.appendChild(btnGroup);
   block.appendChild(hdr);
 
   // ── Collapsed mini-summary ──
@@ -1324,38 +1532,19 @@ function recalcBlock(tid){
 }
 function recalcAll(){tables.forEach(t=>{recalcBlock(t.id);});}
 function rebuildBlock(tObj){const old=document.querySelector(`.match-block[data-tid="${tObj.id}"]`);if(old){const nd=buildTable(tObj);old.replaceWith(nd);recalcBlock(tObj.id);updateLeaderboard();}}
-function rebuildAll(){const a=document.getElementById('tablesArea');a.innerHTML='';tables.forEach(t=>a.appendChild(buildTable(t)));recalcAll();updateLeaderboard();}
+function rebuildAll(){renderAll();}
+function addMatch(){
+  const t=mkTable(4);tables.push(t);save();renderAll();
+  setTimeout(()=>{const dom=document.querySelector(`.match-block[data-tid="${t.id}"]`);if(dom)dom.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+function removeMatch(tid){
+  if(tables.length===1){alert('min 1');return;}if(!confirm(T('confirmRemove')))return;
+  tables=tables.filter(t=>t.id!==tid);save();renderAll();updateLeaderboard();
+}function rebuildAll(){const a=document.getElementById('tablesArea');a.innerHTML='';tables.forEach(t=>a.appendChild(buildTable(t)));recalcAll();updateLeaderboard();}
 
 function updateLeaderboard(){
-  const sm={};
-  tables.forEach(tObj=>{
-    const pc=tObj.playerCount||4;const tots=Array(pc).fill(0);
-    const activeRows=tObj.rowCount||ROWS_BASE;
-    tObj.rows.forEach((row,r)=>{if(r<activeRows)calcScores(row,r,pc).forEach((s,p)=>{if(s!==null)tots[p]+=s;});});
-    for(let p=0;p<pc;p++){const n=(tObj.players[p]||'').trim()||`P${p+1}`;sm[n]=(sm[n]||0)+tots[p];}
-  });
-  const sorted=Object.entries(sm).map(([name,score])=>({name,score})).sort((a,b)=>b.score-a.score);
-  const lb=document.getElementById('lbList');lb.innerHTML='';
-  if(!sorted.length){lb.innerHTML='<div style="padding:16px;text-align:center;color:var(--dim);font-size:.72rem;">—</div>';return;}
-  sorted.forEach((item,i)=>{
-    const rank=i+1;
-    const div=document.createElement('div');div.style.position='relative';
-    const stripe=document.createElement('div');stripe.className='lb-stripe';
-    stripe.style.background=rank===1?'#fbbf24':rank===2?'#cbd5e1':rank===3?'#cd7f32':'#334155';
-    const inner=document.createElement('div');
-    inner.className=`lb-item ${rank===1?'lb-1':rank===2?'lb-2':rank===3?'lb-3':'lb-o'}`;
-    const rankEl=document.createElement('div');rankEl.className='lb-rank';
-    rankEl.style.color=rank===1?'#fbbf24':rank===2?'#cbd5e1':rank===3?'#cd7f32':'#475569';
-    rankEl.textContent=rank<=3?['🥇','🥈','🥉'][rank-1]:`#${rank}`;
-    rankEl.style.fontSize=rank>3?'.6rem':'inherit';
-    const nameEl=document.createElement('span');nameEl.className='lb-name';nameEl.textContent=item.name;
-    const scoreEl=document.createElement('span');scoreEl.className='lb-score';
-    scoreEl.style.color=rank===1?'#fbbf24':'#fff';
-    if(rank===1)scoreEl.style.textShadow='0 0 10px rgba(251,191,36,.8)';
-    scoreEl.textContent=item.score;
-    inner.appendChild(rankEl);inner.appendChild(nameEl);inner.appendChild(scoreEl);
-    div.appendChild(stripe);div.appendChild(inner);lb.appendChild(div);
-  });
+  // Update all category leaderboards inside each category section
+  categories.forEach(cat=>updateCatLb(cat.id));
 }
 
 function showTotals(){
@@ -1436,7 +1625,267 @@ function closeModal(e){
   if(e.target===document.getElementById('grandModal'))closeTotals();
 }
 
-function confirmClear(){if(confirm(T('confirmClear'))){['rt6','rtLang'].forEach(k=>localStorage.removeItem(k));location.reload();}}
+// ══════════════════════════════════════
+// CATEGORY SYSTEM
+// ══════════════════════════════════════
+let _editCatId=null;
+const CAT_COLORS=['#3b9dff','#f5c518','#22c55e','#ef4444','#a855f7','#fb923c','#f472b6','#22d3ee'];
+
+function getCatColor(id){return CAT_COLORS[id%CAT_COLORS.length];}
+
+function openCatModal(editId=null){
+  _editCatId=editId;
+  const cat=editId!==null?categories.find(c=>c.id===editId):null;
+  document.getElementById('catModalTitle').textContent=cat?'✏️ แก้ไขหมวดหมู่':'📁 สร้างหมวดหมู่';
+  document.getElementById('catNameInput').value=cat?cat.name:'';
+  document.getElementById('catModal').style.display='flex';
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('catNameInput').select(),80);
+}
+function closeCatModal(){
+  document.getElementById('catModal').style.display='none';
+  document.body.style.overflow='';_editCatId=null;
+}
+function saveCat(){
+  const name=document.getElementById('catNameInput').value.trim();
+  if(!name)return;
+  if(_editCatId!==null){
+    const c=categories.find(c=>c.id===_editCatId);if(c)c.name=name;
+  } else {
+    categories.push({id:catCounter++,name,collapsed:false});
+  }
+  save();closeCatModal();renderAll();
+}
+function deleteCategory(id){
+  if(!confirm('ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก'))return;
+  categories=categories.filter(c=>c.id!==id);
+  tables.forEach(t=>{if(t.catId===id)t.catId=null;});
+  save();renderAll();
+}
+function toggleCatCollapse(id){
+  const c=categories.find(c=>c.id===id);if(!c)return;
+  c.collapsed=!c.collapsed;save();
+  const body=document.getElementById(`catBody-${id}`);
+  const hdr=document.getElementById(`catHdr-${id}`);
+  if(body)body.classList.toggle('hidden',c.collapsed);
+  if(hdr)hdr.classList.toggle('collapsed',c.collapsed);
+}
+function setTableCategory(tid,catId){
+  const t=tables.find(t=>t.id===tid);if(!t)return;
+  t.catId=catId;save();renderAll();
+}
+
+// ── BUILD CATEGORY DROPDOWN for each table block ──
+let _activeCatDd=null;
+function openCatDd(btn,tid){
+  if(_activeCatDd){_activeCatDd.remove();_activeCatDd=null;if(_activeCatDd?.dataset?.tid===String(tid))return;}
+  const dd=document.createElement('div');dd.className='cat-dd';dd.dataset.tid=tid;
+  // None option
+  const none=document.createElement('div');none.className='cat-dd-item';
+  none.innerHTML='<span class="cat-dot" style="background:var(--dim)"></span>ไม่มีหมวดหมู่';
+  none.onclick=()=>{setTableCategory(tid,null);dd.remove();_activeCatDd=null;};
+  dd.appendChild(none);
+  if(categories.length){
+    const div=document.createElement('div');div.className='cat-dd-divider';dd.appendChild(div);
+  }
+  categories.forEach(cat=>{
+    const item=document.createElement('div');item.className='cat-dd-item';
+    const tObj=tables.find(t=>t.id===tid);
+    if(tObj&&tObj.catId===cat.id)item.classList.add('active');
+    item.innerHTML=`<span class="cat-dot" style="background:${getCatColor(cat.id)}"></span>${cat.name}`;
+    item.onclick=()=>{setTableCategory(tid,cat.id);dd.remove();_activeCatDd=null;};
+    dd.appendChild(item);
+  });
+  document.body.appendChild(dd);
+  _activeCatDd=dd;
+  // Position
+  const rect=btn.getBoundingClientRect();
+  dd.style.top=(rect.bottom+4)+'px';
+  dd.style.left=rect.left+'px';
+  dd.style.display='block';
+  setTimeout(()=>{
+    document.addEventListener('click',function h(e){if(!dd.contains(e.target)&&e.target!==btn){dd.remove();_activeCatDd=null;document.removeEventListener('click',h);}});
+  },10);
+}
+
+// ── RENDER ALL ──
+function renderAll(){
+  const area=document.getElementById('tablesArea');area.innerHTML='';
+  categories.forEach(cat=>{
+    const section=document.createElement('div');section.className='cat-section';
+    const catTables=tables.filter(t=>t.catId===cat.id);
+    // Header
+    const hdr=document.createElement('div');hdr.id=`catHdr-${cat.id}`;
+    hdr.className='cat-header'+(cat.collapsed?' collapsed':'');
+    hdr.addEventListener('click',e=>{if(!e.target.closest('.cat-actions'))toggleCatCollapse(cat.id);});
+    const left=document.createElement('div');left.className='cat-header-left';
+    const chev=document.createElement('span');chev.className='cat-chevron';chev.textContent='▼';
+    const nm=document.createElement('span');nm.className='cat-name';nm.style.color=getCatColor(cat.id);nm.textContent=cat.name;
+    const cnt=document.createElement('span');cnt.className='cat-count';cnt.textContent=`${catTables.length} การแข่งขัน`;
+    left.append(chev,nm,cnt);
+    const acts=document.createElement('div');acts.className='cat-actions';
+    const bTime=document.createElement('button');bTime.className='cat-btn';bTime.textContent='⚡ เวลาด่าน';
+    bTime.addEventListener('click',e=>{e.stopPropagation();openBestTimeModal(cat.id);});
+    const bScore=document.createElement('button');bScore.className='cat-btn';bScore.textContent='🏆 คะแนน';
+    bScore.addEventListener('click',e=>{e.stopPropagation();openScoreModal(cat.id);});
+    const bEdit=document.createElement('button');bEdit.className='cat-btn';bEdit.textContent='✏️';
+    bEdit.addEventListener('click',e=>{e.stopPropagation();openCatModal(cat.id);});
+    const bDel=document.createElement('button');bDel.className='cat-btn danger';bDel.textContent='🗑';
+    bDel.addEventListener('click',e=>{e.stopPropagation();deleteCategory(cat.id);});
+    acts.append(bTime,bScore,bEdit,bDel);
+    hdr.append(left,acts);section.appendChild(hdr);
+    // Body: inner-grid (tables | leaderboard)
+    const body=document.createElement('div');body.id=`catBody-${cat.id}`;
+    body.className='cat-body'+(cat.collapsed?' hidden':'');
+    if(catTables.length===0){
+      const empty=document.createElement('div');
+      empty.style.cssText='padding:16px;text-align:center;color:var(--dim);font-size:.78rem;font-family:Rajdhani,monospace;';
+      empty.textContent='— ยังไม่มีการแข่งขันในหมวดหมู่นี้ —';body.appendChild(empty);
+    } else {
+      const innerGrid=document.createElement('div');innerGrid.className='cat-inner-grid';
+      const tablesCol=document.createElement('div');
+      catTables.forEach(tObj=>tablesCol.appendChild(buildTable(tObj)));
+      innerGrid.appendChild(tablesCol);
+      innerGrid.appendChild(buildCatLbBox(cat.id));
+      body.appendChild(innerGrid);
+    }
+    section.appendChild(body);area.appendChild(section);
+  });
+  const uncatTables=tables.filter(t=>t.catId===null||t.catId===undefined);
+  if(uncatTables.length>0){
+    const zone=document.createElement('div');zone.className='no-cat-zone';
+    if(categories.length>0){
+      const lbl=document.createElement('div');
+      lbl.style.cssText='font-family:Rajdhani,monospace;font-size:.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-left:4px;';
+      lbl.textContent='ไม่มีหมวดหมู่';zone.appendChild(lbl);
+    }
+    uncatTables.forEach(tObj=>zone.appendChild(buildTable(tObj)));
+    area.appendChild(zone);
+  }
+  recalcAll();updateLeaderboard();
+}
+
+// ── CAT LEADERBOARD BOX ──
+function buildCatLbBox(catId){
+  const box=document.createElement('div');box.className='cat-lb';box.id=`catLb-${catId}`;
+  const hdr=document.createElement('div');hdr.className='cat-lb-hdr';
+  const dot=document.createElement('span');dot.style.cssText=`width:10px;height:10px;border-radius:50%;background:${getCatColor(catId)};display:inline-block;margin-right:6px;`;
+  const title=document.createElement('span');title.className='cat-lb-title';title.textContent='🏆 LEADERBOARD';
+  hdr.appendChild(dot);hdr.appendChild(title);box.appendChild(hdr);
+  const lbBody=document.createElement('div');lbBody.className='cat-lb-body';lbBody.id=`catLbBody-${catId}`;
+  box.appendChild(lbBody);return box;
+}
+function updateCatLb(catId){
+  const lbBody=document.getElementById(`catLbBody-${catId}`);if(!lbBody)return;
+  const catTables=tables.filter(t=>t.catId===catId);
+  const sm={};
+  catTables.forEach(tObj=>{
+    const pc=tObj.playerCount||4;const ar=tObj.rowCount||ROWS_BASE;const tots=Array(pc).fill(0);
+    tObj.rows.forEach((row,r)=>{if(r<ar)calcScores(row,r,pc).forEach((s,p)=>{if(s!==null)tots[p]+=s;});});
+    for(let p=0;p<pc;p++){const n=(tObj.players[p]||'').trim()||`P${p+1}`;sm[n]=(sm[n]||0)+tots[p];}
+  });
+  const sorted=Object.entries(sm).map(([n,s])=>({name:n,score:s})).sort((a,b)=>b.score-a.score).slice(0,5);
+  lbBody.innerHTML='';
+  if(!sorted.length){lbBody.innerHTML='<div style="padding:12px;text-align:center;color:var(--dim);font-size:.72rem;">—</div>';return;}
+  sorted.forEach((item,i)=>{
+    const rank=i+1;
+    const div=document.createElement('div');div.style.position='relative';
+    const stripe=document.createElement('div');stripe.className='lb-stripe';
+    stripe.style.background=rank===1?'#fbbf24':rank===2?'#cbd5e1':rank===3?'#cd7f32':'#334155';
+    const inner=document.createElement('div');
+    inner.className=`lb-item ${rank===1?'lb-1':rank===2?'lb-2':rank===3?'lb-3':'lb-o'}`;
+    inner.style.cssText='margin:0 4px 5px;padding:8px 12px;';
+    const rankEl=document.createElement('div');rankEl.className='lb-rank';
+    rankEl.textContent=rank<=3?['🥇','🥈','🥉'][rank-1]:`#${rank}`;
+    rankEl.style.color=rank===1?'#fbbf24':rank===2?'#cbd5e1':rank===3?'#cd7f32':'#475569';
+    rankEl.style.fontSize=rank>3?'.6rem':'inherit';
+    const nameEl=document.createElement('span');nameEl.className='lb-name';nameEl.textContent=item.name;
+    const scoreEl=document.createElement('span');scoreEl.className='lb-score';scoreEl.textContent=item.score;
+    scoreEl.style.color=rank===1?'#fbbf24':'#fff';scoreEl.style.fontSize='1.1rem';
+    if(rank===1)scoreEl.style.textShadow='0 0 10px rgba(251,191,36,.8)';
+    inner.appendChild(rankEl);inner.appendChild(nameEl);inner.appendChild(scoreEl);
+    div.appendChild(stripe);div.appendChild(inner);lbBody.appendChild(div);
+  });
+}
+
+// ── BEST TIME MODAL (no score) ──
+function openBestTimeModal(catId){
+  const cat=catId!==null?categories.find(c=>c.id===catId):null;
+  const catTables=catId!==null?tables.filter(t=>t.catId===catId):tables;
+  const title=cat?`⚡ เวลาเร็วสุดต่อด่าน — ${cat.name}`:'⚡ เวลาเร็วสุดต่อด่าน (ทั้งหมด)';
+  document.getElementById('bestTimeTitle').textContent=title;
+  const body=document.getElementById('bestTimeBody');body.innerHTML='';
+  // Build stageMap
+  const stageMap={};
+  catTables.forEach(tObj=>{
+    const pc=tObj.playerCount||4;const ar=tObj.rowCount||ROWS_BASE;
+    tObj.rows.forEach((row,r)=>{
+      if(r>=ar||!row.stage)return;
+      row.times.slice(0,pc).forEach((tv,p)=>{
+        const t=parseTime(tv);if(t===null)return;
+        const name=(tObj.players[p]||'').trim()||`P${p+1}`;
+        if(!stageMap[row.stage]||t<stageMap[row.stage].time)
+          stageMap[row.stage]={time:t,timeStr:tv,player:name,match:`${T('matchLabel')} #${tObj.id+1}`};
+      });
+    });
+  });
+  const stages=Object.entries(stageMap).sort((a,b)=>a[0].localeCompare(b[0]));
+  if(!stages.length){
+    body.innerHTML='<div style="padding:24px;text-align:center;color:var(--dim);font-family:Rajdhani,monospace;font-size:.85rem;">ยังไม่มีข้อมูลเวลา</div>';
+  } else {
+    const wrap=document.createElement('div');wrap.style.cssText='overflow-x:auto;';
+    const tbl=document.createElement('table');tbl.className='best-time-tbl';
+    tbl.innerHTML='<thead><tr><th>ด่าน</th><th>เวลาดีสุด</th><th>ผู้เล่น</th><th>การแข่งขัน</th></tr></thead>';
+    const tbody=document.createElement('tbody');
+    stages.forEach(([stage,info])=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td class="bt-stage">${stage}</td><td class="bt-time">${info.timeStr}</td><td class="bt-player">${info.player}</td><td class="bt-player">${info.match}</td>`;
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody);wrap.appendChild(tbl);body.appendChild(wrap);
+  }
+  document.getElementById('bestTimeModal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeBestTimeModal(){document.getElementById('bestTimeModal').style.display='none';document.body.style.overflow='';}
+
+// ── SCORE MODAL ──
+function openScoreModal(catId){
+  const cat=catId!==null?categories.find(c=>c.id===catId):null;
+  const catTables=catId!==null?tables.filter(t=>t.catId===catId):tables;
+  const title=cat?`🏆 คะแนนรวม — ${cat.name}`:'🏆 คะแนนรวมทั้งหมด';
+  document.getElementById('scoreModalTitle').textContent=title;
+  const sm={};
+  catTables.forEach(tObj=>{
+    const pc=tObj.playerCount||4;const ar=tObj.rowCount||ROWS_BASE;const tots=Array(pc).fill(0);
+    tObj.rows.forEach((row,r)=>{if(r<ar)calcScores(row,r,pc).forEach((s,p)=>{if(s!==null)tots[p]+=s;});});
+    for(let p=0;p<pc;p++){const n=(tObj.players[p]||'').trim()||`P${p+1}`;sm[n]=(sm[n]||0)+tots[p];}
+  });
+  const sorted=Object.entries(sm).map(([n,s])=>({name:n,score:s})).sort((a,b)=>b.score-a.score);
+  const body=document.getElementById('scoreModalBody');body.innerHTML='';
+  const maxS=sorted.length?sorted[0].score:0;
+  if(!sorted.length){body.innerHTML='<div style="padding:24px;text-align:center;color:var(--dim);">ยังไม่มีข้อมูล</div>';}
+  else{
+    sorted.forEach((item,i)=>{
+      const row=document.createElement('div');row.className='cat-score-row';
+      const badge=document.createElement('div');badge.className='cat-rank-badge';
+      badge.textContent=['🥇','🥈','🥉'][i]||`#${i+1}`;
+      badge.style.color=i===0?'var(--gold)':i===1?'#cbd5e1':i===2?'#cd7f32':'var(--dim)';
+      const pname=document.createElement('span');pname.className='cat-player-name';pname.textContent=item.name;
+      const barWrap=document.createElement('div');barWrap.style.cssText='flex:1;max-width:80px;height:4px;background:var(--input-bg);border-radius:2px;overflow:hidden;';
+      const bar=document.createElement('div');bar.style.cssText=`height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--gold));width:${maxS>0?Math.round(item.score/maxS*100):0}%;`;
+      barWrap.appendChild(bar);
+      const pscore=document.createElement('span');pscore.className='cat-player-score';pscore.textContent=item.score;
+      pscore.style.color=item.score===maxS&&maxS>0?'var(--gold)':'var(--blue2)';
+      row.append(badge,pname,barWrap,pscore);body.appendChild(row);
+    });
+  }
+  document.getElementById('scoreModal').style.display='flex';document.body.style.overflow='hidden';
+}
+function closeScoreModal(){document.getElementById('scoreModal').style.display='none';document.body.style.overflow='';}
+
+
+function confirmClear(){if(confirm(T('confirmClear'))){['rt6','rtCats','rtLang'].forEach(k=>localStorage.removeItem(k));location.reload();}}
 function removeMatch(tid){
   if(tables.length===1){alert('min 1');return;}if(!confirm(T('confirmRemove')))return;
   tables=tables.filter(t=>t.id!==tid);save();document.querySelector(`.match-block[data-tid="${tid}"]`)?.remove();updateLeaderboard();
@@ -1536,17 +1985,21 @@ async function captureTableImage(){
   const pc=tObj.playerCount||4;
   const activeRows=tObj.rowCount||ROWS_BASE;
 
-  // Theme colors
-  const bgColor   =isLight?'#dde8f8':'#04081a';
-  const cardBg    =isLight?'#ffffff':'#0d1e4a';
+  // Read CSS variables from current theme for accurate color matching
+  const cs=getComputedStyle(document.documentElement);
+  const cv=(v,fb)=>cs.getPropertyValue(v).trim()||fb;
+  const bgColor   =cv('--bg',       isLight?'#dde8f8':'#04081a');
+  const textColor =cv('--text',     isLight?'#0a1a3a':'#e8f0ff');
+  const dimColor  =cv('--dim',      isLight?'#4a6898':'#5a78aa');
+  const goldColor =cv('--gold',     isLight?'#b8860b':'#f5c518');
+  const blueColor =cv('--ac1',      isLight?'#1558c0':'#1d6fe8');
+  const blue2Color=cv('--ac2',      isLight?'#1a72e8':'#3b9dff');
+  const greenClr  =cv('--green',    isLight?'#16a34a':'#22c55e');
+  // Derived
+  const cardBg    =isLight?'rgba(255,255,255,.97)':'rgba(13,30,74,.97)';
   const hdrBg     =isLight?'#c8daf5':'#071230';
   const rowAlt    =isLight?'#eef4ff':'#060f20';
-  const textColor =isLight?'#0a1a3a':'#e8f0ff';
-  const dimColor  =isLight?'#4a6898':'#5a78aa';
-  const goldColor =isLight?'#b8860b':'#f5c518';
-  const blueColor =isLight?'#1558c0':'#3b9dff';
-  const borderClr =isLight?'rgba(21,88,192,.3)':'rgba(29,111,232,.3)';
-  const greenClr  =isLight?'#16a34a':'#22c55e';
+  const borderClr =`${blueColor}55`;
   const redClr    ='#ef4444';
 
   // Layout
@@ -1800,16 +2253,14 @@ document.addEventListener('click',e=>{
 });
 
 // ── INIT ──
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeTotals();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeTotals();closeCatModal();closeBestTimeModal();closeScoreModal();}});
 applyTheme(currentColor, currentMode);
 loadState();
 document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('active',o.dataset.lang===lang));
 document.getElementById('globeLabel').textContent=T('globeLabel');
 buildTitle();
 document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=T(el.dataset.i18n));
-document.getElementById('tablesArea').innerHTML='';
-tables.forEach(t=>document.getElementById('tablesArea').appendChild(buildTable(t)));
-recalcAll();updateLeaderboard();
+renderAll();
 </script>
 </body>
 </html>
