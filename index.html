@@ -2532,7 +2532,8 @@ async function exportExcel(tablesToExport, sheetTitle){
     ws.mergeCells(rn,1,rn,2);ws.getCell(rn,1).value=`${T('grandTotal')}`;ws.getCell(rn,1).font={bold:true,italic:true};ws.getCell(rn,1).alignment={horizontal:'right'};
     for(let p=0;p<maxPc;p++){const tc2=3+p*2,pc2=4+p*2;ws.mergeCells(rn,tc2,rn,pc2);const c=ws.getCell(rn,tc2);c.value=p<pc?mt[p]:0;c.font={bold:true,size:12};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFF2CC'}};c.alignment={horizontal:'center'};}rn++;
   });
-  ws.getColumn(1).width=6;ws.getColumn(2).width=35;allNames.forEach((_,i)=>{ws.getColumn(3+i*2).width=13;ws.getColumn(4+i*2).width=8;});
+  ws.getColumn(1).width=6;ws.getColumn(2).width=35;
+  for(let p=0;p<maxPc;p++){ws.getColumn(3+p*2).width=13;ws.getColumn(4+p*2).width=8;}
   ws.eachRow((row,rNum)=>{if(rNum<2)return;row.eachCell(c=>{if(c.value===undefined||c.value===null)return;c.border={top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}};});});
   const safeName=(sheetTitle||'all').replace(/[^a-zA-Z0-9ก-๙]/g,'_').substring(0,20);
   const buf=await wb.xlsx.writeBuffer();const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`race_${safeName}_${Date.now()}.xlsx`;a.click();URL.revokeObjectURL(a.href);
