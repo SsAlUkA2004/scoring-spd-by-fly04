@@ -1047,11 +1047,11 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
         </div>
       </div>
       <button class="btn btn-add" onclick="addMatch()">＋ <span class="btn-txt" data-i18n="addMatch">เพิ่มการแข่งขัน</span></button>
-      <button class="btn" style="background:rgba(245,197,24,.1);border-color:rgba(245,197,24,.35);color:var(--gold);" onclick="openCatModal()">📁 <span class="btn-txt">หมวดหมู่</span></button>
-      <button class="btn" style="background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.35);color:var(--cyan);" onclick="openBestTimeModal(null)">⚡ <span class="btn-txt">เวลาด่านทั้งหมด</span></button>
-      <button class="btn" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#c084fc;" onclick="openScoreModal(null)">🏆 <span class="btn-txt">คะแนนรวมทั้งหมด</span></button>
-      <button class="btn" id="btnCollapseAll" style="background:var(--input-bg);border-color:var(--card-border);color:var(--text2);" onclick="collapseAll()">⊟ <span class="btn-txt">ย่อทั้งหมด</span></button>
-      <button class="btn btn-excel" id="btnExcel">📊 <span class="btn-txt" data-i18n="exportExcel">Export</span></button>
+      <button class="btn" style="background:rgba(245,197,24,.1);border-color:rgba(245,197,24,.35);color:var(--gold);" onclick="openCatModal()">📁 <span class="btn-txt" data-i18n="catLabel">หมวดหมู่</span></button>
+      <button class="btn" style="background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.35);color:var(--cyan);" onclick="openBestTimeModal(null)">⚡ <span class="btn-txt" data-i18n="allBestTime">เวลาด่านทั้งหมด</span></button>
+      <button class="btn" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#c084fc;" onclick="openScoreModal(null)">🏆 <span class="btn-txt" data-i18n="allScore">คะแนนรวมทั้งหมด</span></button>
+      <button class="btn" id="btnCollapseAll" style="background:var(--input-bg);border-color:var(--card-border);color:var(--text2);" onclick="collapseAll()">⊟ <span class="btn-txt" id="collapseAllTxt" data-i18n="collapseAll">ย่อทั้งหมด</span></button>
+      <button class="btn btn-excel" onclick="importExcel()">📥 <span class="btn-txt" data-i18n="importExcel">Import</span></button>
       <button class="btn btn-clear" onclick="confirmClear()">🗑 <span class="btn-txt" data-i18n="clearData">ล้างข้อมูล</span></button>
     </div>
   </div>
@@ -1143,11 +1143,26 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 <script>
 // ── I18N ──
 const I18N={
-  th:{title:'🏁 RACE TIME TRACKER',sub1:'บันทึกเวลา · คำนวณแต้ม · จัดอันดับ',sub2:'กรอกเวลาในแต่ละรอบ เช่น 15699 → 1:56:99',addMatch:'เพิ่มการแข่งขัน',totalScore:'คะแนนรวม',exportExcel:'Export',clearData:'ล้างข้อมูล',totalAll:'คะแนนรวมทั้งหมด',leaderboard:'🏆 LEADERBOARD',matchLabel:'การแข่งขัน',removeMatch:'✕ ลบ',round:'รอบ',playerLabel:'ผู้เล่น',score:'คะแนน',grandTotal:'⚡ คะแนนรวม',stagePH:'🔍 เลือกด่าน...',rank:'อันดับ',player:'ผู้เล่น',confirmClear:'ล้างข้อมูลทั้งหมด?',confirmRemove:'ลบการแข่งขันนี้?',minP:'ต้องมีผู้เล่นอย่างน้อย 2 คน',maxP:'มีผู้เล่นสูงสุด 6 คนแล้ว',kingMap:'👑 KING',pts:'แต้ม',globeLabel:'ไทย',stageLabel:'แผนที่'},
-  en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',exportExcel:'Export',clearData:'Clear Data',totalAll:'Overall Standings',leaderboard:'🏆 LEADERBOARD',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'⚡ Total',stagePH:'🔍 Select stage...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minP:'Minimum 2 players',maxP:'Maximum 6 players',kingMap:'👑 KING',pts:'pts',globeLabel:'English',stageLabel:'Stage'},
-  zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',exportExcel:'导出',clearData:'清除数据',totalAll:'总排行',leaderboard:'🏆 排行榜',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'⚡ 总计',stagePH:'🔍 选择赛道...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'简体中文',stageLabel:'赛道'},
-  vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',exportExcel:'Xuất',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',leaderboard:'🏆 XẾP HẠNG',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'⚡ Tổng',stagePH:'🔍 Chọn màn...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả?',confirmRemove:'Xóa trận này?',minP:'Tối thiểu 2 người',maxP:'Tối đa 6 người',kingMap:'👑 KING',pts:'điểm',globeLabel:'Tiếng Việt',stageLabel:'Bản đồ'},
-  tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',exportExcel:'匯出',clearData:'清除資料',totalAll:'總排行',leaderboard:'🏆 排行榜',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'⚡ 總計',stagePH:'🔍 選擇賽道...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'繁體中文',stageLabel:'賽道'}
+  th:{title:'🏁 RACE TIME TRACKER',sub1:'บันทึกเวลา · คำนวณแต้ม · จัดอันดับ',sub2:'กรอกเวลาในแต่ละรอบ เช่น 15699 → 1:56:99',addMatch:'เพิ่มการแข่งขัน',totalScore:'คะแนนรวม',exportExcel:'Export',importExcel:'Import',clearData:'ล้างข้อมูล',totalAll:'คะแนนรวมทั้งหมด',leaderboard:'🏆 LEADERBOARD',matchLabel:'การแข่งขัน',removeMatch:'✕ ลบ',round:'รอบ',playerLabel:'ผู้เล่น',score:'คะแนน',grandTotal:'⚡ คะแนนรวม',stagePH:'🔍 เลือกด่าน...',rank:'อันดับ',player:'ผู้เล่น',confirmClear:'ล้างข้อมูลทั้งหมด?',confirmRemove:'ลบการแข่งขันนี้?',minP:'ต้องมีผู้เล่นอย่างน้อย 2 คน',maxP:'มีผู้เล่นสูงสุด 6 คนแล้ว',kingMap:'👑 KING',pts:'แต้ม',globeLabel:'ไทย',stageLabel:'แผนที่',
+    catLabel:'หมวดหมู่',allBestTime:'เวลาด่านทั้งหมด',allScore:'คะแนนรวมทั้งหมด',collapseAll:'ย่อทั้งหมด',expandAll:'ขยายทั้งหมด',
+    catBestTime:'เวลาด่าน',catScore:'คะแนน',catExport:'Export',catAddMatch:'＋ การแข่งขัน',catEdit:'✏️',catDelete:'🗑',
+    confirmResetTable:'รีเซ็ตตารางนี้?',noDataYet:'ยังไม่มีข้อมูล',rounds9:'9 รอบ',rounds13:'13 รอบ'},
+  en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',exportExcel:'Export',importExcel:'Import',clearData:'Clear Data',totalAll:'Overall Standings',leaderboard:'🏆 LEADERBOARD',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'⚡ Total',stagePH:'🔍 Select stage...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minP:'Minimum 2 players',maxP:'Maximum 6 players',kingMap:'👑 KING',pts:'pts',globeLabel:'English',stageLabel:'Stage',
+    catLabel:'Category',allBestTime:'All Best Times',allScore:'Overall Score',collapseAll:'Collapse All',expandAll:'Expand All',
+    catBestTime:'Best Times',catScore:'Score',catExport:'Export',catAddMatch:'＋ Match',catEdit:'✏️',catDelete:'🗑',
+    confirmResetTable:'Reset this table?',noDataYet:'No data yet',rounds9:'9 Rounds',rounds13:'13 Rounds'},
+  zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',exportExcel:'导出',importExcel:'导入',clearData:'清除数据',totalAll:'总排行',leaderboard:'🏆 排行榜',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'⚡ 总计',stagePH:'🔍 选择赛道...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'简体中文',stageLabel:'赛道',
+    catLabel:'分组',allBestTime:'全部最佳时间',allScore:'总积分',collapseAll:'全部折叠',expandAll:'全部展开',
+    catBestTime:'最佳时间',catScore:'积分',catExport:'导出',catAddMatch:'＋ 比赛',catEdit:'✏️',catDelete:'🗑',
+    confirmResetTable:'重置此表格？',noDataYet:'暂无数据',rounds9:'9轮',rounds13:'13轮'},
+  vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',exportExcel:'Xuất',importExcel:'Nhập',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',leaderboard:'🏆 XẾP HẠNG',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'⚡ Tổng',stagePH:'🔍 Chọn màn...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả?',confirmRemove:'Xóa trận này?',minP:'Tối thiểu 2 người',maxP:'Tối đa 6 người',kingMap:'👑 KING',pts:'điểm',globeLabel:'Tiếng Việt',stageLabel:'Bản đồ',
+    catLabel:'Nhóm',allBestTime:'Thời gian tốt nhất',allScore:'Tổng điểm',collapseAll:'Thu gọn tất cả',expandAll:'Mở rộng tất cả',
+    catBestTime:'Thời gian',catScore:'Điểm',catExport:'Xuất',catAddMatch:'＋ Trận',catEdit:'✏️',catDelete:'🗑',
+    confirmResetTable:'Đặt lại bảng này?',noDataYet:'Chưa có dữ liệu',rounds9:'9 vòng',rounds13:'13 vòng'},
+  tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',exportExcel:'匯出',importExcel:'匯入',clearData:'清除資料',totalAll:'總排行',leaderboard:'🏆 排行榜',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'⚡ 總計',stagePH:'🔍 選擇賽道...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'繁體中文',stageLabel:'賽道',
+    catLabel:'分組',allBestTime:'全部最佳時間',allScore:'總積分',collapseAll:'全部折疊',expandAll:'全部展開',
+    catBestTime:'最佳時間',catScore:'積分',catExport:'匯出',catAddMatch:'＋ 比賽',catEdit:'✏️',catDelete:'🗑',
+    confirmResetTable:'重置此表格？',noDataYet:'暫無資料',rounds9:'9回合',rounds13:'13回合'}
 };
 let lang='th';
 function T(k){return(I18N[lang]||I18N.th)[k]||(I18N.th[k]||k);}
@@ -1165,17 +1180,24 @@ let categories=[],catCounter=0; // {id, name, collapsed}
 function loadState(){
   try{tables=JSON.parse(localStorage.getItem('rt6')||'[]');}catch(e){tables=[];}
   try{categories=JSON.parse(localStorage.getItem('rtCats')||'[]');}catch(e){categories=[];}
+  // Normalize catId: must be a valid category id (number) or null
+  const validCatIds=new Set(categories.map(c=>c.id));
   tables.forEach(t=>{
     if(!t.players)t.players=Array(MAX_P).fill('');
     if(!t.rowCount)t.rowCount=ROWS_BASE;
-    if(!t.collapsed)t.collapsed=false;
-    if(!t.catId)t.catId=null;
+    if(t.collapsed===undefined||t.collapsed===null)t.collapsed=false;
+    // FIX: catId=0 is valid! Only reset if undefined/missing or points to deleted category
+    if(t.catId===undefined){
+      t.catId=null;
+    } else if(t.catId!==null&&!validCatIds.has(t.catId)){
+      t.catId=null; // category was deleted
+    }
     while(t.rows.length<ROWS_MAX)t.rows.push({stage:'',times:Array(MAX_P).fill('')});
   });
   try{lang=localStorage.getItem('rtLang')||'th';}catch(e){}
   if(!tables.length){tc=0;tables.push(mkTable(4));}
   else tc=Math.max(...tables.map(t=>t.id))+1;
-  if(categories.length) catCounter=Math.max(...categories.map(c=>c.id))+1;
+  if(categories.length)catCounter=Math.max(...categories.map(c=>c.id))+1;
 }
 function save(){
   localStorage.setItem('rt6',JSON.stringify(tables));
@@ -1537,10 +1559,26 @@ function addMatch(){
   const t=mkTable(4);tables.push(t);save();renderAll();
   setTimeout(()=>{const dom=document.querySelector(`.match-block[data-tid="${t.id}"]`);if(dom)dom.scrollIntoView({behavior:'smooth',block:'start'});},100);
 }
+
+function addMatchToCategory(catId){
+  const t=mkTable(4);t.catId=catId;tables.push(t);save();renderAll();
+  setTimeout(()=>{
+    const dom=document.querySelector(`.match-block[data-tid="${t.id}"]`);
+    if(dom)dom.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },100);
+}
+
+async function exportCategory(catId){
+  const cat=categories.find(c=>c.id===catId);
+  const catTables=tables.filter(t=>t.catId===catId);
+  if(!catTables.length){alert('ไม่มีการแข่งขันในหมวดหมู่นี้');return;}
+  await exportExcel(catTables, cat?cat.name:T('matchLabel'));
+}
 function removeMatch(tid){
   if(tables.length===1){alert('min 1');return;}if(!confirm(T('confirmRemove')))return;
-  tables=tables.filter(t=>t.id!==tid);save();renderAll();updateLeaderboard();
-}function rebuildAll(){const a=document.getElementById('tablesArea');a.innerHTML='';tables.forEach(t=>a.appendChild(buildTable(t)));recalcAll();updateLeaderboard();}
+  tables=tables.filter(t=>t.id!==tid);save();renderAll();
+}
+function rebuildAll(){renderAll();}
 
 function updateLeaderboard(){
   // Update all category leaderboards inside each category section
@@ -1713,7 +1751,7 @@ function renderAll(){
   const area=document.getElementById('tablesArea');area.innerHTML='';
   categories.forEach(cat=>{
     const section=document.createElement('div');section.className='cat-section';
-    const catTables=tables.filter(t=>t.catId===cat.id);
+    const catTables=tables.filter(t=>t.catId===cat.id); // strict === ensures id=0 works
     // Header
     const hdr=document.createElement('div');hdr.id=`catHdr-${cat.id}`;
     hdr.className='cat-header'+(cat.collapsed?' collapsed':'');
@@ -1724,15 +1762,21 @@ function renderAll(){
     const cnt=document.createElement('span');cnt.className='cat-count';cnt.textContent=`${catTables.length} การแข่งขัน`;
     left.append(chev,nm,cnt);
     const acts=document.createElement('div');acts.className='cat-actions';
-    const bTime=document.createElement('button');bTime.className='cat-btn';bTime.textContent='⚡ เวลาด่าน';
+    const bAdd=document.createElement('button');bAdd.className='cat-btn';bAdd.textContent=T('catAddMatch');
+    bAdd.style.cssText='color:var(--blue2);border-color:var(--card-border);';
+    bAdd.addEventListener('click',e=>{e.stopPropagation();addMatchToCategory(cat.id);});
+    const bTime=document.createElement('button');bTime.className='cat-btn';bTime.textContent=`⚡ ${T('catBestTime')}`;
     bTime.addEventListener('click',e=>{e.stopPropagation();openBestTimeModal(cat.id);});
-    const bScore=document.createElement('button');bScore.className='cat-btn';bScore.textContent='🏆 คะแนน';
+    const bScore=document.createElement('button');bScore.className='cat-btn';bScore.textContent=`🏆 ${T('catScore')}`;
     bScore.addEventListener('click',e=>{e.stopPropagation();openScoreModal(cat.id);});
-    const bEdit=document.createElement('button');bEdit.className='cat-btn';bEdit.textContent='✏️';
+    const bExp=document.createElement('button');bExp.className='cat-btn';bExp.textContent=`📊 ${T('catExport')}`;
+    bExp.style.cssText='color:var(--green);';
+    bExp.addEventListener('click',e=>{e.stopPropagation();exportCategory(cat.id);});
+    const bEdit=document.createElement('button');bEdit.className='cat-btn';bEdit.textContent=T('catEdit');
     bEdit.addEventListener('click',e=>{e.stopPropagation();openCatModal(cat.id);});
-    const bDel=document.createElement('button');bDel.className='cat-btn danger';bDel.textContent='🗑';
+    const bDel=document.createElement('button');bDel.className='cat-btn danger';bDel.textContent=T('catDelete');
     bDel.addEventListener('click',e=>{e.stopPropagation();deleteCategory(cat.id);});
-    acts.append(bTime,bScore,bEdit,bDel);
+    acts.append(bAdd,bTime,bScore,bExp,bEdit,bDel);
     hdr.append(left,acts);section.appendChild(hdr);
     // Body: inner-grid (tables | leaderboard)
     const body=document.createElement('div');body.id=`catBody-${cat.id}`;
@@ -1751,7 +1795,9 @@ function renderAll(){
     }
     section.appendChild(body);area.appendChild(section);
   });
-  const uncatTables=tables.filter(t=>t.catId===null||t.catId===undefined);
+  // Uncategorized: catId is null, undefined, or points to non-existent category
+  const validIds=new Set(categories.map(c=>c.id));
+  const uncatTables=tables.filter(t=>t.catId===null||t.catId===undefined||!validIds.has(t.catId));
   if(uncatTables.length>0){
     const zone=document.createElement('div');zone.className='no-cat-zone';
     if(categories.length>0){
@@ -1895,13 +1941,12 @@ function addMatch(){const t=mkTable(4);tables.push(t);save();const dom=buildTabl
 function collapseAll(){
   const allCollapsed=tables.every(t=>t.collapsed);
   tables.forEach(t=>{t.collapsed=!allCollapsed;});save();
-  // Update DOM without full rebuild
   tables.forEach(t=>{
     const block=document.querySelector(`.match-block[data-tid="${t.id}"]`);
     if(block){block.classList.toggle('collapsed',t.collapsed);updateCollapsedSummary(t.id);}
   });
-  const btn=document.getElementById('btnCollapseAll');
-  if(btn){const sp=btn.querySelector('.btn-txt');if(sp)sp.textContent=allCollapsed?'ย่อทั้งหมด':'ขยายทั้งหมด';}
+  const sp=document.getElementById('collapseAllTxt');
+  if(sp)sp.textContent=allCollapsed?T('collapseAll'):T('expandAll');
 }
 function toggleCollapse(tid){
   const tObj=tables.find(t=>t.id===tid);if(!tObj)return;
@@ -2144,23 +2189,107 @@ async function captureTableImage(){
   closeSaveImgModal();
 }
 
-// ── EXPORT EXCEL ──
-async function exportExcel(){
+// ── IMPORT EXCEL ──
+function importExcel(){
   if(typeof ExcelJS==='undefined'){alert('ExcelJS not loaded');return;}
-  const wb=new ExcelJS.Workbook();const ws=wb.addWorksheet('Race Tracker');
-  const maxPc=Math.max(...tables.map(t=>t.playerCount||4));
+  const input=document.createElement('input');input.type='file';input.accept='.xlsx';
+  input.onchange=async(e)=>{
+    const file=e.target.files[0];if(!file)return;
+    const buf=await file.arrayBuffer();
+    const wb=new ExcelJS.Workbook();
+    try{await wb.xlsx.load(buf);}catch(err){alert('ไม่สามารถอ่านไฟล์ได้: '+err.message);return;}
+    const ws=wb.worksheets[0];if(!ws){alert('ไม่พบ sheet ในไฟล์นี้');return;}
+
+    // Parse format: row1=title, row2=headers, row3=subheaders(Time/pts), row4+=data
+    // col1=#, col2=matchLabel, col3,4=P1 time/pts, col5,6=P2 time/pts ...
+    const rows=[];ws.eachRow((row,rn)=>rows.push({rn,vals:row.values.slice(1)}));
+    if(rows.length<4){alert('ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป');return;}
+
+    // Row 2 = player name headers (merged cols, every 2 cols = 1 player)
+    const headerRow=rows[1].vals;
+    const players=[];
+    for(let i=2;i<headerRow.length;i+=2){
+      const v=headerRow[i];
+      const name=typeof v==='object'&&v&&v.richText?v.richText.map(r=>r.text).join(''):String(v||'').trim();
+      if(name&&name!=='undefined')players.push(name);
+    }
+    const pc=Math.max(2,Math.min(MAX_P,players.length||2));
+
+    // Row 4+ = data rows until total row
+    const newTables=[];
+    let currentT=null;
+    let currentRow=0;
+
+    for(let ri=3;ri<rows.length;ri++){
+      const vals=rows[ri].vals;
+      const v0=String(vals[0]||'').trim();
+      const v1=String(vals[1]||'').trim();
+
+      // Detect match header row: col1=# (number), col2=matchLabel text or serial number
+      if(/^\d+$/.test(v0)&&(v1===''||isNaN(Number(v1)))){
+        // New match block
+        currentT=mkTable(pc);
+        currentT.players=players.slice(0,MAX_P).concat(Array(MAX_P-Math.min(MAX_P,players.length)).fill(''));
+        currentRow=0;
+        newTables.push(currentT);
+      }
+
+      // Data row: col1=round number
+      if(currentT&&/^\d+$/.test(v0)&&v1!==''){
+        const roundIdx=parseInt(v0)-1;
+        if(roundIdx>=0&&roundIdx<ROWS_MAX){
+          currentT.rows[roundIdx].stage=v1;
+          for(let p=0;p<pc;p++){
+            const tv=vals[2+p*2];
+            const timeStr=typeof tv==='string'?tv.trim():typeof tv==='number'?String(tv):'';
+            if(timeStr&&timeStr!=='0'&&timeStr!=='-')currentT.rows[roundIdx].times[p]=timeStr;
+          }
+        }
+        currentRow++;
+        // Auto-detect rowCount from max round seen
+        if(currentT)currentT.rowCount=Math.max(currentT.rowCount,Math.min(ROWS_MAX,currentRow));
+      }
+    }
+
+    if(!newTables.length){alert('ไม่พบข้อมูลการแข่งขันในไฟล์');return;}
+
+    const msg=`พบ ${newTables.length} การแข่งขัน\nต้องการ:\n[เพิ่มต่อ] = เพิ่มเข้าข้อมูลที่มีอยู่\n[แทนที่] = ล้างแล้วนำเข้าใหม่`;
+    const choice=window.confirm(msg+'\n\nกด OK = เพิ่มต่อ, Cancel = แทนที่');
+    if(choice===false){
+      // Replace
+      tables=newTables;tc=Math.max(...newTables.map(t=>t.id))+1;
+    } else {
+      // Append
+      newTables.forEach(t=>tables.push(t));
+      tc=Math.max(...tables.map(t=>t.id))+1;
+    }
+    save();renderAll();
+    alert(`นำเข้าสำเร็จ ${newTables.length} การแข่งขัน`);
+  };
+  input.click();
+}
+
+// ── EXPORT EXCEL ──
+async function exportExcel(tablesToExport, sheetTitle){
+  if(typeof ExcelJS==='undefined'){alert('ExcelJS not loaded');return;}
+  const tblList = tablesToExport || tables;
+  const wsName = (sheetTitle||'Race Tracker').substring(0,30);
+  const wb=new ExcelJS.Workbook();const ws=wb.addWorksheet(wsName);
+  const maxPc=Math.max(...tblList.map(t=>t.playerCount||4));
   const allNames=[];
-  for(let p=0;p<maxPc;p++){const fn=tables.map(t=>(t.players[p]||'').trim()).find(n=>n)||`P${p+1}`;allNames.push(fn);}
+  for(let p=0;p<maxPc;p++){const fn=tblList.map(t=>(t.players[p]||'').trim()).find(n=>n)||`P${p+1}`;allNames.push(fn);}
   const cols=2+maxPc*2;
-  ws.mergeCells(1,1,1,cols);const tC=ws.getCell(1,1);tC.value=T('title');tC.font={bold:true,size:14,color:{argb:'FFFFFFFF'}};tC.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};tC.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=36;
+  const headerTitle = sheetTitle ? `${T('title')} — ${sheetTitle}` : T('title');
+  ws.mergeCells(1,1,1,cols);const tC=ws.getCell(1,1);tC.value=headerTitle;tC.font={bold:true,size:14,color:{argb:'FFFFFFFF'}};tC.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};tC.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=36;
   ws.getCell(2,1).value='#';ws.getCell(2,2).value=T('matchLabel');
   [ws.getCell(2,1),ws.getCell(2,2)].forEach(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};c.alignment={horizontal:'center'};});
   allNames.forEach((name,i)=>{const tc2=3+i*2,pc2=4+i*2;ws.mergeCells(2,tc2,2,pc2);const nc=ws.getCell(2,tc2);nc.value=name;nc.font={bold:true,size:11};nc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E3A5F'}};nc.alignment={horizontal:'center'};ws.getCell(3,tc2).value='Time';ws.getCell(3,pc2).value=T('pts');[ws.getCell(3,tc2),ws.getCell(3,pc2)].forEach(c=>{c.font={bold:true};c.alignment={horizontal:'center'};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0F2744'}};});});
   ws.getRow(2).height=24;ws.getRow(3).height=20;
   let rn=4;
-  tables.forEach((tObj,ti)=>{
+  tblList.forEach((tObj,ti)=>{
     const pc=tObj.playerCount||4;
-    for(let r=0;r<ROWS;r++){
+    const activeRows=tObj.rowCount||ROWS_BASE;
+    for(let r=0;r<activeRows;r++){
       const row=tObj.rows[r];const scores=calcScores(row,r,pc);
       const parsed=row.times.slice(0,pc).map(t=>parseTime(t));
       const valid=parsed.filter(t=>t!==null);const best=valid.length?Math.min(...valid):null;
@@ -2180,16 +2309,16 @@ async function exportExcel(){
   });
   ws.getColumn(1).width=6;ws.getColumn(2).width=35;allNames.forEach((_,i)=>{ws.getColumn(3+i*2).width=13;ws.getColumn(4+i*2).width=8;});
   ws.eachRow((row,rNum)=>{if(rNum<2)return;row.eachCell(c=>{if(c.value===undefined||c.value===null)return;c.border={top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}};});});
-  const buf=await wb.xlsx.writeBuffer();const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`race_tracker_${Date.now()}.xlsx`;a.click();URL.revokeObjectURL(a.href);
+  const safeName=(sheetTitle||'all').replace(/[^a-zA-Z0-9ก-๙]/g,'_').substring(0,20);
+  const buf=await wb.xlsx.writeBuffer();const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`race_${safeName}_${Date.now()}.xlsx`;a.click();URL.revokeObjectURL(a.href);
 }
-document.getElementById('btnExcel').addEventListener('click',exportExcel);
 
 // ── LANG ──
 function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=T(el.dataset.i18n));
   document.getElementById('globeLabel').textContent=T('globeLabel');
   document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('active',o.dataset.lang===lang));
-  buildTitle();rebuildAll();
+  buildTitle();renderAll();
 }
 const gBtn=document.getElementById('globeBtn'),lDd=document.getElementById('langDd');
 gBtn.addEventListener('click',e=>{e.stopPropagation();const o=lDd.classList.contains('open');lDd.classList.toggle('open',!o);gBtn.classList.toggle('open',!o);});
