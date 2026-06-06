@@ -356,30 +356,34 @@ header::after{
 .theme-btn:hover,.theme-btn.open{border-color:var(--blue2);color:var(--blue2);}
 .theme-swatch{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.3);flex-shrink:0;transition:background .3s;}
 .theme-panel{
-  position:fixed; /* fixed so it's never clipped by parent overflow */
-  min-width:200px;
+  position:fixed;
+  min-width:196px;max-width:210px;
   background:var(--s1);border:1px solid var(--card-border);
   border-radius:12px;z-index:99999;
   box-shadow:0 10px 30px rgba(0,0,0,.5);
   display:none;
   animation:ddIn .15s ease;padding:12px;
-  /* position set by JS */
+  box-sizing:border-box;
 }
 [data-mode="light"] .theme-panel{background:#f0f5ff;}
 .theme-panel.open{display:block;}
 .tp-section-lbl{font-family:'Rajdhani',monospace;font-size:.6rem;font-weight:700;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
 .tp-mode-row{display:flex;gap:6px;margin-bottom:10px;}
-.tp-mode-btn{flex:1;padding:6px 0;border-radius:6px;border:1px solid var(--card-border);background:var(--input-bg);color:var(--text2);cursor:pointer;font-family:'Exo 2',sans-serif;font-size:.8rem;font-weight:600;transition:all .2s;}
+.tp-mode-btn{flex:1;padding:6px 0;border-radius:6px;border:1px solid var(--card-border);background:var(--input-bg);color:var(--text2);cursor:pointer;font-family:'Exo 2',sans-serif;font-size:.8rem;font-weight:600;transition:all .2s;white-space:nowrap;}
 .tp-mode-btn:hover,.tp-mode-btn.active{background:var(--blue);color:#fff;border-color:var(--blue2);}
 .tp-divider{height:1px;background:var(--card-border);margin:10px 0;}
-.tp-colors{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.tp-colors{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:7px;
+}
 .tp-color{
   width:100%;aspect-ratio:1;border-radius:8px;border:2px solid transparent;
   cursor:pointer;transition:all .2s;position:relative;
+  min-width:0;/* prevent overflow */
 }
-.tp-color:hover{transform:scale(1.1);box-shadow:0 0 10px rgba(255,255,255,.25);}
-.tp-color.active{border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,.45);}
-.tp-color.active::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,.5);}
+.tp-color:hover{transform:scale(1.08);box-shadow:0 0 8px rgba(255,255,255,.2);}
+.tp-color.active{border-color:#fff;box-shadow:0 0 10px rgba(255,255,255,.4);}
+.tp-color.active::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,.6);}
 .globe-arrow{font-size:.58rem;opacity:.6;transition:transform .2s;}
 .theme-btn.open .globe-arrow,.globe-btn.open .globe-arrow{transform:rotate(180deg);}
 
@@ -2353,28 +2357,24 @@ function importExcel(){
     });
     if(rows.length<4){alert('ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป');return;}
 
-    // ── Row 2: player names (cols 3,5,7,... every 2 cols) ──
-    const headerRow=rows[1].vals; // 0-indexed
-    const players=[];
-    for(let i=2;i<headerRow.length;i+=2){
-      const name=(headerRow[i]||'').trim();
-      if(name&&name.toLowerCase()!=='undefined'&&name!=='')players.push(name);
-    }
-    const pc=Math.max(2,Math.min(MAX_P,players.length||2));
+    // ── Row 2: generic P1..PX headers (just column positions) ──
+    // ── Row 4+: data with match header rows interspersed ──
+    // New format: match header row (dark bg) has player names, then round rows
+    // Old format: round rows with "รอบ 1" in col2 starts new match
 
-    // ── Parse rows 4+ ──
-    // Format: col1=serial#, col2="การแข่งขัน X - รอบ Y (stageName)"
-    // Total row: col1=grandTotal text (merged, no serial number), col2=empty
-    // detect new match: col2 contains "- รอบ 1" / "- Round 1" / "- 轮次 1" etc.
-    const round1Patterns=[
-      /[-–]\s*(รอบ|Round|Vòng|回合|轮次)\s*1\b/i,
-      /\s1\s*[-–]\s*(รอบ|Round|Vòng|回合|轮次)\s*1\b/i,
-    ];
-    function isRound1Label(s){return round1Patterns.some(p=>p.test(s));}
+    // Detect round patterns for both formats
+    const round1Patterns=[/[-–]\s*(รอบ|Round|Vòng|回合|轮次)\s*1\b/i];
+    const roundPatterns=[/\b(รอบ|Round|Vòng|回合|轮次)\s*(\d+)/i];
+    function isRound1(s){return round1Patterns.some(p=>p.test(s));}
+    function getRoundNum(s){for(const p of roundPatterns){const m=s.match(p);if(m)return parseInt(m[2]);}return null;}
 
-    // Also detect total row: col1 contains grandTotal keywords, col2 empty
-    const totalPatterns=[/คะแนนรวม/,/Total/i,/总计/,/Tổng/i,/總計/];
-    function isTotalRow(c1){return totalPatterns.some(p=>p.test(c1));}
+    // Match header row: contains matchLabel keyword + match number
+    const matchHdrPatterns=[/^(การแข่งขัน|Match|Trận|比赛|比賽)\s*\d+$/i];
+    function isMatchHdr(s){return matchHdrPatterns.some(p=>p.test(s.trim()));}
+
+    // Total row patterns
+    const totalPatterns=[/คะแนนรวม/,/Total/i,/总计/,/Tổng/i,/總計/,/Grand/i];
+    function isTotalRow(s){return totalPatterns.some(p=>p.test(s));}
 
     const newTables=[];
     let currentT=null;
@@ -2383,43 +2383,66 @@ function importExcel(){
       const vals=rows[ri].vals;
       const c1=(vals[0]||'').trim();
       const c2=(vals[1]||'').trim();
+      const combined=c1+' '+c2;
 
-      // Skip title, header, subheader rows (already done by starting at ri=3)
       // Skip total rows
       if(isTotalRow(c1)||isTotalRow(c2))continue;
 
-      // New match: col2 contains "รอบ 1" / "Round 1" etc.
-      if(isRound1Label(c2)){
-        currentT=mkTable(pc);
-        currentT.players=Array(MAX_P).fill('');
-        players.forEach((n,i)=>{if(i<MAX_P)currentT.players[i]=n;});
+      // ── New format: match header row (e.g. "การแข่งขัน 1") ──
+      if(isMatchHdr(c1)){
+        // Read player names from cols 3,5,7,... of this same row
+        const matchPlayers=[];
+        for(let p=0;p<MAX_P;p++){
+          const pName=(vals[2+p*2]||'').trim();
+          matchPlayers.push(pName&&pName!=='—'?pName:'');
+        }
+        const matchPc=Math.max(2,matchPlayers.filter(n=>n).length||2);
+        currentT=mkTable(matchPc);
+        currentT.players=matchPlayers.concat(Array(MAX_P-matchPlayers.length).fill('')).slice(0,MAX_P);
+        currentT.rowCount=ROWS_BASE;
+        newTables.push(currentT);
+        continue;
+      }
+
+      // ── Old format: new match detected by "รอบ 1" pattern ──
+      if(!currentT&&isRound1(c2)){
+        // Read global player names from row 2 (rows[1])
+        const globalPlayers=[];
+        for(let p=0;p<MAX_P;p++){
+          const pName=(rows[1].vals[2+p*2]||'').trim();
+          globalPlayers.push(pName&&pName!=='undefined'?pName:'');
+        }
+        const gpc=Math.max(2,globalPlayers.filter(n=>n).length||2);
+        currentT=mkTable(gpc);
+        currentT.players=globalPlayers.slice(0,MAX_P);
+        currentT.rowCount=ROWS_BASE;
+        newTables.push(currentT);
+      } else if(currentT&&isRound1(c2)){
+        // Old format multi-match: new match starts
+        const prevT=currentT;
+        currentT=mkTable(prevT.playerCount);
+        currentT.players=[...prevT.players];
         currentT.rowCount=ROWS_BASE;
         newTables.push(currentT);
       }
 
       if(!currentT)continue;
 
-      // Parse round number and stage from col2
-      // Format: "การแข่งขัน X - รอบ Y (stageName)" or "การแข่งขัน X - รอบ Y"
-      const roundMatch=c2.match(/[-–]\s*(?:รอบ|Round|Vòng|回合|轮次)\s*(\d+)(?:\s*\(([^)]*)\))?/i);
+      // ── Parse round row ──
+      // New format col2: "รอบ 1 (stageName)"  Old format: "การแข่งขัน 1 - รอบ 1 (stageName)"
+      const roundMatch=c2.match(/(?:[-–]\s*)?(?:รอบ|Round|Vòng|回合|轮次)\s*(\d+)(?:\s*\(([^)]*)\))?/i);
       if(!roundMatch)continue;
       const roundIdx=parseInt(roundMatch[1])-1;
       const stageName=(roundMatch[2]||'').trim();
-
       if(roundIdx<0||roundIdx>=ROWS_MAX)continue;
 
-      // Set stage
       if(stageName)currentT.rows[roundIdx].stage=stageName;
 
-      // Parse times from cols 3,5,7,... (0-indexed: 2,4,6,...)
-      for(let p=0;p<pc;p++){
+      for(let p=0;p<(currentT.playerCount||MAX_P);p++){
         const colIdx=2+p*2;
         const tv=(vals[colIdx]||'').trim();
-        // Valid time format: digits with colons, e.g. 1:23:45
         if(tv&&tv!=='0'&&/\d/.test(tv))currentT.rows[roundIdx].times[p]=tv;
       }
-
-      // Track max round for rowCount
       currentT.rowCount=Math.max(currentT.rowCount,roundIdx+1);
       if(currentT.rowCount<ROWS_BASE)currentT.rowCount=ROWS_BASE;
     }
@@ -2452,26 +2475,52 @@ async function exportExcel(tablesToExport, sheetTitle){
   const wsName = (sheetTitle||'Race Tracker').substring(0,30);
   const wb=new ExcelJS.Workbook();const ws=wb.addWorksheet(wsName);
   const maxPc=Math.max(...tblList.map(t=>t.playerCount||4));
-  const allNames=[];
-  for(let p=0;p<maxPc;p++){const fn=tblList.map(t=>(t.players[p]||'').trim()).find(n=>n)||`P${p+1}`;allNames.push(fn);}
   const cols=2+maxPc*2;
-  const headerTitle = sheetTitle ? `${T('title')} — ${sheetTitle}` : T('title');
+  const headerTitle=sheetTitle?`${T('title')} — ${sheetTitle}`:T('title');
+  // Row 1: title
   ws.mergeCells(1,1,1,cols);const tC=ws.getCell(1,1);tC.value=headerTitle;tC.font={bold:true,size:14,color:{argb:'FFFFFFFF'}};tC.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};tC.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=36;
+  // Row 2: column headers — generic P1..PX so imports know position
   ws.getCell(2,1).value='#';ws.getCell(2,2).value=T('matchLabel');
   [ws.getCell(2,1),ws.getCell(2,2)].forEach(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};c.alignment={horizontal:'center'};});
-  allNames.forEach((name,i)=>{const tc2=3+i*2,pc2=4+i*2;ws.mergeCells(2,tc2,2,pc2);const nc=ws.getCell(2,tc2);nc.value=name;nc.font={bold:true,size:11};nc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E3A5F'}};nc.alignment={horizontal:'center'};ws.getCell(3,tc2).value='Time';ws.getCell(3,pc2).value=T('pts');[ws.getCell(3,tc2),ws.getCell(3,pc2)].forEach(c=>{c.font={bold:true};c.alignment={horizontal:'center'};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0F2744'}};});});
+  for(let p=0;p<maxPc;p++){
+    const tc2=3+p*2,pc2=4+p*2;
+    ws.mergeCells(2,tc2,2,pc2);const nc=ws.getCell(2,tc2);
+    nc.value=`P${p+1}`;nc.font={bold:true,size:11};
+    nc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E3A5F'}};nc.alignment={horizontal:'center'};
+    ws.getCell(3,tc2).value='Time';ws.getCell(3,pc2).value=T('pts');
+    [ws.getCell(3,tc2),ws.getCell(3,pc2)].forEach(c=>{c.font={bold:true};c.alignment={horizontal:'center'};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0F2744'}};});
+  }
   ws.getRow(2).height=24;ws.getRow(3).height=20;
   let rn=4;
   tblList.forEach((tObj,ti)=>{
     const pc=tObj.playerCount||4;
     const activeRows=tObj.rowCount||ROWS_BASE;
+    // Write match header row with actual player names for this match
+    ws.mergeCells(rn,1,rn,2);
+    const mhdr=ws.getCell(rn,1);
+    mhdr.value=`${T('matchLabel')} ${ti+1}`;
+    mhdr.font={bold:true,size:12,color:{argb:'FFFFFFFF'}};
+    mhdr.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0F2244'}};
+    mhdr.alignment={horizontal:'left',vertical:'middle'};
+    ws.getRow(rn).height=22;
+    // Player names for this match
+    for(let p=0;p<maxPc;p++){
+      const tc2=3+p*2,pc2=4+p*2;
+      const pName=p<pc?(tObj.players[p]||'').trim()||`P${p+1}`:'—';
+      ws.mergeCells(rn,tc2,rn,pc2);
+      const nc=ws.getCell(rn,tc2);nc.value=pName;
+      nc.font={bold:true,size:10,color:{argb:'FFE8F0FF'}};
+      nc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1A3060'}};
+      nc.alignment={horizontal:'center'};
+    }
+    rn++;
     for(let r=0;r<activeRows;r++){
       const row=tObj.rows[r];const scores=calcScores(row,r,pc);
       const parsed=row.times.slice(0,pc).map(t=>parseTime(t));
       const valid=parsed.filter(t=>t!==null);const best=valid.length?Math.min(...valid):null;
       const isKR=r in KM&&KM[r]<pc;const kp=isKR?KM[r]:-1;
-      const ml=`${T('matchLabel')} ${ti+1} - ${T('round')} ${r+1}${row.stage?` (${row.stage})`:''}`;
-      ws.getCell(rn,1).value=rn-3;ws.getCell(rn,2).value=ml;ws.getCell(rn,2).font={bold:true};
+      const ml=`${T('round')} ${r+1}${row.stage?` (${row.stage})`:''}`;
+      ws.getCell(rn,1).value=rn-3;ws.getCell(rn,2).value=ml;ws.getCell(rn,2).font={bold:false};
       for(let p=0;p<maxPc;p++){
         const tc2=3+p*2,pc2=4+p*2;const tv=p<pc?row.times[p]:'';const sv=p<pc&&scores[p]!==null?scores[p]:0;
         ws.getCell(rn,tc2).value=tv||'';ws.getCell(rn,pc2).value=tv?sv:0;
@@ -2480,7 +2529,7 @@ async function exportExcel(tablesToExport, sheetTitle){
       }rn++;
     }
     const mt=Array(pc).fill(0);tObj.rows.forEach((row2,r2)=>{calcScores(row2,r2,pc).forEach((s,p)=>{if(s!==null)mt[p]+=s;});});
-    ws.mergeCells(rn,1,rn,2);ws.getCell(rn,1).value=`${T('grandTotal')} (${T('matchLabel')} ${ti+1})`;ws.getCell(rn,1).font={bold:true,italic:true};ws.getCell(rn,1).alignment={horizontal:'right'};
+    ws.mergeCells(rn,1,rn,2);ws.getCell(rn,1).value=`${T('grandTotal')}`;ws.getCell(rn,1).font={bold:true,italic:true};ws.getCell(rn,1).alignment={horizontal:'right'};
     for(let p=0;p<maxPc;p++){const tc2=3+p*2,pc2=4+p*2;ws.mergeCells(rn,tc2,rn,pc2);const c=ws.getCell(rn,tc2);c.value=p<pc?mt[p]:0;c.font={bold:true,size:12};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFF2CC'}};c.alignment={horizontal:'center'};}rn++;
   });
   ws.getColumn(1).width=6;ws.getColumn(2).width=35;allNames.forEach((_,i)=>{ws.getColumn(3+i*2).width=13;ws.getColumn(4+i*2).width=8;});
@@ -2542,9 +2591,14 @@ function toggleThemePanel(){
   const open=panel.classList.contains('open');
   if(!open){
     const rect=btn.getBoundingClientRect();
+    const panelW=210;
+    // Try align right edge to button right, but don't go off left edge
+    let left=rect.right-panelW;
+    if(left<8)left=8;
+    if(left+panelW>window.innerWidth-8)left=window.innerWidth-panelW-8;
     panel.style.top=(rect.bottom+6)+'px';
-    panel.style.left='auto';
-    panel.style.right=(window.innerWidth-rect.right)+'px';
+    panel.style.left=left+'px';
+    panel.style.right='auto';
   }
   panel.classList.toggle('open',!open);
   btn.classList.toggle('open',!open);
