@@ -2200,71 +2200,112 @@ function importExcel(){
     try{await wb.xlsx.load(buf);}catch(err){alert('ไม่สามารถอ่านไฟล์ได้: '+err.message);return;}
     const ws=wb.worksheets[0];if(!ws){alert('ไม่พบ sheet ในไฟล์นี้');return;}
 
-    // Parse format: row1=title, row2=headers, row3=subheaders(Time/pts), row4+=data
-    // col1=#, col2=matchLabel, col3,4=P1 time/pts, col5,6=P2 time/pts ...
-    const rows=[];ws.eachRow((row,rn)=>rows.push({rn,vals:row.values.slice(1)}));
+    // ── Collect all rows into array ──
+    const rows=[];
+    ws.eachRow((row,rn)=>{
+      const vals=[];
+      row.eachCell({includeEmpty:true},(cell,cn)=>{
+        // Resolve merged cells, rich text, etc.
+        let v=cell.value;
+        if(v&&typeof v==='object'){
+          if(v.richText)v=v.richText.map(r=>r.text).join('');
+          else if(v.result!==undefined)v=v.result;
+          else if(v.text)v=v.text;
+        }
+        vals[cn-1]=v===null||v===undefined?'':String(v).trim();
+      });
+      rows.push({rn,vals});
+    });
     if(rows.length<4){alert('ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป');return;}
 
-    // Row 2 = player name headers (merged cols, every 2 cols = 1 player)
-    const headerRow=rows[1].vals;
+    // ── Row 2: player names (cols 3,5,7,... every 2 cols) ──
+    const headerRow=rows[1].vals; // 0-indexed
     const players=[];
     for(let i=2;i<headerRow.length;i+=2){
-      const v=headerRow[i];
-      const name=typeof v==='object'&&v&&v.richText?v.richText.map(r=>r.text).join(''):String(v||'').trim();
-      if(name&&name!=='undefined')players.push(name);
+      const name=(headerRow[i]||'').trim();
+      if(name&&name.toLowerCase()!=='undefined'&&name!=='')players.push(name);
     }
     const pc=Math.max(2,Math.min(MAX_P,players.length||2));
 
-    // Row 4+ = data rows until total row
+    // ── Parse rows 4+ ──
+    // Format: col1=serial#, col2="การแข่งขัน X - รอบ Y (stageName)"
+    // Total row: col1=grandTotal text (merged, no serial number), col2=empty
+    // detect new match: col2 contains "- รอบ 1" / "- Round 1" / "- 轮次 1" etc.
+    const round1Patterns=[
+      /[-–]\s*(รอบ|Round|Vòng|回合|轮次)\s*1\b/i,
+      /\s1\s*[-–]\s*(รอบ|Round|Vòng|回合|轮次)\s*1\b/i,
+    ];
+    function isRound1Label(s){return round1Patterns.some(p=>p.test(s));}
+
+    // Also detect total row: col1 contains grandTotal keywords, col2 empty
+    const totalPatterns=[/คะแนนรวม/,/Total/i,/总计/,/Tổng/i,/總計/];
+    function isTotalRow(c1){return totalPatterns.some(p=>p.test(c1));}
+
     const newTables=[];
     let currentT=null;
-    let currentRow=0;
 
     for(let ri=3;ri<rows.length;ri++){
       const vals=rows[ri].vals;
-      const v0=String(vals[0]||'').trim();
-      const v1=String(vals[1]||'').trim();
+      const c1=(vals[0]||'').trim();
+      const c2=(vals[1]||'').trim();
 
-      // Detect match header row: col1=# (number), col2=matchLabel text or serial number
-      if(/^\d+$/.test(v0)&&(v1===''||isNaN(Number(v1)))){
-        // New match block
+      // Skip title, header, subheader rows (already done by starting at ri=3)
+      // Skip total rows
+      if(isTotalRow(c1)||isTotalRow(c2))continue;
+
+      // New match: col2 contains "รอบ 1" / "Round 1" etc.
+      if(isRound1Label(c2)){
         currentT=mkTable(pc);
-        currentT.players=players.slice(0,MAX_P).concat(Array(MAX_P-Math.min(MAX_P,players.length)).fill(''));
-        currentRow=0;
+        currentT.players=Array(MAX_P).fill('');
+        players.forEach((n,i)=>{if(i<MAX_P)currentT.players[i]=n;});
+        currentT.rowCount=ROWS_BASE;
         newTables.push(currentT);
       }
 
-      // Data row: col1=round number
-      if(currentT&&/^\d+$/.test(v0)&&v1!==''){
-        const roundIdx=parseInt(v0)-1;
-        if(roundIdx>=0&&roundIdx<ROWS_MAX){
-          currentT.rows[roundIdx].stage=v1;
-          for(let p=0;p<pc;p++){
-            const tv=vals[2+p*2];
-            const timeStr=typeof tv==='string'?tv.trim():typeof tv==='number'?String(tv):'';
-            if(timeStr&&timeStr!=='0'&&timeStr!=='-')currentT.rows[roundIdx].times[p]=timeStr;
-          }
-        }
-        currentRow++;
-        // Auto-detect rowCount from max round seen
-        if(currentT)currentT.rowCount=Math.max(currentT.rowCount,Math.min(ROWS_MAX,currentRow));
+      if(!currentT)continue;
+
+      // Parse round number and stage from col2
+      // Format: "การแข่งขัน X - รอบ Y (stageName)" or "การแข่งขัน X - รอบ Y"
+      const roundMatch=c2.match(/[-–]\s*(?:รอบ|Round|Vòng|回合|轮次)\s*(\d+)(?:\s*\(([^)]*)\))?/i);
+      if(!roundMatch)continue;
+      const roundIdx=parseInt(roundMatch[1])-1;
+      const stageName=(roundMatch[2]||'').trim();
+
+      if(roundIdx<0||roundIdx>=ROWS_MAX)continue;
+
+      // Set stage
+      if(stageName)currentT.rows[roundIdx].stage=stageName;
+
+      // Parse times from cols 3,5,7,... (0-indexed: 2,4,6,...)
+      for(let p=0;p<pc;p++){
+        const colIdx=2+p*2;
+        const tv=(vals[colIdx]||'').trim();
+        // Valid time format: digits with colons, e.g. 1:23:45
+        if(tv&&tv!=='0'&&/\d/.test(tv))currentT.rows[roundIdx].times[p]=tv;
       }
+
+      // Track max round for rowCount
+      currentT.rowCount=Math.max(currentT.rowCount,roundIdx+1);
+      if(currentT.rowCount<ROWS_BASE)currentT.rowCount=ROWS_BASE;
     }
 
-    if(!newTables.length){alert('ไม่พบข้อมูลการแข่งขันในไฟล์');return;}
+    if(!newTables.length){alert('ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้');return;}
 
-    const msg=`พบ ${newTables.length} การแข่งขัน\nต้องการ:\n[เพิ่มต่อ] = เพิ่มเข้าข้อมูลที่มีอยู่\n[แทนที่] = ล้างแล้วนำเข้าใหม่`;
-    const choice=window.confirm(msg+'\n\nกด OK = เพิ่มต่อ, Cancel = แทนที่');
+    // ── Ask user: append or replace ──
+    const choice=window.confirm(
+      `${T('importExcel')}: พบ ${newTables.length} การแข่งขัน\n\n` +
+      `กด OK  → เพิ่มต่อกับข้อมูลที่มีอยู่\n` +
+      `กด Cancel → ล้างทั้งหมดแล้วนำเข้าใหม่`
+    );
     if(choice===false){
-      // Replace
-      tables=newTables;tc=Math.max(...newTables.map(t=>t.id))+1;
+      tables=newTables;
+      tc=newTables.length?Math.max(...newTables.map(t=>t.id))+1:0;
     } else {
-      // Append
       newTables.forEach(t=>tables.push(t));
-      tc=Math.max(...tables.map(t=>t.id))+1;
+      tc=tables.length?Math.max(...tables.map(t=>t.id))+1:0;
     }
     save();renderAll();
-    alert(`นำเข้าสำเร็จ ${newTables.length} การแข่งขัน`);
+    alert(`✅ นำเข้าสำเร็จ ${newTables.length} การแข่งขัน`);
   };
   input.click();
 }
