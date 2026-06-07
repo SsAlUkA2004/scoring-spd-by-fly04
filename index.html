@@ -2352,42 +2352,57 @@ async function captureTableImage(){
   }
   y+=ROW_P*pc;
 
-  // ── TOTAL ROW — ⚡ label + N equal cells (name + score) ──
+  // ── TOTAL ROW — ⚡ label + N equal cells (name + score, same size, no dividers) ──
   const totGrad=ctx.createLinearGradient(tableX,y,tableX+tableW,y);
   totGrad.addColorStop(0,blueColor+'55');totGrad.addColorStop(.5,goldColor+'33');totGrad.addColorStop(1,blueColor+'55');
   ctx.fillStyle=totGrad;ctx.fillRect(tableX,y,tableW,ROW_TOT);
   ctx.strokeStyle=goldColor+'66';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(tableX,y);ctx.lineTo(tableX+tableW,y);ctx.stroke();
-  ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(tableX,y,tableW,ROW_TOT);
+  ctx.strokeStyle=borderClr;ctx.lineWidth=.5;
+  // Only draw outer border, no inner dividers
+  ctx.strokeRect(tableX,y,tableW,ROW_TOT);
 
-  // Label cell: ⚡ คะแนน
+  // ⚡ label
   ctx.textAlign='left';ctx.font=`700 10px Rajdhani,monospace`;ctx.fillStyle=goldColor;
   ctx.fillText('⚡ '+T('grandTotal').replace('⚡','').trim(),tableX+7,y+ROW_TOT/2+4);
 
-  // Player score cells — divide remaining width equally among players
+  // Player score cells — divide remaining width equally, NO dividers between cells
   const scoreAreaX=tableX+LABEL_W;
   const scoreAreaW=tableW-LABEL_W;
   const scoreColW=scoreAreaW/pc;
+  const FONT_SIZE=10; // same font size for both name and score
 
   for(let p=0;p<pc;p++){
     const pName=(tObj.players[p]||'').trim()||`P${p+1}`;
     const sx=scoreAreaX+scoreColW*p;
     const isTop=tots[p]===maxT&&tots[p]>0;
+    const cx2=sx+scoreColW/2;
 
-    // Divider between player cells
-    ctx.strokeStyle=blueColor+'44';ctx.lineWidth=.5;
-    ctx.beginPath();ctx.moveTo(sx,y);ctx.lineTo(sx,y+ROW_TOT);ctx.stroke();
-
-    // Name (small, dim)
-    ctx.textAlign='center';ctx.font=`600 8px Rajdhani,sans-serif`;
+    // Name + score centered together, same font size
+    ctx.textAlign='center';
+    ctx.font=`600 ${FONT_SIZE}px Rajdhani,sans-serif`;
     ctx.fillStyle=isTop?goldColor:dimColor;
-    fillTextEllipsis(ctx,pName,sx+scoreColW/2,y+13,scoreColW-8);
+    const nameW=ctx.measureText(pName).width;
 
-    // Score (large, highlight top)
-    ctx.font=`bold 15px Rajdhani,monospace`;
+    ctx.font=`700 ${FONT_SIZE}px Rajdhani,monospace`;
+    const scoreStr=String(tots[p]);
+    const scoreW=ctx.measureText(scoreStr).width;
+
+    const gap=6;
+    const totalW=nameW+gap+scoreW;
+    const startX=cx2-totalW/2;
+
+    // Draw name
+    ctx.font=`600 ${FONT_SIZE}px Rajdhani,sans-serif`;
+    ctx.fillStyle=isTop?goldColor:dimColor;
+    ctx.textAlign='left';
+    ctx.fillText(pName,startX,y+ROW_TOT/2+4);
+
+    // Draw score right after name
+    ctx.font=`700 ${FONT_SIZE}px Rajdhani,monospace`;
     ctx.fillStyle=isTop?goldColor:blue2Color;
-    if(isTop)ctx.shadowColor=goldColor;if(isTop)ctx.shadowBlur=8;
-    ctx.fillText(tots[p],sx+scoreColW/2,y+ROW_TOT-8);
+    if(isTop){ctx.shadowColor=goldColor;ctx.shadowBlur=8;}
+    ctx.fillText(scoreStr,startX+nameW+gap,y+ROW_TOT/2+4);
     ctx.shadowBlur=0;ctx.shadowColor='transparent';
   }
 
