@@ -1158,7 +1158,10 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
     <div class="modal-box" style="max-width:480px">
       <div class="modal-hdr">
         <span class="modal-title" id="stageRecModalTitle">🎯 สถิติด่านเร็วสุด</span>
-        <button class="modal-close" onclick="closeStageRecModal()">✕</button>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="btn" style="padding:5px 10px;font-size:.68rem;background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.35);color:#34d399;" onclick="saveStageRecImage()">📷 บันทึก</button>
+          <button class="modal-close" onclick="closeStageRecModal()">✕</button>
+        </div>
       </div>
       <div class="modal-body" id="stageRecBody" style="padding:0;overflow-y:auto;max-height:68vh;"></div>
     </div>
@@ -1174,27 +1177,27 @@ const I18N={
     catLabel:'หมวดหมู่',allBestTime:'เวลาด่านทั้งหมด',allScore:'คะแนนรวมทั้งหมด',collapseAll:'ย่อทั้งหมด',expandAll:'ขยายทั้งหมด',
     catBestTime:'เวลาด่าน',catScore:'คะแนน',catExport:'Export',catAddMatch:'＋ การแข่งขัน',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'รีเซ็ตตารางนี้?',noDataYet:'ยังไม่มีข้อมูล',rounds9:'9 รอบ',rounds13:'13 รอบ',
-    randStage:'🎲 สุ่มแผนที่',allStageRec:'สถิติด่านทั้งหมด',stageRec:'สถิติด่าน',stageRecTitle:'🎯 สถิติผู้ถือเร็วสุดต่อด่าน',stageUnit:'ด่าน',catStageRec:'สถิติ'},
+    randStage:'🎲 สุ่มแผนที่',allStageRec:'สถิติด่านทั้งหมด',stageRec:'สถิติด่าน',stageRecTitle:'🎯 สถิติผู้ถือเร็วสุดต่อด่าน',stageUnit:'ด่าน',catStageRec:'สถิติ',matchUnit:'การแข่งขัน',noCatMatches:'— ยังไม่มีการแข่งขัน —',minMatch:'ต้องมีการแข่งขันอย่างน้อย 1 รายการ',deleteCatConfirm:'ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก',importSuccess:'นำเข้าสำเร็จ',bestTimeCol:'เวลาดีสุด',importFail:'ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้',noCat:'ไม่มีหมวดหมู่',editCatTitle:'✏️ แก้ไขหมวดหมู่',createCatTitle:'📁 สร้างหมวดหมู่',importErrRead:'ไม่สามารถอ่านไฟล์ได้',importErrSheet:'ไม่พบ Sheet ในไฟล์นี้',importErrData:'ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป'},
   en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',exportExcel:'Export',importExcel:'Import',clearData:'Clear Data',totalAll:'Overall Standings',leaderboard:'🏆 LEADERBOARD',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'⚡ Total',stagePH:'🔍 Select map...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minP:'Minimum 2 players',maxP:'Maximum 6 players',kingMap:'👑 KING',pts:'pts',globeLabel:'English',stageLabel:'Maps',
     catLabel:'Category',allBestTime:'All Best Times',allScore:'Overall Score',collapseAll:'Collapse All',expandAll:'Expand All',
     catBestTime:'Best Times',catScore:'Score',catExport:'Export',catAddMatch:'＋ Match',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'Reset this table?',noDataYet:'No data yet',rounds9:'9 Rounds',rounds13:'13 Rounds',
-    randStage:'🎲 Random Maps',allStageRec:'All Map Records',stageRec:'Stage Records',stageRecTitle:'🎯 Stage Record Champions',stageUnit:'maps',catStageRec:'Records'},
+    randStage:'🎲 Random Maps',allStageRec:'All Map Records',stageRec:'Stage Records',stageRecTitle:'🎯 Stage Record Champions',stageUnit:'maps',catStageRec:'Records',matchUnit:'matches',noCatMatches:'— No matches in this category —',minMatch:'At least 1 match is required',deleteCatConfirm:'Delete this category? Matches will be moved out',importSuccess:'Import successful',bestTimeCol:'Best Time',importFail:'No match data found in file\n\nPlease check that the file was exported from this app',noCat:'No Category',editCatTitle:'✏️ Edit Category',createCatTitle:'📁 Create Category',importErrRead:'Cannot read file',importErrSheet:'No sheet found in this file',importErrData:'Invalid file or insufficient data'},
   zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',exportExcel:'导出',importExcel:'导入',clearData:'清除数据',totalAll:'总排行',leaderboard:'🏆 排行榜',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'⚡ 总计',stagePH:'🔍 选择地图...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'简体中文',stageLabel:'地图',
     catLabel:'分组',allBestTime:'全部最佳时间',allScore:'总积分',collapseAll:'全部折叠',expandAll:'全部展开',
     catBestTime:'最佳时间',catScore:'积分',catExport:'导出',catAddMatch:'＋ 比赛',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'重置此表格？',noDataYet:'暂无数据',rounds9:'9轮',rounds13:'13轮',
-    randStage:'🎲 随机地图',allStageRec:'全部赛道记录',stageRec:'赛道记录',stageRecTitle:'🎯 赛道最速记录排行',stageUnit:'赛道',catStageRec:'记录'},
+    randStage:'🎲 随机地图',allStageRec:'全部赛道记录',stageRec:'赛道记录',stageRecTitle:'🎯 赛道最速记录排行',stageUnit:'赛道',catStageRec:'记录',matchUnit:'场比赛',noCatMatches:'— 此分组暂无比赛 —',minMatch:'至少需要1场比赛',deleteCatConfirm:'删除此分组？比赛将被移出',importSuccess:'导入成功',bestTimeCol:'最佳时间',importFail:'文件中未找到比赛数据\n\n请确认文件是从本网站导出的',noCat:'无分组',editCatTitle:'✏️ 编辑分组',createCatTitle:'📁 新建分组',importErrRead:'无法读取文件',importErrSheet:'文件中未找到工作表',importErrData:'文件无效或数据不足'},
   vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',exportExcel:'Xuất',importExcel:'Nhập',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',leaderboard:'🏆 XẾP HẠNG',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'⚡ Tổng',stagePH:'🔍 Chọn bản đồ...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả?',confirmRemove:'Xóa trận này?',minP:'Tối thiểu 2 người',maxP:'Tối đa 6 người',kingMap:'👑 KING',pts:'điểm',globeLabel:'Tiếng Việt',stageLabel:'Bản đồ',
     catLabel:'Nhóm',allBestTime:'Thời gian tốt nhất',allScore:'Tổng điểm',collapseAll:'Thu gọn tất cả',expandAll:'Mở rộng tất cả',
     catBestTime:'Thời gian',catScore:'Điểm',catExport:'Xuất',catAddMatch:'＋ Trận',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'Đặt lại bảng này?',noDataYet:'Chưa có dữ liệu',rounds9:'9 vòng',rounds13:'13 vòng',
-    randStage:'🎲 Bản đồ ngẫu nhiên',allStageRec:'Tất cả kỷ lục',stageRec:'Kỷ lục bản đồ',stageRecTitle:'🎯 Bảng kỷ lục nhanh nhất',stageUnit:'bản đồ',catStageRec:'Kỷ lục'},
+    randStage:'🎲 Bản đồ ngẫu nhiên',allStageRec:'Tất cả kỷ lục',stageRec:'Kỷ lục bản đồ',stageRecTitle:'🎯 Bảng kỷ lục nhanh nhất',stageUnit:'bản đồ',catStageRec:'Kỷ lục',matchUnit:'trận',noCatMatches:'— Chưa có trận trong nhóm —',minMatch:'Cần ít nhất 1 trận',deleteCatConfirm:'Xóa nhóm này? Các trận sẽ được chuyển ra',importSuccess:'Nhập thành công',bestTimeCol:'Thời gian tốt',importFail:'Không tìm thấy dữ liệu\n\nVui lòng kiểm tra file được xuất từ ứng dụng này',noCat:'Không có nhóm',editCatTitle:'✏️ Sửa nhóm',createCatTitle:'📁 Tạo nhóm',importErrRead:'Không thể đọc file',importErrSheet:'Không tìm thấy sheet trong file',importErrData:'File không hợp lệ hoặc dữ liệu không đủ'},
   tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',exportExcel:'匯出',importExcel:'匯入',clearData:'清除資料',totalAll:'總排行',leaderboard:'🏆 排行榜',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'⚡ 總計',stagePH:'🔍 選擇地圖...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'繁體中文',stageLabel:'地圖',
     catLabel:'分組',allBestTime:'全部最佳時間',allScore:'總積分',collapseAll:'全部折疊',expandAll:'全部展開',
     catBestTime:'最佳時間',catScore:'積分',catExport:'匯出',catAddMatch:'＋ 比賽',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'重置此表格？',noDataYet:'暫無資料',rounds9:'9回合',rounds13:'13回合',
-    randStage:'🎲 隨機地圖',allStageRec:'全部賽道記錄',stageRec:'賽道記錄',stageRecTitle:'🎯 賽道最速記錄排行',stageUnit:'賽道',catStageRec:'記錄'}
+    randStage:'🎲 隨機地圖',allStageRec:'全部賽道記錄',stageRec:'賽道記錄',stageRecTitle:'🎯 賽道最速記錄排行',stageUnit:'賽道',catStageRec:'記錄',matchUnit:'場比賽',noCatMatches:'— 此分組暫無比賽 —',minMatch:'至少需要1場比賽',deleteCatConfirm:'刪除此分組？比賽將被移出',importSuccess:'匯入成功',bestTimeCol:'最佳時間',importFail:'檔案中未找到比賽資料\n\n請確認檔案是從本網站匯出的',noCat:'無分組',editCatTitle:'✏️ 編輯分組',createCatTitle:'📁 新建分組',importErrRead:'無法讀取檔案',importErrSheet:'檔案中未找到工作表',importErrData:'檔案無效或資料不足'}
 };
 let lang='th';
 function T(k){return(I18N[lang]||I18N.th)[k]||(I18N.th[k]||k);}
@@ -1392,7 +1395,7 @@ function buildStageSelector(tObj,r){
     randBtn.type='button';
     randBtn.className='rand-btn';
     randBtn.innerHTML=T('randStage');
-    randBtn.title='สุ่มด่านแบบสุ่มจากทั้งหมด';
+    randBtn.title=T('randStage');
     randBtn.addEventListener('click',(e)=>{
       e.preventDefault();
       e.stopPropagation();
@@ -1443,12 +1446,12 @@ function buildTable(tObj){
     b.onclick=()=>{tObj.rowCount=n;save();rebuildBlock(tObj);};
     rowToggle.appendChild(b);
   });
-  const imgBtn=document.createElement('button');imgBtn.className='btn-rm btn-img';imgBtn.innerHTML='📷';imgBtn.title='บันทึกรูปตาราง';imgBtn.onclick=()=>openSaveImageModal(tObj.id);
-  const rstBtn=document.createElement('button');rstBtn.className='btn-rm btn-rst';rstBtn.innerHTML='🔄';rstBtn.title='รีเซ็ตตารางนี้';rstBtn.onclick=()=>resetTable(tObj.id);
+  const imgBtn=document.createElement('button');imgBtn.className='btn-rm btn-img';imgBtn.innerHTML='📷';imgBtn.title='📷';imgBtn.onclick=()=>openSaveImageModal(tObj.id);
+  const rstBtn=document.createElement('button');rstBtn.className='btn-rm btn-rst';rstBtn.innerHTML='🔄';rstBtn.title=T('confirmResetTable').replace('?','');rstBtn.onclick=()=>resetTable(tObj.id);
   const rmBtn=document.createElement('button');rmBtn.className='btn-rm';rmBtn.textContent=T('removeMatch');rmBtn.onclick=()=>removeMatch(tObj.id);
   const cat=tObj.catId!==null&&tObj.catId!==undefined?categories.find(c=>c.id===tObj.catId):null;
   const catBtn=document.createElement('button');catBtn.className='cat-select-btn';
-  catBtn.innerHTML=`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${cat?getCatColor(cat.id):'var(--dim)'};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;max-width:90px;white-space:nowrap;">${cat?cat.name:'หมวดหมู่'}</span>▾`;
+  catBtn.innerHTML=`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${cat?getCatColor(cat.id):'var(--dim)'};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;max-width:90px;white-space:nowrap;">${cat?cat.name:T('catLabel')}</span>▾`;
   catBtn.onclick=(e)=>{e.stopPropagation();openCatDd(catBtn,tObj.id);};
   btnGroup.append(rowToggle,catBtn,imgBtn,rstBtn,rmBtn);hdr.appendChild(btnGroup);
   block.appendChild(hdr);
@@ -1589,11 +1592,11 @@ function addMatchToCategory(catId){
 async function exportCategory(catId){
   const cat=categories.find(c=>c.id===catId);
   const catTables=tables.filter(t=>t.catId===catId);
-  if(!catTables.length){alert('ไม่มีการแข่งขันในหมวดหมู่นี้');return;}
+  if(!catTables.length){alert(T('noCatMatches'));return;}
   await exportExcel(catTables, cat?cat.name:T('matchLabel'));
 }
 function removeMatch(tid){
-  if(tables.length===1){alert('min 1');return;}if(!confirm(T('confirmRemove')))return;
+  if(tables.length===1){alert(T('minMatch'));return;}if(!confirm(T('confirmRemove')))return;
   tables=tables.filter(t=>t.id!==tid);save();renderAll();
 }
 
@@ -1686,7 +1689,7 @@ function getCatColor(id){return CAT_COLORS[id%CAT_COLORS.length];}
 function openCatModal(editId=null){
   _editCatId=editId;
   const cat=editId!==null?categories.find(c=>c.id===editId):null;
-  document.getElementById('catModalTitle').textContent=cat?'✏️ แก้ไขหมวดหมู่':'📁 สร้างหมวดหมู่';
+  document.getElementById('catModalTitle').textContent=cat?T('editCatTitle'):T('createCatTitle');
   document.getElementById('catNameInput').value=cat?cat.name:'';
   document.getElementById('catModal').style.display='flex';
   document.body.style.overflow='hidden';
@@ -1707,7 +1710,7 @@ function saveCat(){
   save();closeCatModal();renderAll();
 }
 function deleteCategory(id){
-  if(!confirm('ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก'))return;
+  if(!confirm(T('deleteCatConfirm')))return;
   categories=categories.filter(c=>c.id!==id);
   tables.forEach(t=>{if(t.catId===id)t.catId=null;});
   save();renderAll();
@@ -1730,7 +1733,7 @@ function openCatDd(btn,tid){
   if(_activeCatDd){const _wasSame=_activeCatDd.dataset.tid===String(tid);_activeCatDd.remove();_activeCatDd=null;if(_wasSame)return;}
   const dd=document.createElement('div');dd.className='cat-dd';dd.dataset.tid=tid;
   const none=document.createElement('div');none.className='cat-dd-item';
-  none.innerHTML='<span class="cat-dot" style="background:var(--dim)"></span>ไม่มีหมวดหมู่';
+  none.innerHTML=`<span class="cat-dot" style="background:var(--dim)"></span>${T('noCat')}`;
   none.onclick=()=>{setTableCategory(tid,null);dd.remove();_activeCatDd=null;};
   dd.appendChild(none);
   if(categories.length){
@@ -1767,7 +1770,7 @@ function renderAll(){
     const left=document.createElement('div');left.className='cat-header-left';
     const chev=document.createElement('span');chev.className='cat-chevron';chev.textContent='▼';
     const nm=document.createElement('span');nm.className='cat-name';nm.style.color=getCatColor(cat.id);nm.textContent=cat.name;
-    const cnt=document.createElement('span');cnt.className='cat-count';cnt.textContent=`${catTables.length} การแข่งขัน`;
+    const cnt=document.createElement('span');cnt.className='cat-count';cnt.textContent=`${catTables.length} ${T('matchUnit')}`;
     left.append(chev,nm,cnt);
     const acts=document.createElement('div');acts.className='cat-actions';
     const bAdd=document.createElement('button');bAdd.className='cat-btn';bAdd.textContent=T('catAddMatch');
@@ -1794,7 +1797,7 @@ function renderAll(){
     if(catTables.length===0){
       const empty=document.createElement('div');
       empty.style.cssText='padding:16px;text-align:center;color:var(--dim);font-size:.78rem;font-family:Rajdhani,monospace;';
-      empty.textContent='— ยังไม่มีการแข่งขันในหมวดหมู่นี้ —';body.appendChild(empty);
+      empty.textContent=T('noCatMatches');body.appendChild(empty);
     } else {
       const innerGrid=document.createElement('div');innerGrid.className='cat-inner-grid';
       const tablesCol=document.createElement('div');
@@ -1812,7 +1815,7 @@ function renderAll(){
     if(categories.length>0){
       const lbl=document.createElement('div');
       lbl.style.cssText='font-family:Rajdhani,monospace;font-size:.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;padding-left:4px;';
-      lbl.textContent='ไม่มีหมวดหมู่';zone.appendChild(lbl);
+      lbl.textContent=T('noCat');zone.appendChild(lbl);
     }
     uncatTables.forEach(tObj=>zone.appendChild(buildTable(tObj)));
     area.appendChild(zone);
@@ -1846,7 +1849,7 @@ function updateCatLb(catId){
   const sorted=Object.entries(sm).map(([n,s])=>({name:n,score:s,plays:playCount[n]||0})).sort((a,b)=>b.score-a.score).slice(0,5);
   lbBody.innerHTML='';
   if(!sorted.length){
-    lbBody.innerHTML='<div style="padding:14px;text-align:center;color:var(--dim);font-size:.72rem;font-family:Rajdhani,monospace;">— ยังไม่มีข้อมูล —</div>';
+    lbBody.innerHTML=`<div style="padding:14px;text-align:center;color:var(--dim);font-size:.72rem;font-family:Rajdhani,monospace;">— ${T('noDataYet')} —</div>`;
     return;
   }
   const RANK_ICONS=['🥇','🥈','🥉'];
@@ -1870,7 +1873,7 @@ function updateCatLb(catId){
     const info=document.createElement('div');info.className='lb-info';
     const nameEl=document.createElement('span');nameEl.className='lb-name';nameEl.textContent=item.name;
     const playsEl=document.createElement('span');playsEl.className='lb-plays';
-    playsEl.textContent=`${item.plays} การแข่งขัน`;
+    playsEl.textContent=`${item.plays} ${T('matchUnit')}`;
     info.appendChild(nameEl);info.appendChild(playsEl);
 
     // ── score ──
@@ -1890,7 +1893,7 @@ function openBestTimeModal(catId){
   _bestTimeCatId=catId;
   const cat=catId!==null?categories.find(c=>c.id===catId):null;
   const catTables=catId!==null?tables.filter(t=>t.catId===catId):tables;
-  const title=cat?`⚡ เวลาเร็วสุดต่อด่าน — ${cat.name}`:'⚡ เวลาเร็วสุดต่อด่าน (ทั้งหมด)';
+  const title=cat?`⚡ ${T('catBestTime')} — ${cat.name}`:`⚡ ${T('allBestTime')}`;
   document.getElementById('bestTimeTitle').textContent=title;
   const body=document.getElementById('bestTimeBody');body.innerHTML='';
   const stageMap={};
@@ -1908,11 +1911,11 @@ function openBestTimeModal(catId){
   });
   const stages=Object.entries(stageMap).sort((a,b)=>a[0].localeCompare(b[0]));
   if(!stages.length){
-    body.innerHTML='<div style="padding:24px;text-align:center;color:var(--dim);font-family:Rajdhani,monospace;font-size:.85rem;">ยังไม่มีข้อมูลเวลา</div>';
+    body.innerHTML=`<div style="padding:24px;text-align:center;color:var(--dim);font-family:Rajdhani,monospace;font-size:.85rem;">${T('noDataYet')}</div>`;
   } else {
     const wrap=document.createElement('div');wrap.style.cssText='overflow-x:auto;';
     const tbl=document.createElement('table');tbl.className='best-time-tbl';
-    tbl.innerHTML='<thead><tr><th>ด่าน</th><th>เวลาดีสุด</th><th>ผู้เล่น</th><th>การแข่งขัน</th></tr></thead>';
+    tbl.innerHTML=`<thead><tr><th>${T('stageLabel')}</th><th>${T('bestTimeCol')}</th><th>${T('player')}</th><th>${T('matchLabel')}</th></tr></thead>`;
     const tbody=document.createElement('tbody');
     stages.forEach(([stage,info])=>{
       const tr=document.createElement('tr');
@@ -1930,7 +1933,7 @@ async function saveBestTimeImage(){
   const catId=_bestTimeCatId;
   const cat=catId!==null?categories.find(c=>c.id===catId):null;
   const catTables=catId!==null?tables.filter(t=>t.catId===catId):tables;
-  const titleTxt=cat?`⚡ เวลาเร็วสุดต่อด่าน — ${cat.name}`:'⚡ เวลาเร็วสุดต่อด่าน (ทั้งหมด)';
+  const titleTxt=cat?`⚡ ${T('catBestTime')} — ${cat.name}`:`⚡ ${T('allBestTime')}`;
 
   const stageMap={};
   catTables.forEach(tObj=>{
@@ -1946,7 +1949,7 @@ async function saveBestTimeImage(){
     });
   });
   const stages=Object.entries(stageMap).sort((a,b)=>a[0].localeCompare(b[0]));
-  if(!stages.length){alert('ยังไม่มีข้อมูลเวลา');return;}
+  if(!stages.length){alert(T('noDataYet'));return;}
 
   const isLight=currentMode==='light';
   const htmlEl=document.documentElement;
@@ -1985,7 +1988,7 @@ async function saveBestTimeImage(){
   y+=TITLE_H;
 
   ctx.fillStyle=hdrBg;ctx.fillRect(PAD,y,W-PAD*2,HEAD_H);
-  const cols=[{label:'ด่าน',x:PAD+6,w:COL_STAGE-10,align:'left'},{label:'เวลาดีสุด',x:PAD+COL_STAGE+COL_TIME/2,w:COL_TIME,align:'center'},{label:'ผู้เล่น',x:PAD+COL_STAGE+COL_TIME+COL_PLAYER/2,w:COL_PLAYER,align:'center'},{label:'การแข่งขัน',x:PAD+COL_STAGE+COL_TIME+COL_PLAYER+COL_MATCH/2,w:COL_MATCH,align:'center'}];
+  const cols=[{label:T('stageLabel'),x:PAD+6,w:COL_STAGE-10,align:'left'},{label:T('bestTimeCol'),x:PAD+COL_STAGE+COL_TIME/2,w:COL_TIME,align:'center'},{label:T('player'),x:PAD+COL_STAGE+COL_TIME+COL_PLAYER/2,w:COL_PLAYER,align:'center'},{label:T('matchLabel'),x:PAD+COL_STAGE+COL_TIME+COL_PLAYER+COL_MATCH/2,w:COL_MATCH,align:'center'}];
   ctx.font=`700 10px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
   cols.forEach(col=>{ctx.textAlign=col.align;ctx.fillText(col.label,col.x,y+HEAD_H/2+4);});
   ctx.strokeStyle=blueColor+'44';ctx.lineWidth=1;ctx.strokeRect(PAD,y,W-PAD*2,HEAD_H);
@@ -2019,7 +2022,7 @@ async function saveBestTimeImage(){
 function openScoreModal(catId){
   const cat=catId!==null?categories.find(c=>c.id===catId):null;
   const catTables=catId!==null?tables.filter(t=>t.catId===catId):tables;
-  const title=cat?`🏆 คะแนนรวม — ${cat.name}`:'🏆 คะแนนรวมทั้งหมด';
+  const title=cat?`🏆 ${T('catScore')} — ${cat.name}`:`🏆 ${T('allScore')}`;
   document.getElementById('scoreModalTitle').textContent=title;
   const sm={};const playCount={};
   catTables.forEach(tObj=>{
@@ -2036,11 +2039,11 @@ function openScoreModal(catId){
   if(catTables.length>0){
     const badge=document.createElement('div');
     badge.style.cssText='text-align:center;padding:4px;margin-bottom:8px;font-family:Rajdhani,monospace;font-size:.72rem;color:var(--dim);';
-    badge.textContent=`${catTables.length} การแข่งขัน`;
+    badge.textContent=`${catTables.length} ${T('matchUnit')}`;
     body.appendChild(badge);
   }
   const maxS=sorted.length?sorted[0].score:0;
-  if(!sorted.length){body.innerHTML='<div style="padding:24px;text-align:center;color:var(--dim);">ยังไม่มีข้อมูล</div>';}
+  if(!sorted.length){body.innerHTML=`<div style="padding:24px;text-align:center;color:var(--dim);">${T('noDataYet')}</div>`;}
   else{
     sorted.forEach((item,i)=>{
       const row=document.createElement('div');row.className='cat-score-row';
@@ -2050,7 +2053,7 @@ function openScoreModal(catId){
       const nameWrap=document.createElement('div');nameWrap.style.cssText='flex:1;display:flex;flex-direction:column;gap:1px;';
       const pname=document.createElement('span');pname.className='cat-player-name';pname.textContent=item.name;
       const playsEl=document.createElement('span');playsEl.style.cssText='font-size:.6rem;color:var(--dim);font-family:Rajdhani,monospace;';
-      playsEl.textContent=`${item.plays} การแข่งขัน`;
+      playsEl.textContent=`${item.plays} ${T('matchUnit')}`;
       nameWrap.appendChild(pname);nameWrap.appendChild(playsEl);
       const barWrap=document.createElement('div');barWrap.style.cssText='width:60px;height:4px;background:var(--input-bg);border-radius:2px;overflow:hidden;flex-shrink:0;';
       const bar=document.createElement('div');bar.style.cssText=`height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--gold));width:${maxS>0?Math.round(item.score/maxS*100):0}%;`;
@@ -2107,7 +2110,7 @@ function updateCollapsedSummary(tid){
   }
 }
 function resetTable(tid){
-  if(!confirm('รีเซ็ตข้อมูลในตารางนี้?')) return;
+  if(!confirm(T('confirmResetTable'))) return;
   const tObj=tables.find(t=>t.id===tid);if(!tObj)return;
   tObj.players=Array(MAX_P).fill('');
   tObj.rows=Array.from({length:ROWS_MAX},()=>({stage:'',times:Array(MAX_P).fill('')}));
@@ -2446,8 +2449,8 @@ function importExcel(){
     const file=e.target.files[0];if(!file)return;
     const buf=await file.arrayBuffer();
     const wb=new ExcelJS.Workbook();
-    try{await wb.xlsx.load(buf);}catch(err){alert('ไม่สามารถอ่านไฟล์ได้: '+err.message);return;}
-    const ws=wb.worksheets[0];if(!ws){alert('ไม่พบ sheet ในไฟล์นี้');return;}
+    try{await wb.xlsx.load(buf);}catch(err){alert(T('importErrRead')+': '+err.message);return;}
+    const ws=wb.worksheets[0];if(!ws){alert(T('importErrSheet'));return;}
 
     const rows=[];
     ws.eachRow((row,rn)=>{
@@ -2463,7 +2466,7 @@ function importExcel(){
       });
       rows.push({rn,vals});
     });
-    if(rows.length<4){alert('ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป');return;}
+    if(rows.length<4){alert(T('importErrData'));return;}
 
     const round1Patterns=[/[-–]\s*(รอบ|Round|Vòng|回合|轮次)\s*1\b/i];
     const roundPatterns=[/\b(รอบ|Round|Vòng|回合|轮次)\s*(\d+)/i];
@@ -2536,12 +2539,12 @@ function importExcel(){
       if(currentT.rowCount<ROWS_BASE)currentT.rowCount=ROWS_BASE;
     }
 
-    if(!newTables.length){alert('ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้');return;}
+    if(!newTables.length){alert(T('importFail'));return;}
 
     const choice=window.confirm(
-      `${T('importExcel')}: พบ ${newTables.length} การแข่งขัน\n\n` +
-      `กด OK  → เพิ่มต่อกับข้อมูลที่มีอยู่\n` +
-      `กด Cancel → ล้างทั้งหมดแล้วนำเข้าใหม่`
+      `${T('importExcel')}: ${T('importSuccess')} ${newTables.length} ${T('matchUnit')}\n\n` +
+      `OK → ${T('addMatch')}\n` +
+      `Cancel → ${T('clearData')}`
     );
     if(choice===false){
       tables=newTables;
@@ -2551,7 +2554,7 @@ function importExcel(){
       tc=tables.length?Math.max(...tables.map(t=>t.id))+1:0;
     }
     save();renderAll();
-    alert(`✅ นำเข้าสำเร็จ ${newTables.length} การแข่งขัน`);
+    alert(`✅ ${T('importSuccess')} ${newTables.length} ${T('matchUnit')}`);
   };
   input.click();
 }
@@ -2651,7 +2654,9 @@ function calcStageRecords(tableList){
   return rc;
 }
 
+let _stageRecCatId=null;
 function openStageRecModal(catId){
+  _stageRecCatId=catId;
   const cat=catId!==null&&catId!==undefined?categories.find(c=>c.id===catId):null;
   const tList=cat?tables.filter(t=>t.catId===catId):tables;
   const title=cat
@@ -2774,6 +2779,155 @@ function openStageRecModal(catId){
 
   document.getElementById('stageRecModal').style.display='flex';
   document.body.style.overflow='hidden';
+}
+
+
+function saveStageRecImage(){
+  const titleEl=document.getElementById('stageRecModalTitle');
+  const titleTxt=titleEl?titleEl.textContent:'🎯 Stage Record Champions';
+
+  // Re-compute current data
+  const catId=_stageRecCatId;
+  const cat=catId!==null&&catId!==undefined?categories.find(c=>c.id===catId):null;
+  const tList=cat?tables.filter(t=>t.catId===catId):tables;
+  const rc=calcStageRecords(tList);
+  const sorted=Object.entries(rc).map(([n,c])=>({name:n,count:c})).sort((a,b)=>b.count-a.count);
+  if(!sorted.length){alert(T('noDataYet'));return;}
+
+  const isLight=currentMode==='light';
+  const cs=getComputedStyle(document.documentElement);
+  const cv=(v,fb)=>cs.getPropertyValue(v).trim()||fb;
+  const bgColor =cv('--bg',    isLight?'#dde8f8':'#04081a');
+  const textColor=cv('--text', isLight?'#0a1a3a':'#e8f0ff');
+  const dimColor =cv('--dim',  isLight?'#4a6898':'#5a78aa');
+  const goldColor=cv('--gold', isLight?'#b8860b':'#f5c518');
+  const blueColor=cv('--ac1',  isLight?'#1558c0':'#1d6fe8');
+  const blue2    =cv('--ac2',  isLight?'#1a72e8':'#3b9dff');
+  const s1Color  =cv('--s1',   isLight?'#c8daf5':'#071230');
+  const cardBg   =isLight?'rgba(255,255,255,.98)':s1Color+'ee';
+  const hdrBg    =isLight?cv('--s2','#b8ccee'):s1Color;
+  const rowAlt   =isLight?'rgba(21,88,192,.04)':'rgba(255,255,255,.03)';
+
+  const MEDALS=['🥇','🥈','🥉'];
+  const RANK_COLORS=['#fbbf24','#cbd5e1','#cd7f32'];
+  const BAR_COLORS=[
+    ['#fbbf24','#f97316'],
+    ['#94a3b8','#cbd5e1'],
+    ['#cd7f32','#d4a574'],
+  ];
+
+  const PAD=28, NAME_COL=220, BAR_COL=130, COUNT_COL=70;
+  const RANK_COL=46;
+  const W=PAD*2+RANK_COL+NAME_COL+BAR_COL+COUNT_COL;
+  const TITLE_H=56, HDR_H=36, ROW_H=44, FOOT=28;
+  const H=PAD+TITLE_H+HDR_H+ROW_H*sorted.length+FOOT;
+  const maxCount=sorted[0].count;
+
+  const canvas=document.createElement('canvas');
+  canvas.width=W*2;canvas.height=H*2;
+  const ctx=canvas.getContext('2d');ctx.scale(2,2);
+
+  // ── Background ──
+  ctx.fillStyle=bgColor;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=cardBg;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.fill();
+  ctx.strokeStyle=blueColor+'44';ctx.lineWidth=1;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.stroke();
+
+  // accent gradient top line
+  const acc=ctx.createLinearGradient(PAD/2,0,W-PAD/2,0);
+  acc.addColorStop(0,'transparent');acc.addColorStop(.3,blueColor);
+  acc.addColorStop(.5,goldColor);acc.addColorStop(.7,blueColor);acc.addColorStop(1,'transparent');
+  ctx.fillStyle=acc;ctx.fillRect(PAD/2,PAD/2,W-PAD,3);
+
+  // ── Title ──
+  let y=PAD+6;
+  ctx.textAlign='center';
+  ctx.font=`bold 17px Rajdhani,Orbitron,sans-serif`;
+  ctx.fillStyle=goldColor;
+  fillTextEllipsis(ctx,titleTxt,W/2,y+22,W-PAD*2-16);
+  y+=TITLE_H;
+
+  // ── Column header ──
+  ctx.fillStyle=hdrBg;ctx.fillRect(PAD,y,W-PAD*2,HDR_H);
+  ctx.strokeStyle=blueColor+'44';ctx.lineWidth=.5;ctx.strokeRect(PAD,y,W-PAD*2,HDR_H);
+  ctx.font=`700 9px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
+  const colHy=y+HDR_H/2+3;
+  const rankX=PAD+RANK_COL/2, nameX=PAD+RANK_COL+8, barCX=PAD+RANK_COL+NAME_COL+BAR_COL/2, countX=PAD+RANK_COL+NAME_COL+BAR_COL+COUNT_COL/2;
+  ctx.textAlign='center';ctx.fillText('#',rankX,colHy);
+  ctx.textAlign='left';ctx.fillText(T('player').toUpperCase(),nameX,colHy);
+  ctx.textAlign='center';ctx.fillText(T('stageUnit').toUpperCase(),countX,colHy);
+  y+=HDR_H;
+
+  // ── Rows ──
+  sorted.forEach((item,i)=>{
+    const rank=i+1;
+    const ry=y+i*ROW_H;
+    const cy=ry+ROW_H/2+1;
+
+    // row bg
+    ctx.fillStyle=rank===1?'rgba(245,197,24,.08)':rank===2?'rgba(148,163,184,.04)':rank===3?'rgba(205,127,50,.04)':i%2===1?rowAlt:cardBg;
+    ctx.fillRect(PAD,ry,W-PAD*2,ROW_H);
+    ctx.strokeStyle=blueColor+'18';ctx.lineWidth=.5;ctx.strokeRect(PAD,ry,W-PAD*2,ROW_H);
+
+    // left accent stripe
+    const stripeColor=rank<=3?RANK_COLORS[rank-1]:'#334155';
+    ctx.fillStyle=stripeColor;ctx.fillRect(PAD,ry,3,ROW_H);
+
+    // rank / medal
+    ctx.textAlign='center';
+    if(rank<=3){
+      ctx.font=`14px serif`;ctx.fillText(MEDALS[rank-1],rankX,cy+5);
+    } else {
+      ctx.font=`700 10px Orbitron,monospace`;ctx.fillStyle='#475569';
+      ctx.fillText('#'+rank,rankX,cy+4);
+    }
+
+    // player name
+    const nameColor=rank<=3?RANK_COLORS[rank-1]:textColor;
+    ctx.textAlign='left';ctx.font=`700 11px "Exo 2",Sarabun,sans-serif`;ctx.fillStyle=nameColor;
+    if(rank===1){ctx.shadowColor=goldColor;ctx.shadowBlur=8;}
+    fillTextEllipsis(ctx,item.name,PAD+RANK_COL+8,cy+5,NAME_COL-14);
+    ctx.shadowBlur=0;ctx.shadowColor='transparent';
+
+    // progress bar
+    const barX=PAD+RANK_COL+NAME_COL+8;
+    const barW=BAR_COL-20;
+    const barH=5;const barY=cy+1;
+    ctx.fillStyle=isLight?'rgba(0,0,0,.08)':'rgba(255,255,255,.08)';
+    roundRect(ctx,barX,barY-barH/2,barW,barH,3);ctx.fill();
+    const filled=maxCount>0?Math.round(item.count/maxCount*barW):0;
+    if(filled>0){
+      const bc=rank<=3?BAR_COLORS[rank-1]:null;
+      if(bc){
+        const bg=ctx.createLinearGradient(barX,0,barX+filled,0);
+        bg.addColorStop(0,bc[0]);bg.addColorStop(1,bc[1]);
+        ctx.fillStyle=bg;
+      } else {
+        const bg2=ctx.createLinearGradient(barX,0,barX+filled,0);
+        bg2.addColorStop(0,blueColor);bg2.addColorStop(1,blue2);
+        ctx.fillStyle=bg2;
+      }
+      roundRect(ctx,barX,barY-barH/2,filled,barH,3);ctx.fill();
+    }
+
+    // count number
+    ctx.textAlign='center';
+    ctx.font=`900 14px Orbitron,monospace`;
+    ctx.fillStyle=rank<=3?RANK_COLORS[rank-1]:blue2;
+    if(rank===1){ctx.shadowColor=goldColor;ctx.shadowBlur=10;}
+    ctx.fillText(item.count,countX,cy+5);
+    ctx.shadowBlur=0;ctx.shadowColor='transparent';
+  });
+
+  y+=ROW_H*sorted.length;
+
+  // ── Footer ──
+  ctx.textAlign='right';ctx.font=`500 8px "Exo 2",sans-serif`;ctx.fillStyle=dimColor+'99';
+  ctx.fillText('🏁 Race Time Tracker',W-PAD,H-10);
+
+  const link=document.createElement('a');
+  const safeName=(cat?cat.name:'all').replace(/[^a-zA-Z0-9ก-๙]/g,'_').substring(0,20);
+  link.download=`stage_records_${safeName}_${Date.now()}.png`;
+  link.href=canvas.toDataURL('image/png');link.click();
 }
 
 function closeStageRecModal(){
