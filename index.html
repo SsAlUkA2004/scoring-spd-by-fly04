@@ -2305,20 +2305,63 @@ async function captureTableImage(){
   y+=ROW_STAGE;
 
   // ── ROWS 3..N: Players ──
+  // Pre-calc win count (only meaningful for 2 players)
+  const winCount=Array(pc).fill(0);
+  if(pc===2){
+    for(let r=0;r<activeRows;r++){
+      const t0=allParsed[r][0],t1=allParsed[r][1];
+      if(t0!==null&&t1!==null){
+        if(t0<t1)winCount[0]++;
+        else if(t1<t0)winCount[1]++;
+      }
+    }
+  }
+
   for(let p=0;p<pc;p++){
     const pName=(tObj.players[p]||'').trim()||`P${p+1}`;
     const ry=y+ROW_P*p;
     const isEven=p%2===0;
 
-    // Label cell — show name only, no score
+    // Label cell
     ctx.fillStyle=isEven?cardBg:colAlt;
     ctx.fillRect(tableX,ry,LABEL_W,ROW_P);
     ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(tableX,ry,LABEL_W,ROW_P);
     ctx.textAlign='left';
-    ctx.font=`600 8px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
-    ctx.fillText(`${T('playerLabel')} ${p+1}`,tableX+7,ry+14);
-    ctx.font=`700 12px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
-    fillTextEllipsis(ctx,pName,tableX+7,ry+30,LABEL_W-12);
+
+    if(pc===2){
+      // Show: "P1 label" on top, then "Name  W" on bottom line
+      ctx.font=`600 7px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
+      ctx.fillText(`${T('playerLabel')} ${p+1}`,tableX+7,ry+13);
+
+      // Name (truncated to leave room for win count)
+      ctx.font=`700 11px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
+      const wins=winCount[p];
+      const winsStr=String(wins);
+      ctx.font=`700 11px Rajdhani,monospace`;
+      const winsW=ctx.measureText(' '+winsStr).width+4;
+      ctx.font=`700 11px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
+      fillTextEllipsis(ctx,pName,tableX+7,ry+28,LABEL_W-12-winsW);
+
+      // Win count badge — right side of label
+      const isLeading=wins>0&&wins===Math.max(...winCount);
+      const badgeX=tableX+LABEL_W-winsW-4;
+      // Badge bg
+      ctx.fillStyle=isLeading?'rgba(245,197,24,.18)':'rgba(255,255,255,.06)';
+      roundRect(ctx,badgeX-2,ry+19,winsW+2,14,4);ctx.fill();
+      ctx.strokeStyle=isLeading?goldColor+'88':borderClr;ctx.lineWidth=.5;
+      roundRect(ctx,badgeX-2,ry+19,winsW+2,14,4);ctx.stroke();
+      // Win number
+      ctx.font=`700 11px Rajdhani,monospace`;
+      ctx.fillStyle=isLeading?goldColor:dimColor;
+      ctx.textAlign='center';
+      ctx.fillText(winsStr,badgeX+winsW/2-1,ry+29);
+    } else {
+      // Original: P label + name only
+      ctx.font=`600 8px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
+      ctx.fillText(`${T('playerLabel')} ${p+1}`,tableX+7,ry+14);
+      ctx.font=`700 12px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
+      fillTextEllipsis(ctx,pName,tableX+7,ry+30,LABEL_W-12);
+    }
 
     // Round cells for this player
     for(let r=0;r<activeRows;r++){
