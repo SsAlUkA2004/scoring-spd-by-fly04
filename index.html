@@ -293,7 +293,6 @@ html,body{
 
 /* ── HEADER ── */
 header{text-align:center;padding:28px 16px 14px;margin-bottom:18px;position:relative;}
-/* Header checkered border */
 header::before{
   content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
   width:min(600px,90%);height:4px;
@@ -314,12 +313,10 @@ header::after{
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   animation:rShift 4s linear infinite,cFloat 2.6s ease-in-out infinite;
 }
-/* Dark mode: white → accent → gold */
 [data-mode="dark"] #mainTitle .ch{
   background-image:linear-gradient(160deg,#ffffff 0%,var(--blue3) 35%,var(--blue2) 60%,var(--gold) 80%,#ffffff 100%);
   filter:drop-shadow(0 0 8px color-mix(in srgb,var(--blue2) 60%,transparent));
 }
-/* Light mode: deep accent → dark gold */
 [data-mode="light"] #mainTitle .ch{
   background-image:linear-gradient(160deg,var(--s1) 0%,var(--ac1) 35%,var(--ac2) 60%,var(--gold) 80%,var(--s1) 100%);
   filter:drop-shadow(0 2px 4px color-mix(in srgb,var(--ac1) 40%,transparent));
@@ -379,7 +376,7 @@ header::after{
 .tp-color{
   width:100%;aspect-ratio:1;border-radius:8px;border:2px solid transparent;
   cursor:pointer;transition:all .2s;position:relative;
-  min-width:0;/* prevent overflow */
+  min-width:0;
 }
 .tp-color:hover{transform:scale(1.08);box-shadow:0 0 8px rgba(255,255,255,.2);}
 .tp-color.active{border-color:#fff;box-shadow:0 0 10px rgba(255,255,255,.4);}
@@ -402,7 +399,7 @@ header::after{
 .rt-btn.active{background:var(--blue);color:#fff;box-shadow:0 0 8px rgba(29,111,232,.3);}
 .rt-btn:not(.active):hover{color:var(--blue2);}
 
-/* Extra rounds (10-13) styling — dimmed to show they don't count for score */
+/* Extra rounds (10-13) styling */
 .row-extra td{opacity:.75;}
 .row-extra .rnd-lbl{color:var(--dim);}
 .extra-badge{
@@ -425,7 +422,6 @@ header::after{
 .collapse-icon{display:inline-block;transition:transform .3s;font-style:normal;font-size:.8rem;}
 .match-block.collapsed .collapse-icon{transform:rotate(-90deg);}
 
-/* Collapsible body */
 .block-body{
   overflow:hidden;
   transition:max-height .35s cubic-bezier(.4,0,.2,1), opacity .3s ease;
@@ -437,7 +433,6 @@ header::after{
   opacity:0;
 }
 
-/* Collapsed header: show mini score summary */
 .collapsed-summary{
   display:none;
   align-items:center;gap:8px;flex-wrap:wrap;
@@ -468,10 +463,10 @@ header::after{
 .btn-clear{background:var(--card-bg);border-color:var(--s3);color:var(--dim);}
 .btn-clear:hover{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.08);}
 
-/* ── MAIN GRID — full width now (no sidebar) ── */
+/* ── MAIN GRID ── */
 .main-grid{display:block;}
 
-/* ── CATEGORY INNER GRID — tables left, leaderboard right ── */
+/* ── CATEGORY INNER GRID ── */
 .cat-inner-grid{
   display:grid;
   grid-template-columns:1fr 240px;
@@ -480,7 +475,7 @@ header::after{
 }
 @media(max-width:800px){.cat-inner-grid{grid-template-columns:1fr;}}
 
-/* ── CAT LEADERBOARD (inside category) ── */
+/* ── CAT LEADERBOARD ── */
 .cat-lb{
   background:var(--card-bg);border:1px solid var(--card-border);
   border-radius:12px;overflow:hidden;
@@ -504,7 +499,6 @@ header::after{
   transform:skewX(-6deg);display:inline-block;
 }
 .cat-lb-body{padding:6px 0;}
-/* lb-item using CSS vars */
 
 /* ── MATCH BLOCK ── */
 .match-block{margin-bottom:14px;border-radius:14px;overflow:visible;background:var(--card-bg);border:1px solid var(--card-border);box-shadow:0 0 0 1px rgba(59,157,255,.05),0 8px 28px rgba(0,0,10,.3),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(14px);position:relative;transition:background .35s,border-color .35s;}
@@ -526,32 +520,32 @@ header::after{
 .sb-hdr{background:var(--hdr-bg);padding:14px 18px;border-bottom:1px solid var(--card-border);display:flex;align-items:center;justify-content:space-between;}
 .sb-hdr h2{font-family:'Rajdhani',monospace;font-size:1.05rem;font-weight:700;letter-spacing:.2em;transform:skewX(-8deg);display:inline-block;color:var(--gold);}
 .lb-name{font-weight:700;font-size:.9rem;flex:1;margin:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2);font-family:'Exo 2',sans-serif;}
-}
 .tbl-wrap::-webkit-scrollbar{height:5px;}
 .tbl-wrap::-webkit-scrollbar-track{background:var(--s1);border-radius:3px;}
 .tbl-wrap::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:3px;}
 
-/* Fixed layout so columns are equally sized */
 table{
   width:100%;border-collapse:collapse;
   min-width:520px;
-  table-layout:fixed; /* KEY: forces equal player columns */
+  table-layout:fixed;
 }
 thead{position:sticky;top:0;z-index:20;background:var(--tbl-head);backdrop-filter:blur(8px);}
 th{padding:0;border-bottom:2px solid var(--card-border);vertical-align:middle;overflow:hidden;}
-th.th-rnd{width:36px;}th.th-stage{width:145px;}
+th.th-rnd{width:52px;}th.th-stage{width:145px;}
 .th-player-wrap{display:flex;flex-direction:column;align-items:center;padding:4px 6px 6px;}
 .th-player-lbl{font-family:'Rajdhani',monospace;font-size:.6rem;font-weight:700;color:var(--blue3);letter-spacing:1.5px;margin-bottom:4px;text-transform:uppercase;}
 .th-pi{width:100%;background:transparent;border:none;border-bottom:2px solid var(--input-border);color:var(--gold);font-family:'Rajdhani',monospace;font-size:.85rem;font-weight:700;text-align:center;padding:5px 4px;letter-spacing:.8px;outline:none;transition:border-color .2s;}
 .th-pi:focus{border-bottom-color:var(--gold);}
 .th-pi::placeholder{color:var(--input-border);font-size:.7rem;}
-.th-rnd-inner{padding:10px 6px;font-family:'Rajdhani',monospace;font-size:.7rem;font-weight:700;letter-spacing:1.5px;color:var(--dim);text-align:center;text-transform:uppercase;}
+.th-rnd-inner{padding:10px 4px;font-family:'Rajdhani',monospace;font-size:.68rem;font-weight:700;letter-spacing:.3px;color:var(--dim);text-align:center;text-transform:uppercase;overflow:hidden;white-space:nowrap;}
 .th-stage-inner{padding:10px 8px;font-family:'Rajdhani',monospace;font-size:.7rem;font-weight:700;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;}
 td{padding:0;border-bottom:1px solid var(--tbl-row-border);vertical-align:middle;overflow:hidden;transition:background .2s;}
 tr:hover td{background:var(--card-hover);}
-td.rnd-td{width:36px;}td.stage-td{width:145px;}
+td.rnd-td{width:52px;}td.stage-td{width:145px;}
+
 /* ── ROUND LABEL ── */
 .rnd-lbl{padding:10px 8px;font-size:.75rem;font-weight:700;color:var(--blue3);white-space:nowrap;font-family:'Rajdhani',monospace;letter-spacing:1px;text-align:center;}
+
 /* ── STAGE SELECTOR ── */
 .stage-cell{padding:3px 5px;position:relative;}
 .sw{position:relative;}
@@ -560,12 +554,10 @@ td.rnd-td{width:36px;}td.stage-td{width:145px;}
   background:var(--input-bg);border:1px solid var(--input-border);
   color:var(--blue2);font-family:'Exo 2','Sarabun',sans-serif;font-size:.82rem;font-weight:600;
   padding:6px 7px;border-radius:5px;outline:none;transition:all .2s;
-  /* Wrap to show full name — no ellipsis */
   white-space:normal;
   word-break:break-word;
   overflow:hidden;
   resize:none;
-  /* Min height for 1 line, auto-grows */
   min-height:32px;
   line-height:1.35;
   display:block;
@@ -581,24 +573,39 @@ td.rnd-td{width:36px;}td.stage-td{width:145px;}
 .sdd-item:hover{background:rgba(29,111,232,.14);color:var(--blue2);}
 .sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 
+/* ── RANDOM STAGE BUTTON (Round 1 only) ── */
+.rand-btn{
+  display:block;width:100%;margin-top:4px;
+  padding:3px 8px;
+  background:rgba(245,197,24,.08);border:1px dashed rgba(245,197,24,.4);
+  color:var(--gold);border-radius:5px;cursor:pointer;
+  font-family:'Rajdhani',monospace;font-size:.64rem;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;
+  transition:all .2s;line-height:1.5;
+}
+.rand-btn:hover{
+  background:rgba(245,197,24,.22);
+  border-color:var(--gold);
+  border-style:solid;
+  box-shadow:0 0 8px rgba(245,197,24,.3);
+}
+.rand-btn:active{transform:scale(.97);}
+
 /* ── TIME CELL ── */
-/* ALL tds in player columns: same fixed height, no extra padding for king */
 td.king-td{padding-top:0 !important;vertical-align:middle;}
 
-/* tc-wrap: same size in ALL cells — king badge floats outside via absolute */
 .tc-wrap{
   padding:6px 5px 8px;
   display:flex;flex-direction:column;align-items:center;gap:4px;
   position:relative;
   box-sizing:border-box;
   width:100%;
-  min-height:58px; /* uniform height so all rows align */
+  min-height:58px;
 }
 
-/* King badge: absolutely positioned ABOVE the tc-wrap, overflows upward */
 .king-badge{
   position:absolute;
-  top:-14px;       /* float above the cell */
+  top:-14px;
   left:50%;
   transform:translateX(-50%);
   background:linear-gradient(135deg,#9b1c1c,#dc2626,#ef4444);
@@ -612,7 +619,6 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 }
 @keyframes kPulse{0%,100%{box-shadow:0 0 8px rgba(220,38,38,.4)}50%{box-shadow:0 0 18px rgba(220,38,38,.9)}}
 
-/* Give the TR extra top space so absolute badge has room above */
 .has-king-row td{padding-top:14px !important;}
 
 /* ── TIME INPUT ── */
@@ -627,11 +633,13 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 .ti:focus{border-color:var(--blue2);box-shadow:0 0 8px rgba(29,111,232,.2);}
 .ti::placeholder{color:var(--dim);font-size:.7rem;opacity:.6;}
 .ti.has-v{color:var(--text);}
+
 /* ── WINNER CARD ── */
 .ti.best{border:2px solid var(--gold)!important;background:linear-gradient(160deg,rgba(245,197,24,.14),var(--input-bg))!important;color:var(--gold)!important;font-weight:700;box-shadow:0 0 12px rgba(245,197,24,.3);}
 .tc-wrap.is-best{background:rgba(245,197,24,.06);border-radius:8px;outline:1.5px solid rgba(245,197,24,.35);box-shadow:0 0 14px rgba(245,197,24,.18);}
 .ti.best-king{border:2px solid var(--red)!important;background:linear-gradient(160deg,rgba(239,68,68,.15),var(--input-bg))!important;color:var(--red)!important;font-weight:700;box-shadow:0 0 14px rgba(239,68,68,.4);}
 .tc-wrap.is-best-king{background:rgba(239,68,68,.08);border-radius:8px;outline:1.5px solid rgba(239,68,68,.45);box-shadow:0 0 18px rgba(239,68,68,.22);}
+
 /* Score chips */
 .score-chip{font-family:'Rajdhani',monospace;font-size:.8rem;font-weight:700;padding:2px 8px;border-radius:10px;min-width:34px;text-align:center;letter-spacing:.05em;}
 .sc12{background:rgba(239,68,68,.18);color:var(--red);box-shadow:0 0 8px rgba(239,68,68,.25);}
@@ -699,15 +707,47 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
   display:flex;align-items:center;justify-content:space-between;
 }
 .sb-hdr h2{font-family:'Orbitron',monospace;font-size:.82rem;font-weight:900;letter-spacing:.15em;transform:skewX(-8deg);display:inline-block;color:var(--gold);text-shadow:0 0 10px rgba(245,197,24,.4);}
-.lb-item:hover{transform:scale(1.02);box-shadow:0 4px 14px rgba(0,0,16,.2);}
-.lb-1{background:rgba(245,197,24,.08);border-color:rgba(245,197,24,.4);}
-.lb-2{background:rgba(148,163,184,.05);border-color:rgba(148,163,184,.2);}
-.lb-3{background:rgba(205,127,50,.05);border-color:rgba(205,127,50,.2);}
-.lb-o{background:var(--card-hover);border-color:var(--input-border);}
-.lb-stripe{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:8px 0 0 8px;}
-
-
-.lb-score{font-family:'Orbitron',monospace;font-weight:900;font-size:1.25rem;}
+.lb-row{
+  display:flex;align-items:center;
+  padding:7px 10px;
+  border-bottom:1px solid var(--tbl-row-border);
+  gap:0;
+  position:relative;
+  transition:background .15s;
+  min-height:38px;
+}
+.lb-row:last-child{border-bottom:none;}
+.lb-row:hover{background:var(--card-hover);}
+.lb-row.lb-1{background:rgba(245,197,24,.07);}
+.lb-row.lb-2{background:rgba(148,163,184,.04);}
+.lb-row.lb-3{background:rgba(205,127,50,.04);}
+.lb-row::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+}
+.lb-row.lb-1::before{background:#fbbf24;}
+.lb-row.lb-2::before{background:#94a3b8;}
+.lb-row.lb-3::before{background:#cd7f32;}
+.lb-row.lb-o::before{background:#334155;}
+/* rank badge */
+.lb-rank-cell{
+  width:30px;flex-shrink:0;
+  font-family:'Orbitron',monospace;font-size:.7rem;font-weight:700;
+  text-align:center;color:var(--dim);
+}
+.lb-rank-cell.r1{font-size:.95rem;}
+.lb-rank-cell.r2{font-size:.85rem;}
+.lb-rank-cell.r3{font-size:.85rem;}
+/* name + matches */
+.lb-info{flex:1;min-width:0;padding:0 6px;}
+.lb-name{font-weight:700;font-size:.8rem;color:var(--text);font-family:'Exo 2',sans-serif;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+.lb-plays{font-size:.58rem;color:var(--dim);font-family:'Rajdhani',monospace;
+  letter-spacing:.5px;margin-top:1px;display:block;}
+/* score */
+.lb-score{
+  font-family:'Orbitron',monospace;font-weight:900;font-size:.92rem;
+  flex-shrink:0;min-width:36px;text-align:right;
+}
 
 /* ── GRAND TOTAL MODAL ── */
 .modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px;animation:modalFadeIn .25s ease;}
@@ -790,10 +830,8 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 }
 .cat-body.hidden{max-height:0;opacity:0;padding:0 8px;}
 
-/* No-category zone */
 .no-cat-zone{margin-bottom:12px;}
 
-/* Category selector in block header */
 .cat-select-wrap{position:relative;}
 .cat-select-btn{
   display:flex;align-items:center;gap:5px;
@@ -824,7 +862,6 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 .cat-dd-item .cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .cat-dd-divider{height:1px;background:var(--input-border);}
 
-/* Category score panel */
 .cat-score-panel{
   background:var(--card-bg);border:1px solid var(--card-border);
   border-radius:12px;padding:14px;margin-top:14px;
@@ -848,8 +885,6 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 }
 .cat-player-name{flex:1;font-family:'Exo 2',sans-serif;font-weight:600;font-size:.8rem;color:var(--text2);}
 .cat-player-score{font-family:'Rajdhani',monospace;font-weight:700;font-size:.95rem;color:var(--blue2);}
-
-/* Best time table */
 
 .best-time-hdr{
   padding:10px 14px;background:var(--hdr-bg);
@@ -909,7 +944,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 @media(max-width:400px){
   .app{padding:6px 6px 70px;}#mainTitle{letter-spacing:2px;}
   table{min-width:360px!important;}
-  th.th-rnd,td.rnd-td{width:28px!important;}
+  th.th-rnd,td.rnd-td{width:36px!important;}
   th.th-stage,td.stage-td{width:100px!important;}
   .th-rnd-inner,.th-stage-inner{padding:7px 4px;font-size:.44rem;}
   .th-player-lbl{font-size:.4rem;}.th-pi{font-size:.54rem;padding:3px 2px;}
@@ -917,6 +952,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
   .score-chip{font-size:.54rem;padding:1px 4px;min-width:22px;}
   .king-badge{font-size:.4rem;padding:2px 4px;}.rnd-lbl{padding:7px 4px;font-size:.52rem;}
   .tr-lbl{font-size:.5rem;padding:9px 6px;}.total-val{font-size:.78rem;padding:9px 2px;}
+  .rand-btn{font-size:.55rem;padding:2px 4px;}
 }
 @media(max-width:640px){
   .app{padding:8px 8px 70px;}header{padding:14px 8px 10px;}
@@ -925,7 +961,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
   .globe-btn{padding:7px 10px;font-size:.76rem;}.block-hdr{padding:7px 10px;}
   .block-num{font-size:.58rem;}.pctrl-lbl{display:none;}.btn-rm{font-size:.62rem;padding:3px 7px;}
   table{min-width:440px!important;}
-  th.th-rnd,td.rnd-td{width:30px!important;}
+  th.th-rnd,td.rnd-td{width:42px!important;}
   th.th-stage,td.stage-td{width:120px!important;}
   .th-rnd-inner,.th-stage-inner{padding:8px 4px;font-size:.46rem;}
   .th-player-lbl{font-size:.42rem;}.th-pi{font-size:.56rem;padding:4px 2px;}
@@ -935,6 +971,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
   .king-badge{font-size:.42rem;padding:2px 5px;}
   .tr-lbl{font-size:.54rem;padding:10px 8px;letter-spacing:.8px;}
   .total-val{font-size:.82rem;padding:10px 2px;}.tv-top{font-size:.98rem;}
+  .rand-btn{font-size:.6rem;padding:2px 6px;}
 }
 @media(max-width:960px){
   .main-grid{grid-template-columns:1fr;}
@@ -945,7 +982,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
   .lb-body{display:block;padding:8px 0;}.lb-item{margin:0 6px 6px;}
 }
 @media(min-width:1200px){
-  th.th-rnd,td.rnd-td{width:40px!important;}
+  th.th-rnd,td.rnd-td{width:54px!important;}
   th.th-stage,td.stage-td{width:160px!important;}
 }
 @media(min-width:1400px){
@@ -1003,14 +1040,12 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
           <span class="globe-arrow" id="themeArrow">▼</span>
         </button>
         <div class="theme-panel" id="themePanel">
-          <!-- Mode row -->
           <div class="tp-section-lbl">MODE</div>
           <div class="tp-mode-row">
             <button class="tp-mode-btn" data-mode="dark" onclick="setMode('dark')">🌙 Dark</button>
             <button class="tp-mode-btn" data-mode="light" onclick="setMode('light')">☀️ Light</button>
           </div>
           <div class="tp-divider"></div>
-          <!-- Color row -->
           <div class="tp-section-lbl">COLOR</div>
           <div class="tp-colors">
             <button class="tp-color" data-color="blue"   style="background:linear-gradient(135deg,#1d6fe8,#3b9dff)" title="Blue"   onclick="setColor('blue')"></button>
@@ -1071,6 +1106,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
       </div>
     </div>
   </div>
+
   <!-- Best Time Modal -->
   <div id="bestTimeModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeBestTimeModal()">
     <div class="modal-box" style="max-width:620px">
@@ -1116,34 +1152,37 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
     </div>
   </div>
 
-  <!-- (catScoreModal removed — replaced by bestTimeModal + scoreModal) -->
-
 </div>
 <button class="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
 // ── I18N ──
 const I18N={
-  th:{title:'🏁 RACE TIME TRACKER',sub1:'บันทึกเวลา · คำนวณแต้ม · จัดอันดับ',sub2:'กรอกเวลาในแต่ละรอบ เช่น 15699 → 1:56:99',addMatch:'เพิ่มการแข่งขัน',totalScore:'คะแนนรวม',exportExcel:'Export',importExcel:'Import',clearData:'ล้างข้อมูล',totalAll:'คะแนนรวมทั้งหมด',leaderboard:'🏆 LEADERBOARD',matchLabel:'การแข่งขัน',removeMatch:'✕ ลบ',round:'รอบ',playerLabel:'ผู้เล่น',score:'คะแนน',grandTotal:'⚡ คะแนนรวม',stagePH:'🔍 เลือกด่าน...',rank:'อันดับ',player:'ผู้เล่น',confirmClear:'ล้างข้อมูลทั้งหมด?',confirmRemove:'ลบการแข่งขันนี้?',minP:'ต้องมีผู้เล่นอย่างน้อย 2 คน',maxP:'มีผู้เล่นสูงสุด 6 คนแล้ว',kingMap:'👑 KING',pts:'แต้ม',globeLabel:'ไทย',stageLabel:'แผนที่',
+  th:{title:'🏁 RACE TIME TRACKER',sub1:'บันทึกเวลา · คำนวณแต้ม · จัดอันดับ',sub2:'กรอกเวลาในแต่ละรอบ เช่น 15699 → 1:56:99',addMatch:'เพิ่มการแข่งขัน',totalScore:'คะแนนรวม',exportExcel:'Export',importExcel:'Import',clearData:'ล้างข้อมูล',totalAll:'คะแนนรวมทั้งหมด',leaderboard:'🏆 LEADERBOARD',matchLabel:'การแข่งขัน',removeMatch:'✕ ลบ',round:'รอบ',playerLabel:'ผู้เล่น',score:'คะแนน',grandTotal:'⚡ คะแนนรวม',stagePH:'🔍 เลือกแผนที่...',rank:'อันดับ',player:'ผู้เล่น',confirmClear:'ล้างข้อมูลทั้งหมด?',confirmRemove:'ลบการแข่งขันนี้?',minP:'ต้องมีผู้เล่นอย่างน้อย 2 คน',maxP:'มีผู้เล่นสูงสุด 6 คนแล้ว',kingMap:'👑 KING',pts:'แต้ม',globeLabel:'ไทย',stageLabel:'แผนที่',
     catLabel:'หมวดหมู่',allBestTime:'เวลาด่านทั้งหมด',allScore:'คะแนนรวมทั้งหมด',collapseAll:'ย่อทั้งหมด',expandAll:'ขยายทั้งหมด',
     catBestTime:'เวลาด่าน',catScore:'คะแนน',catExport:'Export',catAddMatch:'＋ การแข่งขัน',catEdit:'✏️',catDelete:'🗑',
-    confirmResetTable:'รีเซ็ตตารางนี้?',noDataYet:'ยังไม่มีข้อมูล',rounds9:'9 รอบ',rounds13:'13 รอบ'},
-  en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',exportExcel:'Export',importExcel:'Import',clearData:'Clear Data',totalAll:'Overall Standings',leaderboard:'🏆 LEADERBOARD',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'⚡ Total',stagePH:'🔍 Select stage...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minP:'Minimum 2 players',maxP:'Maximum 6 players',kingMap:'👑 KING',pts:'pts',globeLabel:'English',stageLabel:'Stage',
+    confirmResetTable:'รีเซ็ตตารางนี้?',noDataYet:'ยังไม่มีข้อมูล',rounds9:'9 รอบ',rounds13:'13 รอบ',
+    randStage:'🎲 สุ่มแผนที่'},
+  en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',exportExcel:'Export',importExcel:'Import',clearData:'Clear Data',totalAll:'Overall Standings',leaderboard:'🏆 LEADERBOARD',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'⚡ Total',stagePH:'🔍 Select map...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minP:'Minimum 2 players',maxP:'Maximum 6 players',kingMap:'👑 KING',pts:'pts',globeLabel:'English',stageLabel:'Maps',
     catLabel:'Category',allBestTime:'All Best Times',allScore:'Overall Score',collapseAll:'Collapse All',expandAll:'Expand All',
     catBestTime:'Best Times',catScore:'Score',catExport:'Export',catAddMatch:'＋ Match',catEdit:'✏️',catDelete:'🗑',
-    confirmResetTable:'Reset this table?',noDataYet:'No data yet',rounds9:'9 Rounds',rounds13:'13 Rounds'},
-  zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',exportExcel:'导出',importExcel:'导入',clearData:'清除数据',totalAll:'总排行',leaderboard:'🏆 排行榜',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'⚡ 总计',stagePH:'🔍 选择赛道...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'简体中文',stageLabel:'赛道',
+    confirmResetTable:'Reset this table?',noDataYet:'No data yet',rounds9:'9 Rounds',rounds13:'13 Rounds',
+    randStage:'🎲 Random Maps'},
+  zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',exportExcel:'导出',importExcel:'导入',clearData:'清除数据',totalAll:'总排行',leaderboard:'🏆 排行榜',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'⚡ 总计',stagePH:'🔍 选择地图...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'简体中文',stageLabel:'地图',
     catLabel:'分组',allBestTime:'全部最佳时间',allScore:'总积分',collapseAll:'全部折叠',expandAll:'全部展开',
     catBestTime:'最佳时间',catScore:'积分',catExport:'导出',catAddMatch:'＋ 比赛',catEdit:'✏️',catDelete:'🗑',
-    confirmResetTable:'重置此表格？',noDataYet:'暂无数据',rounds9:'9轮',rounds13:'13轮'},
-  vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',exportExcel:'Xuất',importExcel:'Nhập',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',leaderboard:'🏆 XẾP HẠNG',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'⚡ Tổng',stagePH:'🔍 Chọn màn...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả?',confirmRemove:'Xóa trận này?',minP:'Tối thiểu 2 người',maxP:'Tối đa 6 người',kingMap:'👑 KING',pts:'điểm',globeLabel:'Tiếng Việt',stageLabel:'Bản đồ',
+    confirmResetTable:'重置此表格？',noDataYet:'暂无数据',rounds9:'9轮',rounds13:'13轮',
+    randStage:'🎲 随机地图'},
+  vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',exportExcel:'Xuất',importExcel:'Nhập',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',leaderboard:'🏆 XẾP HẠNG',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'⚡ Tổng',stagePH:'🔍 Chọn bản đồ...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả?',confirmRemove:'Xóa trận này?',minP:'Tối thiểu 2 người',maxP:'Tối đa 6 người',kingMap:'👑 KING',pts:'điểm',globeLabel:'Tiếng Việt',stageLabel:'Bản đồ',
     catLabel:'Nhóm',allBestTime:'Thời gian tốt nhất',allScore:'Tổng điểm',collapseAll:'Thu gọn tất cả',expandAll:'Mở rộng tất cả',
     catBestTime:'Thời gian',catScore:'Điểm',catExport:'Xuất',catAddMatch:'＋ Trận',catEdit:'✏️',catDelete:'🗑',
-    confirmResetTable:'Đặt lại bảng này?',noDataYet:'Chưa có dữ liệu',rounds9:'9 vòng',rounds13:'13 vòng'},
-  tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',exportExcel:'匯出',importExcel:'匯入',clearData:'清除資料',totalAll:'總排行',leaderboard:'🏆 排行榜',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'⚡ 總計',stagePH:'🔍 選擇賽道...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'繁體中文',stageLabel:'賽道',
+    confirmResetTable:'Đặt lại bảng này?',noDataYet:'Chưa có dữ liệu',rounds9:'9 vòng',rounds13:'13 vòng',
+    randStage:'🎲 Bản đồ ngẫu nhiên'},
+  tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',exportExcel:'匯出',importExcel:'匯入',clearData:'清除資料',totalAll:'總排行',leaderboard:'🏆 排行榜',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'⚡ 總計',stagePH:'🔍 選擇地圖...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'繁體中文',stageLabel:'地圖',
     catLabel:'分組',allBestTime:'全部最佳時間',allScore:'總積分',collapseAll:'全部折疊',expandAll:'全部展開',
     catBestTime:'最佳時間',catScore:'積分',catExport:'匯出',catAddMatch:'＋ 比賽',catEdit:'✏️',catDelete:'🗑',
-    confirmResetTable:'重置此表格？',noDataYet:'暫無資料',rounds9:'9回合',rounds13:'13回合'}
+    confirmResetTable:'重置此表格？',noDataYet:'暫無資料',rounds9:'9回合',rounds13:'13回合',
+    randStage:'🎲 隨機地圖'}
 };
 let lang='th';
 function T(k){return(I18N[lang]||I18N.th)[k]||(I18N.th[k]||k);}
@@ -1156,23 +1195,18 @@ const ALL_S=[];for(const[s,l]of Object.entries(SBS))l.forEach(n=>ALL_S.push({nam
 const MAX_P=6,MIN_P=2,ROWS_BASE=9,ROWS_MAX=13;
 const KM={1:0,2:1,3:2,4:3,5:4,6:5};
 let tables=[],tc=0;
-let categories=[],catCounter=0; // {id, name, collapsed}
+let categories=[],catCounter=0;
 
 function loadState(){
   try{tables=JSON.parse(localStorage.getItem('rt6')||'[]');}catch(e){tables=[];}
   try{categories=JSON.parse(localStorage.getItem('rtCats')||'[]');}catch(e){categories=[];}
-  // Normalize catId: must be a valid category id (number) or null
   const validCatIds=new Set(categories.map(c=>c.id));
   tables.forEach(t=>{
     if(!t.players)t.players=Array(MAX_P).fill('');
     if(!t.rowCount)t.rowCount=ROWS_BASE;
     if(t.collapsed===undefined||t.collapsed===null)t.collapsed=false;
-    // FIX: catId=0 is valid! Only reset if undefined/missing or points to deleted category
-    if(t.catId===undefined){
-      t.catId=null;
-    } else if(t.catId!==null&&!validCatIds.has(t.catId)){
-      t.catId=null; // category was deleted
-    }
+    if(t.catId===undefined){t.catId=null;}
+    else if(t.catId!==null&&!validCatIds.has(t.catId)){t.catId=null;}
     while(t.rows.length<ROWS_MAX)t.rows.push({stage:'',times:Array(MAX_P).fill('')});
   });
   try{lang=localStorage.getItem('rtLang')||'th';}catch(e){}
@@ -1205,7 +1239,6 @@ function fmtTime(v){
   return v;
 }
 function calcScores(row,r,pc){
-  // รอบที่ 10-13 (index 9-12) ไม่นับคะแนน
   const scoreable = r < ROWS_BASE;
   const parsed=row.times.slice(0,pc).map(t=>parseTime(t));
   const valid=parsed.filter(t=>t!==null);
@@ -1228,7 +1261,7 @@ function scClass(s){
   if(s>=8)return'sch';if(s>=5)return'scm';if(s>=2)return'scl';return'sc0';
 }
 
-// Global dropdown element — single shared instance mounted on body
+// Global dropdown element
 let _activeDd = null;
 let _activeDdInp = null;
 function _closeDd(){
@@ -1237,13 +1270,10 @@ function _closeDd(){
 document.addEventListener('click', e=>{
   if(_activeDd && !_activeDd.contains(e.target) && e.target!==_activeDdInp) _closeDd();
 }, true);
-// Only close on scroll if it's the page/table scrolling, NOT the dropdown itself
 document.addEventListener('scroll', e=>{
   if(_activeDd && !_activeDd.contains(e.target)){
-    // Reposition instead of closing when table scrolls
     if(_activeDdInp){
       const rect=_activeDdInp.getBoundingClientRect();
-      // If input scrolled off screen, close; otherwise reposition
       if(rect.bottom<0||rect.top>window.innerHeight){
         _closeDd();
       } else {
@@ -1257,12 +1287,11 @@ document.addEventListener('scroll', e=>{
 
 function buildStageSelector(tObj,r){
   const wrap=document.createElement('div');wrap.className='sw';
-  // Use textarea instead of input so text wraps to show full name
   const inp=document.createElement('textarea');
   inp.className='si';inp.rows=1;
   inp.placeholder=T('stagePH');inp.value=tObj.rows[r].stage||'';inp.autocomplete='off';
   inp.spellcheck=false;
-  // Auto-resize height to content
+
   function autoResize(){
     inp.style.height='auto';
     inp.style.height=inp.scrollHeight+'px';
@@ -1271,7 +1300,6 @@ function buildStageSelector(tObj,r){
   inp.addEventListener('input',autoResize);
   inp.addEventListener('focus',autoResize);
 
-  // Create a shared dropdown appended to body for each selector
   const dd=document.createElement('div');dd.className='sdd sdd-portal';
   document.body.appendChild(dd);
 
@@ -1283,7 +1311,6 @@ function buildStageSelector(tObj,r){
     dd.style.width=Math.max(rect.width,180)+'px';
     dd.style.maxHeight='220px';
     dd.style.zIndex='99999';
-    // Flip up if not enough room below
     const spaceBelow=window.innerHeight-rect.bottom;
     if(spaceBelow<230&&rect.top>230){
       dd.style.top='auto';
@@ -1310,7 +1337,6 @@ function buildStageSelector(tObj,r){
         tObj.rows[r].stage=s.name;
         inp.title=s.name;
         save();_closeDd();
-        // Resize after selection
         setTimeout(()=>{inp.style.height='auto';inp.style.height=inp.scrollHeight+'px';},0);
       });
       dd.appendChild(item);
@@ -1337,18 +1363,39 @@ function buildStageSelector(tObj,r){
     dd.classList.add('open');
     _activeDd=dd;_activeDdInp=inp;
   });
-  // Prevent Enter from inserting newline — just close dropdown
   inp.addEventListener('keydown',e=>{
     if(e.key==='Enter'){e.preventDefault();inp.blur();}
   });
   inp.addEventListener('blur',()=>setTimeout(()=>{if(_activeDd===dd)_closeDd();},160));
   if(tObj.rows[r].stage) inp.title=tObj.rows[r].stage;
 
-  // Cleanup when element is removed from DOM
-  const obs=new MutationObserver(()=>{if(!document.body.contains(inp)){dd.remove();obs.disconnect();}});
+  const obs=new MutationObserver(()=>{if(!document.body.contains(inp)){if(_activeDd===dd){_activeDd=null;_activeDdInp=null;}dd.remove();obs.disconnect();}});
   obs.observe(document.body,{childList:true,subtree:true});
 
-  wrap.appendChild(inp);return wrap;
+  wrap.appendChild(inp);
+
+  // ── Random stage button — Round 1 (r===0) only ──
+  if(r===0){
+    const randBtn=document.createElement('button');
+    randBtn.type='button';
+    randBtn.className='rand-btn';
+    randBtn.innerHTML=T('randStage');
+    randBtn.title='สุ่มด่านแบบสุ่มจากทั้งหมด';
+    randBtn.addEventListener('click',(e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      const s=ALL_S[Math.floor(Math.random()*ALL_S.length)];
+      inp.value=s.name;
+      tObj.rows[r].stage=s.name;
+      inp.title=s.name;
+      save();
+      _closeDd();
+      setTimeout(()=>{inp.style.height='auto';inp.style.height=inp.scrollHeight+'px';},0);
+    });
+    wrap.appendChild(randBtn);
+  }
+
+  return wrap;
 }
 
 function buildTable(tObj){
@@ -1361,9 +1408,8 @@ function buildTable(tObj){
   const hdr=document.createElement('div');hdr.className='block-hdr';
   const left=document.createElement('div');left.className='block-hdr-left';
 
-  // Collapse button (chevron)
   const colBtn=document.createElement('button');colBtn.className='collapse-btn';
-  colBtn.innerHTML=`<i class="collapse-icon">▼</i><span>${tObj.collapsed?T('matchLabel')+' #'+(tObj.id+1):T('matchLabel')+' #'+(tObj.id+1)}</span>`;
+  colBtn.innerHTML=`<i class="collapse-icon">▼</i><span>${T('matchLabel')} #${tObj.id+1}</span>`;
   colBtn.onclick=()=>toggleCollapse(tObj.id);
 
   const num=document.createElement('span');num.className='block-num';num.textContent=`${T('matchLabel')} #${tObj.id+1}`;
@@ -1377,7 +1423,6 @@ function buildTable(tObj){
 
   left.append(colBtn,num,pctrl);hdr.appendChild(left);
 
-  // Right buttons
   const btnGroup=document.createElement('div');btnGroup.style.cssText='display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
   const rowToggle=document.createElement('div');rowToggle.className='row-toggle';
   [ROWS_BASE,ROWS_MAX].forEach(n=>{
@@ -1389,7 +1434,6 @@ function buildTable(tObj){
   const imgBtn=document.createElement('button');imgBtn.className='btn-rm btn-img';imgBtn.innerHTML='📷';imgBtn.title='บันทึกรูปตาราง';imgBtn.onclick=()=>openSaveImageModal(tObj.id);
   const rstBtn=document.createElement('button');rstBtn.className='btn-rm btn-rst';rstBtn.innerHTML='🔄';rstBtn.title='รีเซ็ตตารางนี้';rstBtn.onclick=()=>resetTable(tObj.id);
   const rmBtn=document.createElement('button');rmBtn.className='btn-rm';rmBtn.textContent=T('removeMatch');rmBtn.onclick=()=>removeMatch(tObj.id);
-  // Category button
   const cat=tObj.catId!==null&&tObj.catId!==undefined?categories.find(c=>c.id===tObj.catId):null;
   const catBtn=document.createElement('button');catBtn.className='cat-select-btn';
   catBtn.innerHTML=`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${cat?getCatColor(cat.id):'var(--dim)'};flex-shrink:0"></span><span style="overflow:hidden;text-overflow:ellipsis;max-width:90px;white-space:nowrap;">${cat?cat.name:'หมวดหมู่'}</span>▾`;
@@ -1397,11 +1441,9 @@ function buildTable(tObj){
   btnGroup.append(rowToggle,catBtn,imgBtn,rstBtn,rmBtn);hdr.appendChild(btnGroup);
   block.appendChild(hdr);
 
-  // ── Collapsed mini-summary ──
   const summary=document.createElement('div');summary.className='collapsed-summary';summary.id=`summary-${tObj.id}`;
   block.appendChild(summary);
 
-  // ── Collapsible body ──
   const bodyWrap=document.createElement('div');bodyWrap.className='block-body';
 
   const wrap=document.createElement('div');wrap.className='tbl-wrap';
@@ -1409,13 +1451,10 @@ function buildTable(tObj){
   const thead=document.createElement('thead');
   const hRow=document.createElement('tr');
 
-  // TH: Round
   const thR=document.createElement('th');thR.className='th-rnd';
   const thRInner=document.createElement('div');thRInner.className='th-rnd-inner';thRInner.textContent=T('round');thR.appendChild(thRInner);hRow.appendChild(thR);
-  // TH: Stage
   const thS=document.createElement('th');thS.className='th-stage';
   const thSInner=document.createElement('div');thSInner.className='th-stage-inner';thSInner.textContent=T('stageLabel');thS.appendChild(thSInner);hRow.appendChild(thS);
-  // TH: Players (with input)
   for(let p=0;p<pc;p++){
     const th=document.createElement('th');th.className='th-p';
     const pw=document.createElement('div');pw.className='th-player-wrap';
@@ -1429,25 +1468,20 @@ function buildTable(tObj){
   thead.appendChild(hRow);table.appendChild(thead);
   const tbody=document.createElement('tbody');
 
-  // Round rows — render up to tObj.rowCount
   const activeRows = tObj.rowCount || ROWS_BASE;
   for(let r=0;r<activeRows;r++){
     const isKing=r in KM&&KM[r]<pc;const kp=isKing?KM[r]:-1;
-    const isExtra = r >= ROWS_BASE; // rounds 10-13 don't count for score
+    const isExtra = r >= ROWS_BASE;
     const tr=document.createElement('tr');
     if(isKing) tr.classList.add('has-king-row');
     if(isExtra) tr.classList.add('row-extra');
-    // Round label
     const rTd=document.createElement('td');rTd.className='rnd-lbl rnd-td';
     rTd.innerHTML=`${r+1}${isExtra?'<span class="extra-badge">NO PT</span>':''}`;
     tr.appendChild(rTd);
-    // Stage selector
     const sTd=document.createElement('td');sTd.className='stage-cell stage-td';sTd.appendChild(buildStageSelector(tObj,r));tr.appendChild(sTd);
-    // Time cells
     for(let p=0;p<pc;p++){
       const td=document.createElement('td');td.dataset.p=p;td.dataset.r=r;
       const cw=document.createElement('div');cw.className='tc-wrap';
-      // King badge inside tc-wrap as absolute, won't push layout
       if(isKing&&p===kp){
         const b=document.createElement('div');b.className='king-badge';b.textContent=T('kingMap');cw.appendChild(b);
       }
@@ -1468,31 +1502,24 @@ function buildTable(tObj){
     tbody.appendChild(tr);
   }
 
-  // Total row — seamless animated gradient via wrapper div
-  // Build as a separate div outside the main table
   const outerDiv=document.createElement('div');outerDiv.className='total-row-outer';outerDiv.id=`tot-${tObj.id}`;
-  // Animated top border
   const borderLine=document.createElement('div');borderLine.className='total-row-border';outerDiv.appendChild(borderLine);
-  // Inner table for layout alignment
   const totTable=document.createElement('table');
   const totTbody=document.createElement('tbody');
   const totTr=document.createElement('tr');
-  // Label cell
   const totLbl=document.createElement('td');totLbl.colSpan=2;totLbl.style.cssText='width:'+((50+160)+'px')+';min-width:210px;';
   const lspan=document.createElement('span');lspan.className='tr-lbl';lspan.textContent=T('grandTotal');totLbl.appendChild(lspan);totTr.appendChild(totLbl);
-  // Score cells
   for(let p=0;p<pc;p++){
     const td=document.createElement('td');td.dataset.tp=p;td.style.cssText='min-width:90px;';
     const vspan=document.createElement('span');vspan.className='total-val tv-zero';vspan.textContent='0';td.appendChild(vspan);totTr.appendChild(td);
   }
   totTbody.appendChild(totTr);totTable.appendChild(totTbody);outerDiv.appendChild(totTable);
-  tbody.appendChild(document.createElement('tr'));// spacer so table structure is valid
+  tbody.appendChild(document.createElement('tr'));
 
   table.appendChild(tbody);wrap.appendChild(table);
   bodyWrap.appendChild(wrap);
   bodyWrap.appendChild(outerDiv);
   block.appendChild(bodyWrap);
-  // Sync horizontal scroll between table and total row
   wrap.addEventListener('scroll',()=>{outerDiv.scrollLeft=wrap.scrollLeft;});
   outerDiv.addEventListener('scroll',()=>{wrap.scrollLeft=outerDiv.scrollLeft;});
   return block;
@@ -1514,7 +1541,6 @@ function recalcBlock(tid){
       const inp=td.querySelector('.ti');const chip=td.querySelector('[data-chip]');if(!inp||!chip)continue;
       const t=parseTime(inp.value);const isB=t!==null&&t===best;const isKC=isKing&&p===kp;
       inp.className='ti'+(inp.value?' has-v':'')+(isB?(isKC?' best-king':' best'):'');
-      // Winner card frame on tc-wrap
       if(cw){
         cw.classList.remove('is-best','is-best-king');
         if(isB) cw.classList.add(isKC?'is-best-king':'is-best');
@@ -1530,7 +1556,6 @@ function recalcBlock(tid){
     const v=tots[p];const sp=td.querySelector('.total-val');if(!sp)return;
     sp.className='total-val '+(v===0?'tv-zero':v===maxT?'tv-top':'tv-val');sp.textContent=v||'0';
   });
-  // Update collapsed summary too
   updateCollapsedSummary(tid);
 }
 function recalcAll(){tables.forEach(t=>{recalcBlock(t.id);});}
@@ -1559,10 +1584,8 @@ function removeMatch(tid){
   if(tables.length===1){alert('min 1');return;}if(!confirm(T('confirmRemove')))return;
   tables=tables.filter(t=>t.id!==tid);save();renderAll();
 }
-function rebuildAll(){renderAll();}
 
 function updateLeaderboard(){
-  // Update all category leaderboards inside each category section
   categories.forEach(cat=>updateCatLb(cat.id));
 }
 
@@ -1585,11 +1608,9 @@ function showTotals(){
   if(!sorted.length){
     body.innerHTML=`<div style="text-align:center;color:var(--dim);padding:40px;font-family:'Orbitron',monospace;font-size:.75rem;">— ${T('score')} —</div>`;
   } else {
-    // Podium (top 3)
     const top3=sorted.slice(0,Math.min(3,sorted.length));
     if(top3.length>0){
       const podium=document.createElement('div');podium.className='podium-row';
-      // Reorder: 2nd left, 1st center, 3rd right
       const order=top3.length===1?[0]:top3.length===2?[1,0]:[1,0,2];
       order.forEach(idx=>{
         if(idx>=top3.length)return;
@@ -1603,14 +1624,12 @@ function showTotals(){
           <div class="podium-score p${rank}-score">${item.score}</div>
           <div class="podium-pts">${T('pts').toUpperCase()}</div>
         `;
-        // Make 1st place slightly bigger
         if(rank===1)card.style.transform='scale(1.05)';
         podium.appendChild(card);
       });
       body.appendChild(podium);
     }
 
-    // Rest of standings (4th+)
     if(sorted.length>3){
       const sep=document.createElement('div');
       sep.style.cssText='text-align:center;color:var(--dim);font-family:Orbitron,monospace;font-size:.55rem;letter-spacing:2px;margin:8px 0;';
@@ -1694,12 +1713,10 @@ function setTableCategory(tid,catId){
   t.catId=catId;save();renderAll();
 }
 
-// ── BUILD CATEGORY DROPDOWN for each table block ──
 let _activeCatDd=null;
 function openCatDd(btn,tid){
-  if(_activeCatDd){_activeCatDd.remove();_activeCatDd=null;if(_activeCatDd?.dataset?.tid===String(tid))return;}
+  if(_activeCatDd){const _wasSame=_activeCatDd.dataset.tid===String(tid);_activeCatDd.remove();_activeCatDd=null;if(_wasSame)return;}
   const dd=document.createElement('div');dd.className='cat-dd';dd.dataset.tid=tid;
-  // None option
   const none=document.createElement('div');none.className='cat-dd-item';
   none.innerHTML='<span class="cat-dot" style="background:var(--dim)"></span>ไม่มีหมวดหมู่';
   none.onclick=()=>{setTableCategory(tid,null);dd.remove();_activeCatDd=null;};
@@ -1717,7 +1734,6 @@ function openCatDd(btn,tid){
   });
   document.body.appendChild(dd);
   _activeCatDd=dd;
-  // Position
   const rect=btn.getBoundingClientRect();
   dd.style.top=(rect.bottom+4)+'px';
   dd.style.left=rect.left+'px';
@@ -1732,8 +1748,7 @@ function renderAll(){
   const area=document.getElementById('tablesArea');area.innerHTML='';
   categories.forEach(cat=>{
     const section=document.createElement('div');section.className='cat-section';
-    const catTables=tables.filter(t=>t.catId===cat.id); // strict === ensures id=0 works
-    // Header
+    const catTables=tables.filter(t=>t.catId===cat.id);
     const hdr=document.createElement('div');hdr.id=`catHdr-${cat.id}`;
     hdr.className='cat-header'+(cat.collapsed?' collapsed':'');
     hdr.addEventListener('click',e=>{if(!e.target.closest('.cat-actions'))toggleCatCollapse(cat.id);});
@@ -1759,7 +1774,6 @@ function renderAll(){
     bDel.addEventListener('click',e=>{e.stopPropagation();deleteCategory(cat.id);});
     acts.append(bAdd,bTime,bScore,bExp,bEdit,bDel);
     hdr.append(left,acts);section.appendChild(hdr);
-    // Body: inner-grid (tables | leaderboard)
     const body=document.createElement('div');body.id=`catBody-${cat.id}`;
     body.className='cat-body'+(cat.collapsed?' hidden':'');
     if(catTables.length===0){
@@ -1776,7 +1790,6 @@ function renderAll(){
     }
     section.appendChild(body);area.appendChild(section);
   });
-  // Uncategorized: catId is null, undefined, or points to non-existent category
   const validIds=new Set(categories.map(c=>c.id));
   const uncatTables=tables.filter(t=>t.catId===null||t.catId===undefined||!validIds.has(t.catId));
   if(uncatTables.length>0){
@@ -1817,35 +1830,47 @@ function updateCatLb(catId){
   });
   const sorted=Object.entries(sm).map(([n,s])=>({name:n,score:s,plays:playCount[n]||0})).sort((a,b)=>b.score-a.score).slice(0,5);
   lbBody.innerHTML='';
-  if(!sorted.length){lbBody.innerHTML='<div style="padding:12px;text-align:center;color:var(--dim);font-size:.72rem;">—</div>';return;}
+  if(!sorted.length){
+    lbBody.innerHTML='<div style="padding:14px;text-align:center;color:var(--dim);font-size:.72rem;font-family:Rajdhani,monospace;">— ยังไม่มีข้อมูล —</div>';
+    return;
+  }
+  const RANK_ICONS=['🥇','🥈','🥉'];
+  const RANK_COLORS=['#fbbf24','#cbd5e1','#cd7f32'];
   sorted.forEach((item,i)=>{
     const rank=i+1;
-    const div=document.createElement('div');div.style.position='relative';
-    const stripe=document.createElement('div');stripe.className='lb-stripe';
-    stripe.style.background=rank===1?'#fbbf24':rank===2?'#cbd5e1':rank===3?'#cd7f32':'#334155';
-    const inner=document.createElement('div');
-    inner.className=`lb-item ${rank===1?'lb-1':rank===2?'lb-2':rank===3?'lb-3':'lb-o'}`;
-    inner.style.cssText='margin:0 4px 5px;padding:8px 12px;';
-    const rankEl=document.createElement('div');rankEl.className='lb-rank';
-    rankEl.textContent=rank<=3?['🥇','🥈','🥉'][rank-1]:`#${rank}`;
-    rankEl.style.color=rank===1?'#fbbf24':rank===2?'#cbd5e1':rank===3?'#cd7f32':'#475569';
-    rankEl.style.fontSize=rank>3?'.6rem':'inherit';
-    const nameWrap=document.createElement('div');nameWrap.style.cssText='flex:1;margin:0 6px;overflow:hidden;';
+    const row=document.createElement('div');
+    row.className=`lb-row ${rank===1?'lb-1':rank===2?'lb-2':rank===3?'lb-3':'lb-o'}`;
+
+    // ── rank cell ──
+    const rankCell=document.createElement('div');
+    rankCell.className=`lb-rank-cell${rank<=3?' r'+rank:''}`;
+    if(rank<=3){
+      rankCell.textContent=RANK_ICONS[rank-1];
+    } else {
+      rankCell.textContent=`#${rank}`;
+      rankCell.style.color='#475569';
+    }
+
+    // ── name + matches ──
+    const info=document.createElement('div');info.className='lb-info';
     const nameEl=document.createElement('span');nameEl.className='lb-name';nameEl.textContent=item.name;
-    const playsEl=document.createElement('div');playsEl.style.cssText='font-size:.58rem;color:var(--dim);font-family:Rajdhani,monospace;margin-top:1px;';
+    const playsEl=document.createElement('span');playsEl.className='lb-plays';
     playsEl.textContent=`${item.plays} การแข่งขัน`;
-    nameWrap.appendChild(nameEl);nameWrap.appendChild(playsEl);
-    const scoreEl=document.createElement('span');scoreEl.className='lb-score';scoreEl.textContent=item.score;
-    scoreEl.style.color=rank===1?'#fbbf24':'#fff';scoreEl.style.fontSize='1.1rem';
-    if(rank===1)scoreEl.style.textShadow='0 0 10px rgba(251,191,36,.8)';
-    inner.appendChild(rankEl);inner.appendChild(nameWrap);inner.appendChild(scoreEl);
-    div.appendChild(stripe);div.appendChild(inner);lbBody.appendChild(div);
+    info.appendChild(nameEl);info.appendChild(playsEl);
+
+    // ── score ──
+    const scoreEl=document.createElement('div');scoreEl.className='lb-score';
+    scoreEl.textContent=item.score;
+    scoreEl.style.color=rank<=3?RANK_COLORS[rank-1]:'var(--blue2)';
+    if(rank===1)scoreEl.style.textShadow='0 0 12px rgba(251,191,36,.7)';
+
+    row.appendChild(rankCell);row.appendChild(info);row.appendChild(scoreEl);
+    lbBody.appendChild(row);
   });
 }
 
 let _bestTimeCatId=null;
 
-// ── BEST TIME MODAL (no score) ──
 function openBestTimeModal(catId){
   _bestTimeCatId=catId;
   const cat=catId!==null?categories.find(c=>c.id===catId):null;
@@ -1853,7 +1878,6 @@ function openBestTimeModal(catId){
   const title=cat?`⚡ เวลาเร็วสุดต่อด่าน — ${cat.name}`:'⚡ เวลาเร็วสุดต่อด่าน (ทั้งหมด)';
   document.getElementById('bestTimeTitle').textContent=title;
   const body=document.getElementById('bestTimeBody');body.innerHTML='';
-  // Build stageMap
   const stageMap={};
   catTables.forEach(tObj=>{
     const pc=tObj.playerCount||4;const ar=tObj.rowCount||ROWS_BASE;
@@ -1893,7 +1917,6 @@ async function saveBestTimeImage(){
   const catTables=catId!==null?tables.filter(t=>t.catId===catId):tables;
   const titleTxt=cat?`⚡ เวลาเร็วสุดต่อด่าน — ${cat.name}`:'⚡ เวลาเร็วสุดต่อด่าน (ทั้งหมด)';
 
-  // Build stage map
   const stageMap={};
   catTables.forEach(tObj=>{
     const pc=tObj.playerCount||4;const ar=tObj.rowCount||ROWS_BASE;
@@ -1910,7 +1933,6 @@ async function saveBestTimeImage(){
   const stages=Object.entries(stageMap).sort((a,b)=>a[0].localeCompare(b[0]));
   if(!stages.length){alert('ยังไม่มีข้อมูลเวลา');return;}
 
-  // Read theme colors
   const isLight=currentMode==='light';
   const htmlEl=document.documentElement;
   const cs=getComputedStyle(htmlEl);
@@ -1925,9 +1947,7 @@ async function saveBestTimeImage(){
   const cardBg   =isLight?'rgba(255,255,255,.98)':s1Color+'ee';
   const hdrBg    =isLight?cv('--s2','#b8ccee'):cv('--s1','#071230');
   const rowAlt   =isLight?'#f0f6ff':'#05101888';
-  const redClr   ='#ef4444';
 
-  // Layout
   const PAD=28,COL_STAGE=240,COL_TIME=100,COL_PLAYER=120,COL_MATCH=80;
   const W=PAD*2+COL_STAGE+COL_TIME+COL_PLAYER+COL_MATCH;
   const ROW_H=38,HEAD_H=44,TITLE_H=52,FOOT=28;
@@ -1936,23 +1956,19 @@ async function saveBestTimeImage(){
   const canvas=document.createElement('canvas');canvas.width=W*2;canvas.height=H*2;
   const ctx=canvas.getContext('2d');ctx.scale(2,2);
 
-  // BG + card
   ctx.fillStyle=bgColor;ctx.fillRect(0,0,W,H);
   ctx.fillStyle=cardBg;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.fill();
   ctx.strokeStyle=blueColor+'55';ctx.lineWidth=1;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.stroke();
-  // Top accent
   const acc=ctx.createLinearGradient(PAD/2,0,W-PAD/2,0);
   acc.addColorStop(0,'transparent');acc.addColorStop(.35,blueColor);acc.addColorStop(.65,goldColor);acc.addColorStop(1,'transparent');
   ctx.fillStyle=acc;ctx.fillRect(PAD/2,PAD/2,W-PAD,3);
 
-  // Title
   let y=PAD+8;
   ctx.textAlign='center';ctx.fillStyle=goldColor;
   ctx.font=`bold 18px Rajdhani,Orbitron,sans-serif`;
   fillTextEllipsis(ctx,titleTxt,W/2,y+20,W-PAD*2-16);
   y+=TITLE_H;
 
-  // Column headers
   ctx.fillStyle=hdrBg;ctx.fillRect(PAD,y,W-PAD*2,HEAD_H);
   const cols=[{label:'ด่าน',x:PAD+6,w:COL_STAGE-10,align:'left'},{label:'เวลาดีสุด',x:PAD+COL_STAGE+COL_TIME/2,w:COL_TIME,align:'center'},{label:'ผู้เล่น',x:PAD+COL_STAGE+COL_TIME+COL_PLAYER/2,w:COL_PLAYER,align:'center'},{label:'การแข่งขัน',x:PAD+COL_STAGE+COL_TIME+COL_PLAYER+COL_MATCH/2,w:COL_MATCH,align:'center'}];
   ctx.font=`700 10px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
@@ -1960,28 +1976,22 @@ async function saveBestTimeImage(){
   ctx.strokeStyle=blueColor+'44';ctx.lineWidth=1;ctx.strokeRect(PAD,y,W-PAD*2,HEAD_H);
   y+=HEAD_H;
 
-  // Rows
   stages.forEach(([stage,info],i)=>{
     const ry=y+i*ROW_H;
     ctx.fillStyle=i%2===1?rowAlt:cardBg;ctx.fillRect(PAD,ry,W-PAD*2,ROW_H);
     ctx.strokeStyle=blueColor+'22';ctx.lineWidth=.5;ctx.strokeRect(PAD,ry,W-PAD*2,ROW_H);
     const cy=ry+ROW_H/2+4;
-    // Stage
     ctx.textAlign='left';ctx.font=`600 10px "Exo 2",Sarabun,sans-serif`;ctx.fillStyle=textColor;
     fillTextEllipsis(ctx,stage,PAD+6,cy,COL_STAGE-12);
-    // Time
     ctx.textAlign='center';ctx.font=`700 12px Rajdhani,monospace`;ctx.fillStyle=goldColor;
     ctx.fillText(info.timeStr,PAD+COL_STAGE+COL_TIME/2,cy);
-    // Player
     ctx.fillStyle=blue2;ctx.font=`600 10px "Exo 2",sans-serif`;
     fillTextEllipsis(ctx,info.player,PAD+COL_STAGE+COL_TIME+COL_PLAYER/2,cy,COL_PLAYER-8);
-    // Match
     ctx.fillStyle=dimColor;ctx.font=`600 9px Rajdhani,monospace`;
     ctx.fillText(info.match,PAD+COL_STAGE+COL_TIME+COL_PLAYER+COL_MATCH/2,cy);
   });
   y+=ROW_H*stages.length;
 
-  // Watermark
   ctx.textAlign='right';ctx.font=`500 8px "Exo 2",sans-serif`;ctx.fillStyle=dimColor;
   ctx.fillText('🏁 Race Time Tracker',W-PAD,H-10);
 
@@ -1991,7 +2001,6 @@ async function saveBestTimeImage(){
   link.href=canvas.toDataURL('image/png');link.click();
 }
 
-// ── SCORE MODAL ──
 function openScoreModal(catId){
   const cat=catId!==null?categories.find(c=>c.id===catId):null;
   const catTables=catId!==null?tables.filter(t=>t.catId===catId):tables;
@@ -2009,7 +2018,6 @@ function openScoreModal(catId){
   });
   const sorted=Object.entries(sm).map(([n,s])=>({name:n,score:s,plays:playCount[n]||0})).sort((a,b)=>b.score-a.score);
   const body=document.getElementById('scoreModalBody');body.innerHTML='';
-  // Total matches badge
   if(catTables.length>0){
     const badge=document.createElement('div');
     badge.style.cssText='text-align:center;padding:4px;margin-bottom:8px;font-family:Rajdhani,monospace;font-size:.72rem;color:var(--dim);';
@@ -2041,13 +2049,9 @@ function openScoreModal(catId){
 }
 function closeScoreModal(){document.getElementById('scoreModal').style.display='none';document.body.style.overflow='';}
 
-
 function confirmClear(){if(confirm(T('confirmClear'))){['rt6','rtCats','rtLang'].forEach(k=>localStorage.removeItem(k));location.reload();}}
-function removeMatch(tid){
-  if(tables.length===1){alert('min 1');return;}if(!confirm(T('confirmRemove')))return;
-  tables=tables.filter(t=>t.id!==tid);save();document.querySelector(`.match-block[data-tid="${tid}"]`)?.remove();updateLeaderboard();
-}
-function addMatch(){const t=mkTable(4);tables.push(t);save();const dom=buildTable(t);document.getElementById('tablesArea').appendChild(dom);dom.scrollIntoView({behavior:'smooth',block:'start'});recalcBlock(t.id);updateLeaderboard();}
+// removeMatch defined above (uses renderAll)
+// addMatch defined above (uses renderAll)
 
 function collapseAll(){
   const allCollapsed=tables.every(t=>t.collapsed);
@@ -2091,7 +2095,7 @@ function resetTable(tid){
   if(!confirm('รีเซ็ตข้อมูลในตารางนี้?')) return;
   const tObj=tables.find(t=>t.id===tid);if(!tObj)return;
   tObj.players=Array(MAX_P).fill('');
-  tObj.rows=Array.from({length:ROWS},()=>({stage:'',times:Array(MAX_P).fill('')}));
+  tObj.rows=Array.from({length:ROWS_MAX},()=>({stage:'',times:Array(MAX_P).fill('')}));
   save();rebuildBlock(tObj);updateLeaderboard();
 }
 
@@ -2118,13 +2122,9 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
 }
 
-// Draw text with ellipsis if too wide
 function fillTextEllipsis(ctx, text, x, y, maxWidth){
   if(!text) return;
-  if(ctx.measureText(text).width <= maxWidth){
-    ctx.fillText(text, x, y);
-    return;
-  }
+  if(ctx.measureText(text).width <= maxWidth){ctx.fillText(text, x, y);return;}
   let truncated = text;
   while(truncated.length > 1 && ctx.measureText(truncated + '…').width > maxWidth){
     truncated = truncated.slice(0, -1);
@@ -2141,7 +2141,6 @@ async function captureTableImage(){
   const pc=tObj.playerCount||4;
   const activeRows=tObj.rowCount||ROWS_BASE;
 
-  // Theme colors
   const htmlEl=document.documentElement;
   const cs=getComputedStyle(htmlEl);
   const cv=(v,fb)=>{const val=cs.getPropertyValue(v).trim();return val||fb;};
@@ -2159,23 +2158,19 @@ async function captureTableImage(){
   const borderClr =blueColor+'33';
   const redClr    ='#ef4444';
 
-  // ── LANDSCAPE LAYOUT ──
-  // Rows (fixed): [รอบ, แผนที่, P1, P2, ..., Pn, คะแนนรวม]
-  // Columns: each round + label col on left
   const PAD=24;
-  const LABEL_W=90;   // leftmost label column width
-  const COL_W=82;     // width per round column
-  const ROW_RND=32;   // row: round number
-  const ROW_P=52;     // row: each player (time + score chip)
-  const ROW_TOT=38;   // row: total row
+  const LABEL_W=90;
+  const COL_W=82;
+  const ROW_RND=32;
+  const ROW_P=52;
+  const ROW_TOT=38;
   const TITLE_H=50;
   const DESC_H=descTxt?32:0;
   const FOOT=24;
   const STAGE_FONT=`600 8px "Exo 2",Sarabun,sans-serif`;
-  const LINE_H=11;    // line height for wrapped stage text
-  const STAGE_PAD=6;  // vertical padding inside stage row
+  const LINE_H=11;
+  const STAGE_PAD=6;
 
-  // ── Helper: measure wrapped text line count ──
   function wrapTextLines(ctx, text, maxW){
     if(!text) return ['—'];
     const words=text.split(' ');
@@ -2189,8 +2184,6 @@ async function captureTableImage(){
     return lines.length?lines:['—'];
   }
 
-  // ── Pre-measure to calculate dynamic ROW_STAGE ──
-  // Create temp canvas just for measuring
   const tmpCanvas=document.createElement('canvas');
   const tmpCtx=tmpCanvas.getContext('2d');
   tmpCtx.font=STAGE_FONT;
@@ -2210,32 +2203,27 @@ async function captureTableImage(){
   canvas.width=W*2;canvas.height=H*2;
   const ctx=canvas.getContext('2d');ctx.scale(2,2);
 
-  // ── Background ──
   ctx.fillStyle=bgColor;ctx.fillRect(0,0,W,H);
   ctx.fillStyle=cardBg;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.fill();
   ctx.strokeStyle=blueColor+'44';ctx.lineWidth=1;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.stroke();
 
-  // Top accent stripe
   const acc=ctx.createLinearGradient(PAD/2,0,W-PAD/2,0);
   acc.addColorStop(0,'transparent');acc.addColorStop(.3,blueColor);
   acc.addColorStop(.5,goldColor);acc.addColorStop(.7,blueColor);acc.addColorStop(1,'transparent');
   ctx.fillStyle=acc;ctx.fillRect(PAD/2,PAD/2,W-PAD,3);
 
-  // ── Title ──
   let y=PAD+8;
   ctx.textAlign='center';ctx.fillStyle=goldColor;
   ctx.font=`bold 18px Rajdhani,Orbitron,sans-serif`;
   fillTextEllipsis(ctx,titleTxt,W/2,y+20,W-PAD*2-20);
   y+=TITLE_H;
 
-  // ── Description ──
   if(descTxt){
     ctx.font=`600 11px "Exo 2",Sarabun,sans-serif`;ctx.fillStyle=dimColor;
     fillTextEllipsis(ctx,descTxt,W/2,y+14,W-PAD*2-16);
     y+=DESC_H;
   }
 
-  // ── Pre-calc scores for all rounds ──
   const allScores=[];
   const allParsed=[];
   const allBest=[];
@@ -2251,22 +2239,16 @@ async function captureTableImage(){
   allScores.forEach(sc=>sc.forEach((s,p)=>{if(s!==null)tots[p]+=s;}));
   const maxT=Math.max(...tots,0);
 
-  // Helper: col X position
   const colX=(r)=>PAD+LABEL_W+COL_W*r;
   const tableX=PAD;const tableW=W-PAD*2;
 
-  // ── ROW 1: รอบ (round numbers) ──
-  // Label
   ctx.fillStyle=hdrBg;ctx.fillRect(tableX,y,tableW,ROW_RND);
   ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(tableX,y,tableW,ROW_RND);
   ctx.textAlign='left';ctx.font=`700 9px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
   ctx.fillText(T('round').toUpperCase(),tableX+8,y+ROW_RND/2+4);
-  // Round numbers
   for(let r=0;r<activeRows;r++){
     const cx=colX(r);
-    // Alternate column bg
     if(r%2===1){ctx.fillStyle=colAlt;ctx.fillRect(cx,y,COL_W,ROW_RND);}
-    // King indicator
     const isKing=r in KM&&KM[r]<pc;
     ctx.textAlign='center';
     if(isKing){
@@ -2277,14 +2259,12 @@ async function captureTableImage(){
       ctx.fillStyle=blue2Color;ctx.font=`700 12px Rajdhani,sans-serif`;
       ctx.fillText(r+1,cx+COL_W/2,y+ROW_RND/2+5);
     }
-    // Vertical divider — stop before total row (tableH - ROW_TOT)
     const divH=tableH-ROW_TOT;
     ctx.strokeStyle=borderClr;ctx.lineWidth=.5;
     ctx.beginPath();ctx.moveTo(cx,y);ctx.lineTo(cx,y+divH);ctx.stroke();
   }
   y+=ROW_RND;
 
-  // ── ROW 2: แผนที่ (stage) — dynamic height, word wrap ──
   ctx.fillStyle=hdrBg;ctx.fillRect(tableX,y,tableW,ROW_STAGE);
   ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(tableX,y,tableW,ROW_STAGE);
   ctx.textAlign='left';ctx.font=`700 9px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
@@ -2294,18 +2274,13 @@ async function captureTableImage(){
     if(r%2===1){ctx.fillStyle=colAlt;ctx.fillRect(cx,y,COL_W,ROW_STAGE);}
     const stg=tObj.rows[r].stage||'—';
     ctx.font=STAGE_FONT;ctx.fillStyle=textColor;ctx.textAlign='center';
-    // Word-wrap the stage name
     const lines=wrapTextLines(ctx,stg,COL_W-8);
     const totalTextH=lines.length*LINE_H;
     const startY=y+(ROW_STAGE-totalTextH)/2+LINE_H-2;
-    lines.forEach((line,li)=>{
-      ctx.fillText(line,cx+COL_W/2,startY+li*LINE_H);
-    });
+    lines.forEach((line,li)=>{ctx.fillText(line,cx+COL_W/2,startY+li*LINE_H);});
   }
   y+=ROW_STAGE;
 
-  // ── ROWS 3..N: Players ──
-  // Pre-calc win count (only meaningful for 2 players)
   const winCount=Array(pc).fill(0);
   if(pc===2){
     for(let r=0;r<activeRows;r++){
@@ -2322,18 +2297,14 @@ async function captureTableImage(){
     const ry=y+ROW_P*p;
     const isEven=p%2===0;
 
-    // Label cell
     ctx.fillStyle=isEven?cardBg:colAlt;
     ctx.fillRect(tableX,ry,LABEL_W,ROW_P);
     ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(tableX,ry,LABEL_W,ROW_P);
     ctx.textAlign='left';
 
     if(pc===2){
-      // Show: "P1 label" on top, then "Name  W" on bottom line
       ctx.font=`600 7px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
       ctx.fillText(`${T('playerLabel')} ${p+1}`,tableX+7,ry+13);
-
-      // Name (truncated to leave room for win count)
       ctx.font=`700 11px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
       const wins=winCount[p];
       const winsStr=String(wins);
@@ -2341,29 +2312,23 @@ async function captureTableImage(){
       const winsW=ctx.measureText(' '+winsStr).width+4;
       ctx.font=`700 11px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
       fillTextEllipsis(ctx,pName,tableX+7,ry+28,LABEL_W-12-winsW);
-
-      // Win count badge — right side of label
       const isLeading=wins>0&&wins===Math.max(...winCount);
       const badgeX=tableX+LABEL_W-winsW-4;
-      // Badge bg
       ctx.fillStyle=isLeading?'rgba(245,197,24,.18)':'rgba(255,255,255,.06)';
       roundRect(ctx,badgeX-2,ry+19,winsW+2,14,4);ctx.fill();
       ctx.strokeStyle=isLeading?goldColor+'88':borderClr;ctx.lineWidth=.5;
       roundRect(ctx,badgeX-2,ry+19,winsW+2,14,4);ctx.stroke();
-      // Win number
       ctx.font=`700 11px Rajdhani,monospace`;
       ctx.fillStyle=isLeading?goldColor:dimColor;
       ctx.textAlign='center';
       ctx.fillText(winsStr,badgeX+winsW/2-1,ry+29);
     } else {
-      // Original: P label + name only
       ctx.font=`600 8px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
       ctx.fillText(`${T('playerLabel')} ${p+1}`,tableX+7,ry+14);
       ctx.font=`700 12px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
       fillTextEllipsis(ctx,pName,tableX+7,ry+30,LABEL_W-12);
     }
 
-    // Round cells for this player
     for(let r=0;r<activeRows;r++){
       const cx=colX(r);
       const isB=allParsed[r][p]!==null&&allParsed[r][p]===allBest[r];
@@ -2403,23 +2368,19 @@ async function captureTableImage(){
   }
   y+=ROW_P*pc;
 
-  // ── TOTAL ROW — ⚡ label + N equal cells (name + score, bold, no dividers) ──
   const totGrad=ctx.createLinearGradient(tableX,y,tableX+tableW,y);
   totGrad.addColorStop(0,blueColor+'55');totGrad.addColorStop(.5,goldColor+'33');totGrad.addColorStop(1,blueColor+'55');
   ctx.fillStyle=totGrad;ctx.fillRect(tableX,y,tableW,ROW_TOT);
 
-  // Only top border line (gold gradient) — no strokeRect, no side/bottom lines
   const topLineGrad=ctx.createLinearGradient(tableX,y,tableX+tableW,y);
   topLineGrad.addColorStop(0,'transparent');topLineGrad.addColorStop(.2,goldColor+'99');
   topLineGrad.addColorStop(.5,goldColor);topLineGrad.addColorStop(.8,goldColor+'99');topLineGrad.addColorStop(1,'transparent');
   ctx.strokeStyle=topLineGrad;ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(tableX,y);ctx.lineTo(tableX+tableW,y);ctx.stroke();
 
-  // ⚡ label
   ctx.textAlign='left';ctx.font=`700 10px Rajdhani,monospace`;ctx.fillStyle=goldColor;
   ctx.fillText('⚡ '+T('grandTotal').replace('⚡','').trim(),tableX+7,y+ROW_TOT/2+4);
 
-  // Player score cells — divide remaining width equally, NO dividers
   const scoreAreaX=tableX+LABEL_W;
   const scoreAreaW=tableW-LABEL_W;
   const scoreColW=scoreAreaW/pc;
@@ -2431,7 +2392,6 @@ async function captureTableImage(){
     const isTop=tots[p]===maxT&&tots[p]>0;
     const cx2=sx+scoreColW/2;
 
-    // Measure both with bold font (700) same size
     ctx.font=`700 ${FONT_SIZE}px Rajdhani,sans-serif`;
     const nameW=ctx.measureText(pName).width;
     const scoreStr=String(tots[p]);
@@ -2442,13 +2402,11 @@ async function captureTableImage(){
     const startX=cx2-totalW/2;
     const textY=y+ROW_TOT/2+4;
 
-    // Name — bold, same size
     ctx.font=`700 ${FONT_SIZE}px Rajdhani,sans-serif`;
     ctx.fillStyle=isTop?goldColor:dimColor;
     ctx.textAlign='left';
     ctx.fillText(pName,startX,textY);
 
-    // Score — bold, same size
     ctx.font=`700 ${FONT_SIZE}px Rajdhani,monospace`;
     ctx.fillStyle=isTop?goldColor:blue2Color;
     if(isTop){ctx.shadowColor=goldColor;ctx.shadowBlur=8;}
@@ -2456,7 +2414,6 @@ async function captureTableImage(){
     ctx.shadowBlur=0;ctx.shadowColor='transparent';
   }
 
-  // Watermark
   ctx.textAlign='right';ctx.font=`500 8px "Exo 2",sans-serif`;ctx.fillStyle=dimColor+'99';
   ctx.fillText('🏁 Race Time Tracker',W-PAD,H-8);
 
@@ -2477,12 +2434,10 @@ function importExcel(){
     try{await wb.xlsx.load(buf);}catch(err){alert('ไม่สามารถอ่านไฟล์ได้: '+err.message);return;}
     const ws=wb.worksheets[0];if(!ws){alert('ไม่พบ sheet ในไฟล์นี้');return;}
 
-    // ── Collect all rows into array ──
     const rows=[];
     ws.eachRow((row,rn)=>{
       const vals=[];
       row.eachCell({includeEmpty:true},(cell,cn)=>{
-        // Resolve merged cells, rich text, etc.
         let v=cell.value;
         if(v&&typeof v==='object'){
           if(v.richText)v=v.richText.map(r=>r.text).join('');
@@ -2495,22 +2450,12 @@ function importExcel(){
     });
     if(rows.length<4){alert('ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป');return;}
 
-    // ── Row 2: generic P1..PX headers (just column positions) ──
-    // ── Row 4+: data with match header rows interspersed ──
-    // New format: match header row (dark bg) has player names, then round rows
-    // Old format: round rows with "รอบ 1" in col2 starts new match
-
-    // Detect round patterns for both formats
     const round1Patterns=[/[-–]\s*(รอบ|Round|Vòng|回合|轮次)\s*1\b/i];
     const roundPatterns=[/\b(รอบ|Round|Vòng|回合|轮次)\s*(\d+)/i];
     function isRound1(s){return round1Patterns.some(p=>p.test(s));}
     function getRoundNum(s){for(const p of roundPatterns){const m=s.match(p);if(m)return parseInt(m[2]);}return null;}
-
-    // Match header row: contains matchLabel keyword + match number
     const matchHdrPatterns=[/^(การแข่งขัน|Match|Trận|比赛|比賽)\s*\d+$/i];
     function isMatchHdr(s){return matchHdrPatterns.some(p=>p.test(s.trim()));}
-
-    // Total row patterns
     const totalPatterns=[/คะแนนรวม/,/Total/i,/总计/,/Tổng/i,/總計/,/Grand/i];
     function isTotalRow(s){return totalPatterns.some(p=>p.test(s));}
 
@@ -2521,14 +2466,10 @@ function importExcel(){
       const vals=rows[ri].vals;
       const c1=(vals[0]||'').trim();
       const c2=(vals[1]||'').trim();
-      const combined=c1+' '+c2;
 
-      // Skip total rows
       if(isTotalRow(c1)||isTotalRow(c2))continue;
 
-      // ── New format: match header row (e.g. "การแข่งขัน 1") ──
       if(isMatchHdr(c1)){
-        // Read player names from cols 3,5,7,... of this same row
         const matchPlayers=[];
         for(let p=0;p<MAX_P;p++){
           const pName=(vals[2+p*2]||'').trim();
@@ -2542,9 +2483,7 @@ function importExcel(){
         continue;
       }
 
-      // ── Old format: new match detected by "รอบ 1" pattern ──
       if(!currentT&&isRound1(c2)){
-        // Read global player names from row 2 (rows[1])
         const globalPlayers=[];
         for(let p=0;p<MAX_P;p++){
           const pName=(rows[1].vals[2+p*2]||'').trim();
@@ -2556,7 +2495,6 @@ function importExcel(){
         currentT.rowCount=ROWS_BASE;
         newTables.push(currentT);
       } else if(currentT&&isRound1(c2)){
-        // Old format multi-match: new match starts
         const prevT=currentT;
         currentT=mkTable(prevT.playerCount);
         currentT.players=[...prevT.players];
@@ -2566,8 +2504,6 @@ function importExcel(){
 
       if(!currentT)continue;
 
-      // ── Parse round row ──
-      // New format col2: "รอบ 1 (stageName)"  Old format: "การแข่งขัน 1 - รอบ 1 (stageName)"
       const roundMatch=c2.match(/(?:[-–]\s*)?(?:รอบ|Round|Vòng|回合|轮次)\s*(\d+)(?:\s*\(([^)]*)\))?/i);
       if(!roundMatch)continue;
       const roundIdx=parseInt(roundMatch[1])-1;
@@ -2587,7 +2523,6 @@ function importExcel(){
 
     if(!newTables.length){alert('ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้');return;}
 
-    // ── Ask user: append or replace ──
     const choice=window.confirm(
       `${T('importExcel')}: พบ ${newTables.length} การแข่งขัน\n\n` +
       `กด OK  → เพิ่มต่อกับข้อมูลที่มีอยู่\n` +
@@ -2615,9 +2550,7 @@ async function exportExcel(tablesToExport, sheetTitle){
   const maxPc=Math.max(...tblList.map(t=>t.playerCount||4));
   const cols=2+maxPc*2;
   const headerTitle=sheetTitle?`${T('title')} — ${sheetTitle}`:T('title');
-  // Row 1: title
   ws.mergeCells(1,1,1,cols);const tC=ws.getCell(1,1);tC.value=headerTitle;tC.font={bold:true,size:14,color:{argb:'FFFFFFFF'}};tC.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};tC.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=36;
-  // Row 2: column headers — generic P1..PX so imports know position
   ws.getCell(2,1).value='#';ws.getCell(2,2).value=T('matchLabel');
   [ws.getCell(2,1),ws.getCell(2,2)].forEach(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};c.alignment={horizontal:'center'};});
   for(let p=0;p<maxPc;p++){
@@ -2633,7 +2566,6 @@ async function exportExcel(tablesToExport, sheetTitle){
   tblList.forEach((tObj,ti)=>{
     const pc=tObj.playerCount||4;
     const activeRows=tObj.rowCount||ROWS_BASE;
-    // Write match header row with actual player names for this match
     ws.mergeCells(rn,1,rn,2);
     const mhdr=ws.getCell(rn,1);
     mhdr.value=`${T('matchLabel')} ${ti+1}`;
@@ -2641,7 +2573,6 @@ async function exportExcel(tablesToExport, sheetTitle){
     mhdr.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0F2244'}};
     mhdr.alignment={horizontal:'left',vertical:'middle'};
     ws.getRow(rn).height=22;
-    // Player names for this match
     for(let p=0;p<maxPc;p++){
       const tc2=3+p*2,pc2=4+p*2;
       const pName=p<pc?(tObj.players[p]||'').trim()||`P${p+1}`:'—';
@@ -2713,10 +2644,8 @@ function applyTheme(color,mode){
   const html=document.documentElement;
   html.setAttribute('data-color',color);
   html.setAttribute('data-mode',mode);
-  // update swatch
   const sw=document.getElementById('themeSwatch');
   if(sw) sw.style.background=COLOR_SWATCHES[color]||'';
-  // update active states
   document.querySelectorAll('.tp-color').forEach(b=>b.classList.toggle('active',b.dataset.color===color));
   document.querySelectorAll('.tp-mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   localStorage.setItem('rtColor',color);localStorage.setItem('rtMode',mode);
@@ -2731,7 +2660,6 @@ function toggleThemePanel(){
   if(!open){
     const rect=btn.getBoundingClientRect();
     const panelW=210;
-    // Try align right edge to button right, but don't go off left edge
     let left=rect.right-panelW;
     if(left<8)left=8;
     if(left+panelW>window.innerWidth-8)left=window.innerWidth-panelW-8;
