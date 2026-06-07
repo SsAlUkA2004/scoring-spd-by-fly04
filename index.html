@@ -2166,14 +2166,42 @@ async function captureTableImage(){
   const LABEL_W=90;   // leftmost label column width
   const COL_W=82;     // width per round column
   const ROW_RND=32;   // row: round number
-  const ROW_STAGE=36; // row: stage name
   const ROW_P=52;     // row: each player (time + score chip)
   const ROW_TOT=38;   // row: total row
   const TITLE_H=50;
   const DESC_H=descTxt?32:0;
   const FOOT=24;
+  const STAGE_FONT=`600 8px "Exo 2",Sarabun,sans-serif`;
+  const LINE_H=11;    // line height for wrapped stage text
+  const STAGE_PAD=6;  // vertical padding inside stage row
 
-  const nRows=2+pc+1; // รอบ + แผนที่ + pc players + total
+  // ── Helper: measure wrapped text line count ──
+  function wrapTextLines(ctx, text, maxW){
+    if(!text) return ['—'];
+    const words=text.split(' ');
+    const lines=[];let cur='';
+    for(const w of words){
+      const test=cur?cur+' '+w:w;
+      if(ctx.measureText(test).width>maxW&&cur){lines.push(cur);cur=w;}
+      else cur=test;
+    }
+    if(cur)lines.push(cur);
+    return lines.length?lines:['—'];
+  }
+
+  // ── Pre-measure to calculate dynamic ROW_STAGE ──
+  // Create temp canvas just for measuring
+  const tmpCanvas=document.createElement('canvas');
+  const tmpCtx=tmpCanvas.getContext('2d');
+  tmpCtx.font=STAGE_FONT;
+  let maxLines=1;
+  for(let r=0;r<activeRows;r++){
+    const stg=tObj.rows[r].stage||'—';
+    const lines=wrapTextLines(tmpCtx,stg,COL_W-8);
+    if(lines.length>maxLines)maxLines=lines.length;
+  }
+  const ROW_STAGE=Math.max(28, maxLines*LINE_H + STAGE_PAD*2);
+
   const tableH=ROW_RND+ROW_STAGE+ROW_P*pc+ROW_TOT;
   const W=PAD*2+LABEL_W+COL_W*activeRows;
   const H=PAD+TITLE_H+DESC_H+tableH+FOOT;
@@ -2256,7 +2284,7 @@ async function captureTableImage(){
   }
   y+=ROW_RND;
 
-  // ── ROW 2: แผนที่ (stage) ──
+  // ── ROW 2: แผนที่ (stage) — dynamic height, word wrap ──
   ctx.fillStyle=hdrBg;ctx.fillRect(tableX,y,tableW,ROW_STAGE);
   ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(tableX,y,tableW,ROW_STAGE);
   ctx.textAlign='left';ctx.font=`700 9px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
@@ -2265,9 +2293,14 @@ async function captureTableImage(){
     const cx=colX(r);
     if(r%2===1){ctx.fillStyle=colAlt;ctx.fillRect(cx,y,COL_W,ROW_STAGE);}
     const stg=tObj.rows[r].stage||'—';
-    ctx.textAlign='center';ctx.fillStyle=textColor;
-    ctx.font=`600 8px "Exo 2",Sarabun,sans-serif`;
-    fillTextEllipsis(ctx,stg,cx+COL_W/2,y+ROW_STAGE/2+4,COL_W-8);
+    ctx.font=STAGE_FONT;ctx.fillStyle=textColor;ctx.textAlign='center';
+    // Word-wrap the stage name
+    const lines=wrapTextLines(ctx,stg,COL_W-8);
+    const totalTextH=lines.length*LINE_H;
+    const startY=y+(ROW_STAGE-totalTextH)/2+LINE_H-2;
+    lines.forEach((line,li)=>{
+      ctx.fillText(line,cx+COL_W/2,startY+li*LINE_H);
+    });
   }
   y+=ROW_STAGE;
 
