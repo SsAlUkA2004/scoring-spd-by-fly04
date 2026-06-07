@@ -2302,13 +2302,14 @@ async function captureTableImage(){
     const ry=y+ROW_P*p;
     const isEven=p%2===0;
 
-    // Label cell (player name)
+    // Label cell — show name only, no score
     ctx.fillStyle=isEven?cardBg:colAlt;
     ctx.fillRect(tableX,ry,LABEL_W,ROW_P);
     ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(tableX,ry,LABEL_W,ROW_P);
-    ctx.textAlign='left';ctx.font=`600 9px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
+    ctx.textAlign='left';
+    ctx.font=`600 8px Rajdhani,sans-serif`;ctx.fillStyle=dimColor;
     ctx.fillText(`${T('playerLabel')} ${p+1}`,tableX+7,ry+14);
-    ctx.font=`700 11px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
+    ctx.font=`700 12px Rajdhani,sans-serif`;ctx.fillStyle=goldColor;
     fillTextEllipsis(ctx,pName,tableX+7,ry+30,LABEL_W-12);
 
     // Round cells for this player
@@ -2318,12 +2319,10 @@ async function captureTableImage(){
       const isKing=r in KM&&KM[r]<pc;const kp=isKing?KM[r]:-1;
       const isKC=isKing&&p===kp;
 
-      // Cell bg
       ctx.fillStyle=isEven?cardBg:colAlt;
       ctx.fillRect(cx,ry,COL_W,ROW_P);
       ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(cx,ry,COL_W,ROW_P);
 
-      // Winner highlight frame
       if(isB){
         ctx.strokeStyle=isKC?redClr:goldColor;ctx.lineWidth=2;
         roundRect(ctx,cx+3,ry+3,COL_W-6,ROW_P-6,5);ctx.stroke();
@@ -2331,14 +2330,12 @@ async function captureTableImage(){
         roundRect(ctx,cx+3,ry+3,COL_W-6,ROW_P-6,5);ctx.fill();
       }
 
-      // Time value
       const tv=tObj.rows[r].times[p]||'—';
       ctx.textAlign='center';
       ctx.fillStyle=isB?(isKC?redClr:goldColor):textColor;
       ctx.font=`700 12px Rajdhani,monospace`;
       ctx.fillText(tv,cx+COL_W/2,ry+ROW_P/2+1);
 
-      // Score chip (scoreable rounds only)
       const s=allScores[r][p];
       if(s!==null){
         const cW=30,cH=13,cX=cx+COL_W/2-cW/2,cY=ry+ROW_P/2+7;
@@ -2348,7 +2345,6 @@ async function captureTableImage(){
         ctx.font=`700 8px Rajdhani,monospace`;ctx.textAlign='center';
         ctx.fillText(`+${s}`,cx+COL_W/2,cY+cH/2+3);
       } else if(activeRows>ROWS_BASE&&r>=ROWS_BASE){
-        // NO PT label for extra rounds
         ctx.fillStyle=dimColor;ctx.font=`600 7px Rajdhani,monospace`;ctx.textAlign='center';
         ctx.fillText('NO PT',cx+COL_W/2,ry+ROW_P-8);
       }
@@ -2356,41 +2352,46 @@ async function captureTableImage(){
   }
   y+=ROW_P*pc;
 
-  // ── TOTAL ROW ──
-  // Label
+  // ── TOTAL ROW — ⚡ label + N equal cells (name + score) ──
   const totGrad=ctx.createLinearGradient(tableX,y,tableX+tableW,y);
-  totGrad.addColorStop(0,blueColor+'44');totGrad.addColorStop(.5,goldColor+'22');totGrad.addColorStop(1,blueColor+'44');
+  totGrad.addColorStop(0,blueColor+'55');totGrad.addColorStop(.5,goldColor+'33');totGrad.addColorStop(1,blueColor+'55');
   ctx.fillStyle=totGrad;ctx.fillRect(tableX,y,tableW,ROW_TOT);
-  ctx.strokeStyle=goldColor+'66';ctx.lineWidth=1;
+  ctx.strokeStyle=goldColor+'66';ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(tableX,y);ctx.lineTo(tableX+tableW,y);ctx.stroke();
   ctx.strokeStyle=borderClr;ctx.lineWidth=.5;ctx.strokeRect(tableX,y,tableW,ROW_TOT);
+
+  // Label cell: ⚡ คะแนน
   ctx.textAlign='left';ctx.font=`700 10px Rajdhani,monospace`;ctx.fillStyle=goldColor;
-  ctx.fillText('⚡ '+T('grandTotal').replace('⚡','').trim(),tableX+8,y+ROW_TOT/2+4);
-  // Total score per player (show per column since columns=rounds, just show player totals aggregated)
-  // In landscape, total is per-player shown at the bottom of label: already shown
-  // Show top scorer highlighted
-  for(let r=0;r<activeRows;r++){
-    const cx=colX(r);
-    if(r%2===1){ctx.fillStyle='rgba(255,255,255,.02)';ctx.fillRect(cx,y,COL_W,ROW_TOT);}
-  }
-  // Show per-player total score inside label column area
-  // Better: show which player scored in this round (compact)
-  ctx.textAlign='right';ctx.font=`700 9px Rajdhani,monospace`;ctx.fillStyle=dimColor;
-  ctx.fillText(T('score'),tableX+LABEL_W-6,y+ROW_TOT/2+4);
+  ctx.fillText('⚡ '+T('grandTotal').replace('⚡','').trim(),tableX+7,y+ROW_TOT/2+4);
 
-  // ── PLAYER TOTAL COLUMN (right summary) ──
-  // Overlay total scores on the label side for reference — draw totals right-aligned in label col
-  // Go back and overlay total on each player row label
-  let yBack=PAD+TITLE_H+DESC_H+ROW_RND+ROW_STAGE;
+  // Player score cells — divide remaining width equally among players
+  const scoreAreaX=tableX+LABEL_W;
+  const scoreAreaW=tableW-LABEL_W;
+  const scoreColW=scoreAreaW/pc;
+
   for(let p=0;p<pc;p++){
-    const ry2=yBack+ROW_P*p;
+    const pName=(tObj.players[p]||'').trim()||`P${p+1}`;
+    const sx=scoreAreaX+scoreColW*p;
     const isTop=tots[p]===maxT&&tots[p]>0;
-    ctx.textAlign='right';ctx.font=`700 11px Rajdhani,monospace`;
+
+    // Divider between player cells
+    ctx.strokeStyle=blueColor+'44';ctx.lineWidth=.5;
+    ctx.beginPath();ctx.moveTo(sx,y);ctx.lineTo(sx,y+ROW_TOT);ctx.stroke();
+
+    // Name (small, dim)
+    ctx.textAlign='center';ctx.font=`600 8px Rajdhani,sans-serif`;
+    ctx.fillStyle=isTop?goldColor:dimColor;
+    fillTextEllipsis(ctx,pName,sx+scoreColW/2,y+13,scoreColW-8);
+
+    // Score (large, highlight top)
+    ctx.font=`bold 15px Rajdhani,monospace`;
     ctx.fillStyle=isTop?goldColor:blue2Color;
-    ctx.fillText(tots[p],tableX+LABEL_W-7,ry2+ROW_P/2+9);
+    if(isTop)ctx.shadowColor=goldColor;if(isTop)ctx.shadowBlur=8;
+    ctx.fillText(tots[p],sx+scoreColW/2,y+ROW_TOT-8);
+    ctx.shadowBlur=0;ctx.shadowColor='transparent';
   }
 
-  // ── Watermark ──
+  // Watermark
   ctx.textAlign='right';ctx.font=`500 8px "Exo 2",sans-serif`;ctx.fillStyle=dimColor+'99';
   ctx.fillText('🏁 Race Time Tracker',W-PAD,H-8);
 
