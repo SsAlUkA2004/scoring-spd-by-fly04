@@ -2275,9 +2275,10 @@ async function captureTableImage(){
       ctx.fillStyle=blue2Color;ctx.font=`700 12px Rajdhani,sans-serif`;
       ctx.fillText(r+1,cx+COL_W/2,y+ROW_RND/2+5);
     }
-    // Vertical divider
+    // Vertical divider — stop before total row (tableH - ROW_TOT)
+    const divH=tableH-ROW_TOT;
     ctx.strokeStyle=borderClr;ctx.lineWidth=.5;
-    ctx.beginPath();ctx.moveTo(cx,y);ctx.lineTo(cx,y+tableH);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,y);ctx.lineTo(cx,y+divH);ctx.stroke();
   }
   y+=ROW_RND;
 
@@ -2352,25 +2353,27 @@ async function captureTableImage(){
   }
   y+=ROW_P*pc;
 
-  // ── TOTAL ROW — ⚡ label + N equal cells (name + score, same size, no dividers) ──
+  // ── TOTAL ROW — ⚡ label + N equal cells (name + score, bold, no dividers) ──
   const totGrad=ctx.createLinearGradient(tableX,y,tableX+tableW,y);
   totGrad.addColorStop(0,blueColor+'55');totGrad.addColorStop(.5,goldColor+'33');totGrad.addColorStop(1,blueColor+'55');
   ctx.fillStyle=totGrad;ctx.fillRect(tableX,y,tableW,ROW_TOT);
-  ctx.strokeStyle=goldColor+'66';ctx.lineWidth=1.5;
+
+  // Only top border line (gold gradient) — no strokeRect, no side/bottom lines
+  const topLineGrad=ctx.createLinearGradient(tableX,y,tableX+tableW,y);
+  topLineGrad.addColorStop(0,'transparent');topLineGrad.addColorStop(.2,goldColor+'99');
+  topLineGrad.addColorStop(.5,goldColor);topLineGrad.addColorStop(.8,goldColor+'99');topLineGrad.addColorStop(1,'transparent');
+  ctx.strokeStyle=topLineGrad;ctx.lineWidth=1.5;
   ctx.beginPath();ctx.moveTo(tableX,y);ctx.lineTo(tableX+tableW,y);ctx.stroke();
-  ctx.strokeStyle=borderClr;ctx.lineWidth=.5;
-  // Only draw outer border, no inner dividers
-  ctx.strokeRect(tableX,y,tableW,ROW_TOT);
 
   // ⚡ label
   ctx.textAlign='left';ctx.font=`700 10px Rajdhani,monospace`;ctx.fillStyle=goldColor;
   ctx.fillText('⚡ '+T('grandTotal').replace('⚡','').trim(),tableX+7,y+ROW_TOT/2+4);
 
-  // Player score cells — divide remaining width equally, NO dividers between cells
+  // Player score cells — divide remaining width equally, NO dividers
   const scoreAreaX=tableX+LABEL_W;
   const scoreAreaW=tableW-LABEL_W;
   const scoreColW=scoreAreaW/pc;
-  const FONT_SIZE=10; // same font size for both name and score
+  const FONT_SIZE=10;
 
   for(let p=0;p<pc;p++){
     const pName=(tObj.players[p]||'').trim()||`P${p+1}`;
@@ -2378,31 +2381,28 @@ async function captureTableImage(){
     const isTop=tots[p]===maxT&&tots[p]>0;
     const cx2=sx+scoreColW/2;
 
-    // Name + score centered together, same font size
-    ctx.textAlign='center';
-    ctx.font=`600 ${FONT_SIZE}px Rajdhani,sans-serif`;
-    ctx.fillStyle=isTop?goldColor:dimColor;
+    // Measure both with bold font (700) same size
+    ctx.font=`700 ${FONT_SIZE}px Rajdhani,sans-serif`;
     const nameW=ctx.measureText(pName).width;
-
-    ctx.font=`700 ${FONT_SIZE}px Rajdhani,monospace`;
     const scoreStr=String(tots[p]);
     const scoreW=ctx.measureText(scoreStr).width;
 
     const gap=6;
     const totalW=nameW+gap+scoreW;
     const startX=cx2-totalW/2;
+    const textY=y+ROW_TOT/2+4;
 
-    // Draw name
-    ctx.font=`600 ${FONT_SIZE}px Rajdhani,sans-serif`;
+    // Name — bold, same size
+    ctx.font=`700 ${FONT_SIZE}px Rajdhani,sans-serif`;
     ctx.fillStyle=isTop?goldColor:dimColor;
     ctx.textAlign='left';
-    ctx.fillText(pName,startX,y+ROW_TOT/2+4);
+    ctx.fillText(pName,startX,textY);
 
-    // Draw score right after name
+    // Score — bold, same size
     ctx.font=`700 ${FONT_SIZE}px Rajdhani,monospace`;
     ctx.fillStyle=isTop?goldColor:blue2Color;
     if(isTop){ctx.shadowColor=goldColor;ctx.shadowBlur=8;}
-    ctx.fillText(scoreStr,startX+nameW+gap,y+ROW_TOT/2+4);
+    ctx.fillText(scoreStr,startX+nameW+gap,textY);
     ctx.shadowBlur=0;ctx.shadowColor='transparent';
   }
 
