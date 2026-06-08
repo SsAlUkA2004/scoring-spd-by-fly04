@@ -590,6 +590,31 @@ td.rnd-td{width:52px;}td.stage-td{width:145px;}
   box-shadow:0 0 8px rgba(245,197,24,.3);
 }
 .rand-btn:active{transform:scale(.97);}
+/* ── MAP BAN PHASE ── */
+.ban-section-row td{
+  background:rgba(239,68,68,.05);
+  border-top:2px solid rgba(239,68,68,.28)!important;
+  border-bottom:2px solid rgba(239,68,68,.18)!important;
+}
+.ban-section-row:hover td{background:rgba(239,68,68,.08)!important;}
+.ban-lbl-wrap{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:7px 10px;gap:3px;}
+.ban-phase-lbl{font-family:'Rajdhani',monospace;font-size:.7rem;font-weight:700;color:#ef4444;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.ban-phase-note{font-family:'Exo 2',sans-serif;font-size:.58rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;}
+.ban-sw{padding:5px 4px;}
+.ban-inp{width:100%;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);color:var(--text);font-family:'Exo 2',sans-serif;font-size:.76rem;font-weight:600;padding:5px 7px;border-radius:6px;outline:none;transition:all .2s;}
+.ban-inp:focus{border-color:#ef4444;box-shadow:0 0 8px rgba(239,68,68,.25);}
+.ban-inp::placeholder{color:rgba(239,68,68,.4);font-size:.68rem;}
+.ban-chip{display:flex;align-items:center;gap:5px;background:linear-gradient(120deg,rgba(239,68,68,.18),rgba(239,68,68,.1));border:1px solid rgba(239,68,68,.55);border-radius:7px;padding:5px 7px;animation:banIn .2s ease;}
+@keyframes banIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+.ban-chip-icon{font-size:.82rem;flex-shrink:0;line-height:1;}
+.ban-chip-name{font-family:'Exo 2',sans-serif;font-size:.72rem;font-weight:700;color:#ef4444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;max-width:100px;}
+.ban-chip-rm{background:none;border:none;color:rgba(239,68,68,.55);cursor:pointer;font-size:.75rem;padding:0 2px;line-height:1;transition:color .15s;flex-shrink:0;}
+.ban-chip-rm:hover{color:#ef4444;}
+.si.stage-banned{border-color:rgba(239,68,68,.6)!important;background:rgba(239,68,68,.08)!important;color:#ef4444!important;}
+.stage-ban-warn{font-family:'Rajdhani',monospace;font-size:.58rem;font-weight:700;color:#ef4444;letter-spacing:.5px;margin-top:2px;display:block;}
+@media(max-width:640px){.ban-phase-note{display:none;}.ban-chip-name{max-width:60px;}.ban-inp{font-size:.68rem;padding:4px 5px;}}
+@media(max-width:400px){.ban-chip-name{max-width:44px;}.ban-inp{font-size:.6rem;}}
+
 
 /* ── TIME CELL ── */
 td.king-td{padding-top:0 !important;vertical-align:middle;}
@@ -1177,27 +1202,27 @@ const I18N={
     catLabel:'หมวดหมู่',allBestTime:'เวลาด่านทั้งหมด',allScore:'คะแนนรวมทั้งหมด',collapseAll:'ย่อทั้งหมด',expandAll:'ขยายทั้งหมด',
     catBestTime:'เวลาด่าน',catScore:'คะแนน',catExport:'Export',catAddMatch:'＋ การแข่งขัน',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'รีเซ็ตตารางนี้?',noDataYet:'ยังไม่มีข้อมูล',rounds9:'9 รอบ',rounds13:'13 รอบ',
-    randStage:'🎲 สุ่มแผนที่',allStageRec:'สถิติด่านทั้งหมด',stageRec:'สถิติด่าน',stageRecTitle:'🎯 สถิติผู้ถือเร็วสุดต่อด่าน',stageUnit:'ด่าน',catStageRec:'สถิติ',matchUnit:'การแข่งขัน',noCatMatches:'— ยังไม่มีการแข่งขัน —',minMatch:'ต้องมีการแข่งขันอย่างน้อย 1 รายการ',deleteCatConfirm:'ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก',importSuccess:'นำเข้าสำเร็จ',bestTimeCol:'เวลาดีสุด',importFail:'ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้',noCat:'ไม่มีหมวดหมู่',editCatTitle:'✏️ แก้ไขหมวดหมู่',createCatTitle:'📁 สร้างหมวดหมู่',importErrRead:'ไม่สามารถอ่านไฟล์ได้',importErrSheet:'ไม่พบ Sheet ในไฟล์นี้',importErrData:'ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป'},
+    randStage:'🎲 สุ่มแผนที่',allStageRec:'สถิติด่านทั้งหมด',stageRec:'สถิติด่าน',stageRecTitle:'🎯 สถิติผู้ถือเร็วสุดต่อด่าน',stageUnit:'ด่าน',catStageRec:'สถิติ',matchUnit:'การแข่งขัน',noCatMatches:'— ยังไม่มีการแข่งขัน —',minMatch:'ต้องมีการแข่งขันอย่างน้อย 1 รายการ',deleteCatConfirm:'ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก',importSuccess:'นำเข้าสำเร็จ',bestTimeCol:'เวลาดีสุด',importFail:'ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้',noCat:'ไม่มีหมวดหมู่',editCatTitle:'✏️ แก้ไขหมวดหมู่',createCatTitle:'📁 สร้างหมวดหมู่',importErrRead:'ไม่สามารถอ่านไฟล์ได้',importErrSheet:'ไม่พบ Sheet ในไฟล์นี้',importErrData:'ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป',banPhase:'MAP BAN',banPH:'🚫 เลือกแบน...',banRemove:'ยกเลิกแบน',banLabel:'แบน',banNote:'ผู้เล่น 2-4 คน แบนได้คนละ 1 แผนที่'},
   en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',exportExcel:'Export',importExcel:'Import',clearData:'Clear Data',totalAll:'Overall Standings',leaderboard:'🏆 LEADERBOARD',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'⚡ Total',stagePH:'🔍 Select map...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minP:'Minimum 2 players',maxP:'Maximum 6 players',kingMap:'👑 KING',pts:'pts',globeLabel:'English',stageLabel:'Maps',
     catLabel:'Category',allBestTime:'All Best Times',allScore:'Overall Score',collapseAll:'Collapse All',expandAll:'Expand All',
     catBestTime:'Best Times',catScore:'Score',catExport:'Export',catAddMatch:'＋ Match',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'Reset this table?',noDataYet:'No data yet',rounds9:'9 Rounds',rounds13:'13 Rounds',
-    randStage:'🎲 Random Maps',allStageRec:'All Map Records',stageRec:'Stage Records',stageRecTitle:'🎯 Stage Record Champions',stageUnit:'maps',catStageRec:'Records',matchUnit:'matches',noCatMatches:'— No matches in this category —',minMatch:'At least 1 match is required',deleteCatConfirm:'Delete this category? Matches will be moved out',importSuccess:'Import successful',bestTimeCol:'Best Time',importFail:'No match data found in file\n\nPlease check that the file was exported from this app',noCat:'No Category',editCatTitle:'✏️ Edit Category',createCatTitle:'📁 Create Category',importErrRead:'Cannot read file',importErrSheet:'No sheet found in this file',importErrData:'Invalid file or insufficient data'},
+    randStage:'🎲 Random Maps',allStageRec:'All Map Records',stageRec:'Stage Records',stageRecTitle:'🎯 Stage Record Champions',stageUnit:'maps',catStageRec:'Records',matchUnit:'matches',noCatMatches:'— No matches in this category —',minMatch:'At least 1 match is required',deleteCatConfirm:'Delete this category? Matches will be moved out',importSuccess:'Import successful',bestTimeCol:'Best Time',importFail:'No match data found in file\n\nPlease check that the file was exported from this app',noCat:'No Category',editCatTitle:'✏️ Edit Category',createCatTitle:'📁 Create Category',importErrRead:'Cannot read file',importErrSheet:'No sheet found in this file',importErrData:'Invalid file or insufficient data',banPhase:'MAP BAN',banPH:'🚫 Ban a map...',banRemove:'Remove ban',banLabel:'Ban',banNote:'2–4 players · 1 ban each'},
   zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',exportExcel:'导出',importExcel:'导入',clearData:'清除数据',totalAll:'总排行',leaderboard:'🏆 排行榜',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'⚡ 总计',stagePH:'🔍 选择地图...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'简体中文',stageLabel:'地图',
     catLabel:'分组',allBestTime:'全部最佳时间',allScore:'总积分',collapseAll:'全部折叠',expandAll:'全部展开',
     catBestTime:'最佳时间',catScore:'积分',catExport:'导出',catAddMatch:'＋ 比赛',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'重置此表格？',noDataYet:'暂无数据',rounds9:'9轮',rounds13:'13轮',
-    randStage:'🎲 随机地图',allStageRec:'全部赛道记录',stageRec:'赛道记录',stageRecTitle:'🎯 赛道最速记录排行',stageUnit:'赛道',catStageRec:'记录',matchUnit:'场比赛',noCatMatches:'— 此分组暂无比赛 —',minMatch:'至少需要1场比赛',deleteCatConfirm:'删除此分组？比赛将被移出',importSuccess:'导入成功',bestTimeCol:'最佳时间',importFail:'文件中未找到比赛数据\n\n请确认文件是从本网站导出的',noCat:'无分组',editCatTitle:'✏️ 编辑分组',createCatTitle:'📁 新建分组',importErrRead:'无法读取文件',importErrSheet:'文件中未找到工作表',importErrData:'文件无效或数据不足'},
+    randStage:'🎲 随机地图',allStageRec:'全部赛道记录',stageRec:'赛道记录',stageRecTitle:'🎯 赛道最速记录排行',stageUnit:'赛道',catStageRec:'记录',matchUnit:'场比赛',noCatMatches:'— 此分组暂无比赛 —',minMatch:'至少需要1场比赛',deleteCatConfirm:'删除此分组？比赛将被移出',importSuccess:'导入成功',bestTimeCol:'最佳时间',importFail:'文件中未找到比赛数据\n\n请确认文件是从本网站导出的',noCat:'无分组',editCatTitle:'✏️ 编辑分组',createCatTitle:'📁 新建分组',importErrRead:'无法读取文件',importErrSheet:'文件中未找到工作表',importErrData:'文件无效或数据不足',banPhase:'地图封禁',banPH:'🚫 选择封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1张地图'},
   vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',exportExcel:'Xuất',importExcel:'Nhập',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',leaderboard:'🏆 XẾP HẠNG',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'⚡ Tổng',stagePH:'🔍 Chọn bản đồ...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả?',confirmRemove:'Xóa trận này?',minP:'Tối thiểu 2 người',maxP:'Tối đa 6 người',kingMap:'👑 KING',pts:'điểm',globeLabel:'Tiếng Việt',stageLabel:'Bản đồ',
     catLabel:'Nhóm',allBestTime:'Thời gian tốt nhất',allScore:'Tổng điểm',collapseAll:'Thu gọn tất cả',expandAll:'Mở rộng tất cả',
     catBestTime:'Thời gian',catScore:'Điểm',catExport:'Xuất',catAddMatch:'＋ Trận',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'Đặt lại bảng này?',noDataYet:'Chưa có dữ liệu',rounds9:'9 vòng',rounds13:'13 vòng',
-    randStage:'🎲 Bản đồ ngẫu nhiên',allStageRec:'Tất cả kỷ lục',stageRec:'Kỷ lục bản đồ',stageRecTitle:'🎯 Bảng kỷ lục nhanh nhất',stageUnit:'bản đồ',catStageRec:'Kỷ lục',matchUnit:'trận',noCatMatches:'— Chưa có trận trong nhóm —',minMatch:'Cần ít nhất 1 trận',deleteCatConfirm:'Xóa nhóm này? Các trận sẽ được chuyển ra',importSuccess:'Nhập thành công',bestTimeCol:'Thời gian tốt',importFail:'Không tìm thấy dữ liệu\n\nVui lòng kiểm tra file được xuất từ ứng dụng này',noCat:'Không có nhóm',editCatTitle:'✏️ Sửa nhóm',createCatTitle:'📁 Tạo nhóm',importErrRead:'Không thể đọc file',importErrSheet:'Không tìm thấy sheet trong file',importErrData:'File không hợp lệ hoặc dữ liệu không đủ'},
+    randStage:'🎲 Bản đồ ngẫu nhiên',allStageRec:'Tất cả kỷ lục',stageRec:'Kỷ lục bản đồ',stageRecTitle:'🎯 Bảng kỷ lục nhanh nhất',stageUnit:'bản đồ',catStageRec:'Kỷ lục',matchUnit:'trận',noCatMatches:'— Chưa có trận trong nhóm —',minMatch:'Cần ít nhất 1 trận',deleteCatConfirm:'Xóa nhóm này? Các trận sẽ được chuyển ra',importSuccess:'Nhập thành công',bestTimeCol:'Thời gian tốt',importFail:'Không tìm thấy dữ liệu\n\nVui lòng kiểm tra file được xuất từ ứng dụng này',noCat:'Không có nhóm',editCatTitle:'✏️ Sửa nhóm',createCatTitle:'📁 Tạo nhóm',importErrRead:'Không thể đọc file',importErrSheet:'Không tìm thấy sheet trong file',importErrData:'File không hợp lệ hoặc dữ liệu không đủ',banPhase:'CẤM BẢN ĐỒ',banPH:'🚫 Chọn cấm...',banRemove:'Hủy cấm',banLabel:'Cấm',banNote:'2-4 người chơi · mỗi người cấm 1 bản đồ'},
   tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',exportExcel:'匯出',importExcel:'匯入',clearData:'清除資料',totalAll:'總排行',leaderboard:'🏆 排行榜',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'⚡ 總計',stagePH:'🔍 選擇地圖...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'繁體中文',stageLabel:'地圖',
     catLabel:'分組',allBestTime:'全部最佳時間',allScore:'總積分',collapseAll:'全部折疊',expandAll:'全部展開',
     catBestTime:'最佳時間',catScore:'積分',catExport:'匯出',catAddMatch:'＋ 比賽',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'重置此表格？',noDataYet:'暫無資料',rounds9:'9回合',rounds13:'13回合',
-    randStage:'🎲 隨機地圖',allStageRec:'全部賽道記錄',stageRec:'賽道記錄',stageRecTitle:'🎯 賽道最速記錄排行',stageUnit:'賽道',catStageRec:'記錄',matchUnit:'場比賽',noCatMatches:'— 此分組暫無比賽 —',minMatch:'至少需要1場比賽',deleteCatConfirm:'刪除此分組？比賽將被移出',importSuccess:'匯入成功',bestTimeCol:'最佳時間',importFail:'檔案中未找到比賽資料\n\n請確認檔案是從本網站匯出的',noCat:'無分組',editCatTitle:'✏️ 編輯分組',createCatTitle:'📁 新建分組',importErrRead:'無法讀取檔案',importErrSheet:'檔案中未找到工作表',importErrData:'檔案無效或資料不足'}
+    randStage:'🎲 隨機地圖',allStageRec:'全部賽道記錄',stageRec:'賽道記錄',stageRecTitle:'🎯 賽道最速記錄排行',stageUnit:'賽道',catStageRec:'記錄',matchUnit:'場比賽',noCatMatches:'— 此分組暫無比賽 —',minMatch:'至少需要1場比賽',deleteCatConfirm:'刪除此分組？比賽將被移出',importSuccess:'匯入成功',bestTimeCol:'最佳時間',importFail:'檔案中未找到比賽資料\n\n請確認檔案是從本網站匯出的',noCat:'無分組',editCatTitle:'✏️ 編輯分組',createCatTitle:'📁 新建分組',importErrRead:'無法讀取檔案',importErrSheet:'檔案中未找到工作表',importErrData:'檔案無效或資料不足',banPhase:'地圖封禁',banPH:'🚫 選擇封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1張地圖'}
 };
 let lang='th';
 function T(k){return(I18N[lang]||I18N.th)[k]||(I18N.th[k]||k);}
@@ -1223,6 +1248,8 @@ function loadState(){
     if(t.catId===undefined){t.catId=null;}
     else if(t.catId!==null&&!validCatIds.has(t.catId)){t.catId=null;}
     while(t.rows.length<ROWS_MAX)t.rows.push({stage:'',times:Array(MAX_P).fill('')});
+    if(!t.bans)t.bans=Array(MAX_P).fill('');
+    while(t.bans.length<MAX_P)t.bans.push('');
   });
   try{lang=localStorage.getItem('rtLang')||'th';}catch(e){}
   if(!tables.length){tc=0;tables.push(mkTable(4));}
@@ -1238,6 +1265,7 @@ function mkTable(pc){
   return{
     id:tc++,playerCount:pc||4,rowCount:ROWS_BASE,collapsed:false,
     players:Array(MAX_P).fill(''),
+    bans:Array(MAX_P).fill(''),
     rows:Array.from({length:ROWS_MAX},()=>({stage:'',times:Array(MAX_P).fill('')}))
   };
 }
@@ -1276,6 +1304,101 @@ function scClass(s){
   if(s>=8)return'sch';if(s>=5)return'scm';if(s>=2)return'scl';return'sc0';
 }
 
+
+// ══════════════════════════════════════════════════════════════
+// MAP BAN SYSTEM
+// ══════════════════════════════════════════════════════════════
+
+let _activeBanDd=null,_activeBanInp=null;
+function _closeBanDd(){
+  if(_activeBanDd){_activeBanDd.classList.remove('open');_activeBanDd=null;_activeBanInp=null;}
+}
+document.addEventListener('click',e=>{
+  if(_activeBanDd&&!_activeBanDd.contains(e.target)&&e.target!==_activeBanInp)_closeBanDd();
+},true);
+document.addEventListener('scroll',e=>{
+  if(_activeBanDd&&_activeBanInp&&!_activeBanDd.contains(e.target)){
+    const rect=_activeBanInp.getBoundingClientRect();
+    if(rect.bottom<0||rect.top>window.innerHeight){_closeBanDd();}
+    else{_activeBanDd.style.top=(rect.bottom+2)+'px';_activeBanDd.style.left=rect.left+'px';}
+  }
+},true);
+
+function buildBanSelector(tObj,p){
+  const wrap=document.createElement('div');wrap.className='ban-sw';
+  const pc=tObj.playerCount||4;
+  if(!tObj.bans)tObj.bans=Array(MAX_P).fill('');
+  const currentBan=tObj.bans[p]||'';
+
+  if(currentBan){
+    // ── Chip: ban is set ──
+    const chip=document.createElement('div');chip.className='ban-chip';
+    const icon=document.createElement('span');icon.className='ban-chip-icon';icon.textContent='🚫';
+    const nm=document.createElement('span');nm.className='ban-chip-name';nm.textContent=currentBan;nm.title=currentBan;
+    const rm=document.createElement('button');rm.type='button';rm.className='ban-chip-rm';rm.textContent='✕';rm.title=T('banRemove');
+    rm.addEventListener('click',e=>{
+      e.preventDefault();e.stopPropagation();
+      tObj.bans[p]='';save();rebuildBlock(tObj);
+    });
+    chip.append(icon,nm,rm);wrap.appendChild(chip);
+  } else {
+    // ── Input: no ban yet ──
+    const inp=document.createElement('input');inp.type='text';inp.className='ban-inp';
+    inp.placeholder=T('banPH');inp.autocomplete='off';inp.spellcheck=false;
+
+    const dd=document.createElement('div');dd.className='sdd sdd-portal';
+    document.body.appendChild(dd);
+
+    function getOtherBans(){
+      return new Set((tObj.bans||[]).slice(0,pc).filter((b,i)=>b&&i!==p));
+    }
+    function posBanDd(){
+      const rect=inp.getBoundingClientRect();
+      dd.style.cssText=`position:fixed;top:${rect.bottom+2}px;left:${rect.left}px;width:${Math.max(rect.width,180)}px;max-height:200px;z-index:99999;`;
+      const below=window.innerHeight-rect.bottom;
+      if(below<220&&rect.top>220){dd.style.top='auto';dd.style.bottom=(window.innerHeight-rect.top+2)+'px';}
+      else dd.style.bottom='auto';
+    }
+    function popBan(q){
+      dd.innerHTML='';q=(q||'').toLowerCase();
+      const others=getOtherBans();let ls=null;
+      for(const s of ALL_S){
+        if(others.has(s.name))continue;
+        if(q&&!s.name.toLowerCase().includes(q))continue;
+        if(s.stars!==ls){
+          const g=document.createElement('div');g.className='sdd-grp';
+          g.textContent=`${'⭐'.repeat(s.stars)} ${s.stars}★`;g.style.color=SC[s.stars];
+          dd.appendChild(g);ls=s.stars;
+        }
+        const item=document.createElement('div');item.className='sdd-item';
+        const dot=document.createElement('span');dot.className='sdot';dot.style.background=SC[s.stars];
+        item.appendChild(dot);item.appendChild(document.createTextNode(s.name));
+        item.addEventListener('mousedown',e=>{
+          e.preventDefault();
+          tObj.bans[p]=s.name;save();_closeBanDd();rebuildBlock(tObj);
+        });
+        dd.appendChild(item);
+      }
+      if(!dd.children.length){
+        const ni=document.createElement('div');ni.className='sdd-item';ni.style.color='var(--dim)';ni.textContent='—';dd.appendChild(ni);
+      }
+    }
+    inp.addEventListener('focus',()=>{_closeBanDd();_closeDd();popBan(inp.value);posBanDd();dd.classList.add('open');_activeBanDd=dd;_activeBanInp=inp;});
+    inp.addEventListener('input',()=>{popBan(inp.value);posBanDd();dd.classList.add('open');_activeBanDd=dd;_activeBanInp=inp;});
+    inp.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Enter'){inp.blur();_closeBanDd();}});
+    inp.addEventListener('blur',()=>setTimeout(()=>{if(_activeBanDd===dd)_closeBanDd();},160));
+    const obs=new MutationObserver(()=>{
+      if(!document.body.contains(inp)){
+        if(_activeBanDd===dd){_activeBanDd=null;_activeBanInp=null;}
+        dd.remove();obs.disconnect();
+      }
+    });
+    obs.observe(document.body,{childList:true,subtree:true});
+    wrap.appendChild(inp);
+  }
+  return wrap;
+}
+
 // Global dropdown element
 let _activeDd = null;
 let _activeDdInp = null;
@@ -1301,6 +1424,7 @@ document.addEventListener('scroll', e=>{
 }, true);
 
 function buildStageSelector(tObj,r){
+  const pc=tObj.playerCount||4;
   const wrap=document.createElement('div');wrap.className='sw';
   const inp=document.createElement('textarea');
   inp.className='si';inp.rows=1;
@@ -1337,7 +1461,9 @@ function buildStageSelector(tObj,r){
 
   function pop(q){
     dd.innerHTML='';q=(q||'').toLowerCase();let ls=null;
+    const bannedInMatch=new Set((tObj.bans||[]).slice(0,pc).filter(b=>b));
     for(const s of ALL_S){
+      if(bannedInMatch.has(s.name))continue;
       if(q&&!s.name.toLowerCase().includes(q))continue;
       if(s.stars!==ls){
         const g=document.createElement('div');g.className='sdd-grp';
@@ -1484,6 +1610,26 @@ function buildTable(tObj){
   const tbody=document.createElement('tbody');
 
   const activeRows = tObj.rowCount || ROWS_BASE;
+
+  // ── MAP BAN ROW (2–4 players only) ──
+  if(pc>=2&&pc<=4){
+    const banTr=document.createElement('tr');banTr.className='ban-section-row';
+    const banLblTd=document.createElement('td');banLblTd.colSpan=2;
+    const banWrap=document.createElement('div');banWrap.className='ban-lbl-wrap';
+    const banTitle=document.createElement('span');banTitle.className='ban-phase-lbl';
+    banTitle.innerHTML='🚫 '+T('banPhase');
+    const banNote=document.createElement('span');banNote.className='ban-phase-note';
+    banNote.textContent=T('banNote');
+    banWrap.appendChild(banTitle);banWrap.appendChild(banNote);
+    banLblTd.appendChild(banWrap);banTr.appendChild(banLblTd);
+    for(let p=0;p<pc;p++){
+      const banTd=document.createElement('td');
+      banTd.appendChild(buildBanSelector(tObj,p));
+      banTr.appendChild(banTd);
+    }
+    tbody.appendChild(banTr);
+  }
+
   for(let r=0;r<activeRows;r++){
     const isKing=r in KM&&KM[r]<pc;const kp=isKing?KM[r]:-1;
     const isExtra = r >= ROWS_BASE;
@@ -1572,6 +1718,21 @@ function recalcBlock(tid){
     sp.className='total-val '+(v===0?'tv-zero':v===maxT?'tv-top':'tv-val');sp.textContent=v||'0';
   });
   updateCollapsedSummary(tid);
+  // ── Update banned-stage warnings ──
+  const bannedSet=new Set((tObj.bans||[]).slice(0,pc).filter(b=>b));
+  block.querySelectorAll('.stage-cell').forEach(cell=>{
+    const si=cell.querySelector('.si');
+    if(!si)return;
+    const isBanned=bannedSet.size>0&&si.value&&bannedSet.has(si.value.trim());
+    si.classList.toggle('stage-banned',!!isBanned);
+    const existWarn=cell.querySelector('.stage-ban-warn');
+    if(isBanned&&!existWarn){
+      const sw=cell.querySelector('.sw');
+      if(sw){const w=document.createElement('span');w.className='stage-ban-warn';w.textContent='🚫 '+T('banLabel');sw.appendChild(w);}
+    } else if(!isBanned&&existWarn){
+      existWarn.remove();
+    }
+  });
 }
 function recalcAll(){tables.forEach(t=>{recalcBlock(t.id);});}
 function rebuildBlock(tObj){const old=document.querySelector(`.match-block[data-tid="${tObj.id}"]`);if(old){const nd=buildTable(tObj);old.replaceWith(nd);recalcBlock(tObj.id);updateLeaderboard();}}
