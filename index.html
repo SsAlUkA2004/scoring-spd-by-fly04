@@ -1108,6 +1108,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
       <button class="btn" style="background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.35);color:var(--cyan);" onclick="openBestTimeModal(null)">⚡ <span class="btn-txt" data-i18n="allBestTime">เวลาด่านทั้งหมด</span></button>
       <button class="btn" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#c084fc;" onclick="openScoreModal(null)">🏆 <span class="btn-txt" data-i18n="allScore">คะแนนรวมทั้งหมด</span></button>
       <button class="btn" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.35);color:#34d399;" onclick="openStageRecModal(null)">🎯 <span class="btn-txt" data-i18n="allStageRec">สถิติด่านทั้งหมด</span></button>
+      <button class="btn" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#c084fc;" onclick="openCarStatsModal(null)">🚗 <span class="btn-txt" data-i18n="allCarStats">สถิติรถทั้งหมด</span></button>
       <button class="btn" id="btnCollapseAll" style="background:var(--input-bg);border-color:var(--card-border);color:var(--text2);" onclick="collapseAll()">⊟ <span class="btn-txt" id="collapseAllTxt" data-i18n="collapseAll">ย่อทั้งหมด</span></button>
       <button class="btn btn-excel" onclick="importExcel()">📥 <span class="btn-txt" data-i18n="importExcel">Import</span></button>
       <button class="btn btn-clear" onclick="confirmClear()">🗑 <span class="btn-txt" data-i18n="clearData">ล้างข้อมูล</span></button>
@@ -1197,6 +1198,23 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
     </div>
   </div>
 
+  <!-- Car Stats Modal -->
+  <div id="carStatsModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeCarStatsModal()">
+    <div class="modal-box" style="max-width:500px">
+      <div class="modal-hdr">
+        <span class="modal-title" id="carStatsModalTitle">🚗 สถิติการใช้รถ</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button class="btn" style="padding:5px 10px;font-size:.68rem;background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#c084fc;" onclick="saveCarStatsImage()">📷 บันทึก</button>
+          <button class="modal-close" onclick="closeCarStatsModal()">✕</button>
+        </div>
+      </div>
+      <div class="modal-body" style="padding:0;overflow:hidden;display:flex;flex-direction:column;max-height:70vh;">
+        <div id="carStatsFilter" style="display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--card-border);flex-shrink:0;"></div>
+        <div id="carStatsBody" style="overflow-y:auto;flex:1;"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Stage Record Modal -->
   <div id="stageRecModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeStageRecModal()">
     <div class="modal-box" style="max-width:480px">
@@ -1221,27 +1239,27 @@ const I18N={
     catLabel:'หมวดหมู่',allBestTime:'เวลาด่านทั้งหมด',allScore:'คะแนนรวมทั้งหมด',collapseAll:'ย่อทั้งหมด',expandAll:'ขยายทั้งหมด',
     catBestTime:'เวลาด่าน',catScore:'คะแนน',catExport:'Export',catAddMatch:'＋ การแข่งขัน',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'รีเซ็ตตารางนี้?',noDataYet:'ยังไม่มีข้อมูล',rounds9:'9 รอบ',rounds13:'13 รอบ',
-    randStage:'🎲 สุ่มแผนที่',allStageRec:'สถิติด่านทั้งหมด',stageRec:'สถิติด่าน',stageRecTitle:'🎯 สถิติผู้ถือเร็วสุดต่อด่าน',stageUnit:'ด่าน',catStageRec:'สถิติ',matchUnit:'การแข่งขัน',noCatMatches:'— ยังไม่มีการแข่งขัน —',minMatch:'ต้องมีการแข่งขันอย่างน้อย 1 รายการ',deleteCatConfirm:'ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก',importSuccess:'นำเข้าสำเร็จ',bestTimeCol:'เวลาดีสุด',importFail:'ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้',noCat:'ไม่มีหมวดหมู่',editCatTitle:'✏️ แก้ไขหมวดหมู่',createCatTitle:'📁 สร้างหมวดหมู่',importErrRead:'ไม่สามารถอ่านไฟล์ได้',importErrSheet:'ไม่พบ Sheet ในไฟล์นี้',importErrData:'ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป',banPhase:'MAP BAN',banPH:'🚫 เลือกแบน...',banRemove:'ยกเลิกแบน',banLabel:'แบน',banNote:'ผู้เล่น 2-4 คน แบนได้คนละ 1 แผนที่',carPH:'🚗 เลือกรถ...',carLabel:'รถ',classT:'Class T',classA:'Class A'},
+    randStage:'🎲 สุ่มแผนที่',allStageRec:'สถิติด่านทั้งหมด',stageRec:'สถิติด่าน',stageRecTitle:'🎯 สถิติผู้ถือเร็วสุดต่อด่าน',stageUnit:'ด่าน',catStageRec:'สถิติ',matchUnit:'การแข่งขัน',noCatMatches:'— ยังไม่มีการแข่งขัน —',minMatch:'ต้องมีการแข่งขันอย่างน้อย 1 รายการ',deleteCatConfirm:'ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก',importSuccess:'นำเข้าสำเร็จ',bestTimeCol:'เวลาดีสุด',importFail:'ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้',noCat:'ไม่มีหมวดหมู่',editCatTitle:'✏️ แก้ไขหมวดหมู่',createCatTitle:'📁 สร้างหมวดหมู่',importErrRead:'ไม่สามารถอ่านไฟล์ได้',importErrSheet:'ไม่พบ Sheet ในไฟล์นี้',importErrData:'ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป',banPhase:'MAP BAN',banPH:'🚫 เลือกแบน...',banRemove:'ยกเลิกแบน',banLabel:'แบน',banNote:'ผู้เล่น 2-4 คน แบนได้คนละ 1 แผนที่',carPH:'🚗 เลือกรถ...',carLabel:'รถ',classT:'Class T',classA:'Class A',allCarStats:'สถิติรถทั้งหมด',carStats:'สถิติรถ',catCarStats:'รถ',carUsage:'ครั้ง',allClasses:'ทั้งหมด'},
   en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',exportExcel:'Export',importExcel:'Import',clearData:'Clear Data',totalAll:'Overall Standings',leaderboard:'🏆 LEADERBOARD',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'⚡ Total',stagePH:'🔍 Select map...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minP:'Minimum 2 players',maxP:'Maximum 6 players',kingMap:'👑 KING',pts:'pts',globeLabel:'English',stageLabel:'Maps',
     catLabel:'Category',allBestTime:'All Best Times',allScore:'Overall Score',collapseAll:'Collapse All',expandAll:'Expand All',
     catBestTime:'Best Times',catScore:'Score',catExport:'Export',catAddMatch:'＋ Match',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'Reset this table?',noDataYet:'No data yet',rounds9:'9 Rounds',rounds13:'13 Rounds',
-    randStage:'🎲 Random Maps',allStageRec:'All Map Records',stageRec:'Stage Records',stageRecTitle:'🎯 Stage Record Champions',stageUnit:'maps',catStageRec:'Records',matchUnit:'matches',noCatMatches:'— No matches in this category —',minMatch:'At least 1 match is required',deleteCatConfirm:'Delete this category? Matches will be moved out',importSuccess:'Import successful',bestTimeCol:'Best Time',importFail:'No match data found in file\n\nPlease check that the file was exported from this app',noCat:'No Category',editCatTitle:'✏️ Edit Category',createCatTitle:'📁 Create Category',importErrRead:'Cannot read file',importErrSheet:'No sheet found in this file',importErrData:'Invalid file or insufficient data',banPhase:'MAP BAN',banPH:'🚫 Ban a map...',banRemove:'Remove ban',banLabel:'Ban',banNote:'2–4 players · 1 ban each',carPH:'🚗 Select car...',carLabel:'Car',classT:'Class T',classA:'Class A'},
+    randStage:'🎲 Random Maps',allStageRec:'All Map Records',stageRec:'Stage Records',stageRecTitle:'🎯 Stage Record Champions',stageUnit:'maps',catStageRec:'Records',matchUnit:'matches',noCatMatches:'— No matches in this category —',minMatch:'At least 1 match is required',deleteCatConfirm:'Delete this category? Matches will be moved out',importSuccess:'Import successful',bestTimeCol:'Best Time',importFail:'No match data found in file\n\nPlease check that the file was exported from this app',noCat:'No Category',editCatTitle:'✏️ Edit Category',createCatTitle:'📁 Create Category',importErrRead:'Cannot read file',importErrSheet:'No sheet found in this file',importErrData:'Invalid file or insufficient data',banPhase:'MAP BAN',banPH:'🚫 Ban a map...',banRemove:'Remove ban',banLabel:'Ban',banNote:'2–4 players · 1 ban each',carPH:'🚗 Select car...',carLabel:'Car',classT:'Class T',classA:'Class A',allCarStats:'All Car Stats',carStats:'Car Stats',catCarStats:'Cars',carUsage:'uses',allClasses:'All'},
   zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',exportExcel:'导出',importExcel:'导入',clearData:'清除数据',totalAll:'总排行',leaderboard:'🏆 排行榜',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'⚡ 总计',stagePH:'🔍 选择地图...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'简体中文',stageLabel:'地图',
     catLabel:'分组',allBestTime:'全部最佳时间',allScore:'总积分',collapseAll:'全部折叠',expandAll:'全部展开',
     catBestTime:'最佳时间',catScore:'积分',catExport:'导出',catAddMatch:'＋ 比赛',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'重置此表格？',noDataYet:'暂无数据',rounds9:'9轮',rounds13:'13轮',
-    randStage:'🎲 随机地图',allStageRec:'全部赛道记录',stageRec:'赛道记录',stageRecTitle:'🎯 赛道最速记录排行',stageUnit:'赛道',catStageRec:'记录',matchUnit:'场比赛',noCatMatches:'— 此分组暂无比赛 —',minMatch:'至少需要1场比赛',deleteCatConfirm:'删除此分组？比赛将被移出',importSuccess:'导入成功',bestTimeCol:'最佳时间',importFail:'文件中未找到比赛数据\n\n请确认文件是从本网站导出的',noCat:'无分组',editCatTitle:'✏️ 编辑分组',createCatTitle:'📁 新建分组',importErrRead:'无法读取文件',importErrSheet:'文件中未找到工作表',importErrData:'文件无效或数据不足',banPhase:'地图封禁',banPH:'🚫 选择封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1张地图',carPH:'🚗 选择赛车...',carLabel:'赛车',classT:'T级',classA:'A级'},
+    randStage:'🎲 随机地图',allStageRec:'全部赛道记录',stageRec:'赛道记录',stageRecTitle:'🎯 赛道最速记录排行',stageUnit:'赛道',catStageRec:'记录',matchUnit:'场比赛',noCatMatches:'— 此分组暂无比赛 —',minMatch:'至少需要1场比赛',deleteCatConfirm:'删除此分组？比赛将被移出',importSuccess:'导入成功',bestTimeCol:'最佳时间',importFail:'文件中未找到比赛数据\n\n请确认文件是从本网站导出的',noCat:'无分组',editCatTitle:'✏️ 编辑分组',createCatTitle:'📁 新建分组',importErrRead:'无法读取文件',importErrSheet:'文件中未找到工作表',importErrData:'文件无效或数据不足',banPhase:'地图封禁',banPH:'🚫 选择封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1张地图',carPH:'🚗 选择赛车...',carLabel:'赛车',classT:'T级',classA:'A级',allCarStats:'全部赛车统计',carStats:'赛车统计',catCarStats:'赛车',carUsage:'次',allClasses:'全部'},
   vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',exportExcel:'Xuất',importExcel:'Nhập',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',leaderboard:'🏆 XẾP HẠNG',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'⚡ Tổng',stagePH:'🔍 Chọn bản đồ...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả?',confirmRemove:'Xóa trận này?',minP:'Tối thiểu 2 người',maxP:'Tối đa 6 người',kingMap:'👑 KING',pts:'điểm',globeLabel:'Tiếng Việt',stageLabel:'Bản đồ',
     catLabel:'Nhóm',allBestTime:'Thời gian tốt nhất',allScore:'Tổng điểm',collapseAll:'Thu gọn tất cả',expandAll:'Mở rộng tất cả',
     catBestTime:'Thời gian',catScore:'Điểm',catExport:'Xuất',catAddMatch:'＋ Trận',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'Đặt lại bảng này?',noDataYet:'Chưa có dữ liệu',rounds9:'9 vòng',rounds13:'13 vòng',
-    randStage:'🎲 Bản đồ ngẫu nhiên',allStageRec:'Tất cả kỷ lục',stageRec:'Kỷ lục bản đồ',stageRecTitle:'🎯 Bảng kỷ lục nhanh nhất',stageUnit:'bản đồ',catStageRec:'Kỷ lục',matchUnit:'trận',noCatMatches:'— Chưa có trận trong nhóm —',minMatch:'Cần ít nhất 1 trận',deleteCatConfirm:'Xóa nhóm này? Các trận sẽ được chuyển ra',importSuccess:'Nhập thành công',bestTimeCol:'Thời gian tốt',importFail:'Không tìm thấy dữ liệu\n\nVui lòng kiểm tra file được xuất từ ứng dụng này',noCat:'Không có nhóm',editCatTitle:'✏️ Sửa nhóm',createCatTitle:'📁 Tạo nhóm',importErrRead:'Không thể đọc file',importErrSheet:'Không tìm thấy sheet trong file',importErrData:'File không hợp lệ hoặc dữ liệu không đủ',banPhase:'CẤM BẢN ĐỒ',banPH:'🚫 Chọn cấm...',banRemove:'Hủy cấm',banLabel:'Cấm',banNote:'2-4 người chơi · mỗi người cấm 1 bản đồ',carPH:'🚗 Chọn xe...',carLabel:'Xe',classT:'Hạng T',classA:'Hạng A'},
+    randStage:'🎲 Bản đồ ngẫu nhiên',allStageRec:'Tất cả kỷ lục',stageRec:'Kỷ lục bản đồ',stageRecTitle:'🎯 Bảng kỷ lục nhanh nhất',stageUnit:'bản đồ',catStageRec:'Kỷ lục',matchUnit:'trận',noCatMatches:'— Chưa có trận trong nhóm —',minMatch:'Cần ít nhất 1 trận',deleteCatConfirm:'Xóa nhóm này? Các trận sẽ được chuyển ra',importSuccess:'Nhập thành công',bestTimeCol:'Thời gian tốt',importFail:'Không tìm thấy dữ liệu\n\nVui lòng kiểm tra file được xuất từ ứng dụng này',noCat:'Không có nhóm',editCatTitle:'✏️ Sửa nhóm',createCatTitle:'📁 Tạo nhóm',importErrRead:'Không thể đọc file',importErrSheet:'Không tìm thấy sheet trong file',importErrData:'File không hợp lệ hoặc dữ liệu không đủ',banPhase:'CẤM BẢN ĐỒ',banPH:'🚫 Chọn cấm...',banRemove:'Hủy cấm',banLabel:'Cấm',banNote:'2-4 người chơi · mỗi người cấm 1 bản đồ',carPH:'🚗 Chọn xe...',carLabel:'Xe',classT:'Hạng T',classA:'Hạng A',allCarStats:'Thống kê tất cả xe',carStats:'Thống kê xe',catCarStats:'Xe',carUsage:'lần',allClasses:'Tất cả'},
   tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',exportExcel:'匯出',importExcel:'匯入',clearData:'清除資料',totalAll:'總排行',leaderboard:'🏆 排行榜',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'⚡ 總計',stagePH:'🔍 選擇地圖...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'繁體中文',stageLabel:'地圖',
     catLabel:'分組',allBestTime:'全部最佳時間',allScore:'總積分',collapseAll:'全部折疊',expandAll:'全部展開',
     catBestTime:'最佳時間',catScore:'積分',catExport:'匯出',catAddMatch:'＋ 比賽',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'重置此表格？',noDataYet:'暫無資料',rounds9:'9回合',rounds13:'13回合',
-    randStage:'🎲 隨機地圖',allStageRec:'全部賽道記錄',stageRec:'賽道記錄',stageRecTitle:'🎯 賽道最速記錄排行',stageUnit:'賽道',catStageRec:'記錄',matchUnit:'場比賽',noCatMatches:'— 此分組暫無比賽 —',minMatch:'至少需要1場比賽',deleteCatConfirm:'刪除此分組？比賽將被移出',importSuccess:'匯入成功',bestTimeCol:'最佳時間',importFail:'檔案中未找到比賽資料\n\n請確認檔案是從本網站匯出的',noCat:'無分組',editCatTitle:'✏️ 編輯分組',createCatTitle:'📁 新建分組',importErrRead:'無法讀取檔案',importErrSheet:'檔案中未找到工作表',importErrData:'檔案無效或資料不足',banPhase:'地圖封禁',banPH:'🚫 選擇封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1張地圖',carPH:'🚗 選擇賽車...',carLabel:'賽車',classT:'T級',classA:'A級'}
+    randStage:'🎲 隨機地圖',allStageRec:'全部賽道記錄',stageRec:'賽道記錄',stageRecTitle:'🎯 賽道最速記錄排行',stageUnit:'賽道',catStageRec:'記錄',matchUnit:'場比賽',noCatMatches:'— 此分組暫無比賽 —',minMatch:'至少需要1場比賽',deleteCatConfirm:'刪除此分組？比賽將被移出',importSuccess:'匯入成功',bestTimeCol:'最佳時間',importFail:'檔案中未找到比賽資料\n\n請確認檔案是從本網站匯出的',noCat:'無分組',editCatTitle:'✏️ 編輯分組',createCatTitle:'📁 新建分組',importErrRead:'無法讀取檔案',importErrSheet:'檔案中未找到工作表',importErrData:'檔案無效或資料不足',banPhase:'地圖封禁',banPH:'🚫 選擇封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1張地圖',carPH:'🚗 選擇賽車...',carLabel:'賽車',classT:'T級',classA:'A級',allCarStats:'全部賽車統計',carStats:'賽車統計',catCarStats:'賽車',carUsage:'次',allClasses:'全部'}
 };
 let lang='th';
 function T(k){return(I18N[lang]||I18N.th)[k]||(I18N.th[k]||k);}
@@ -1636,7 +1654,7 @@ function buildStageSelector(tObj,r){
 
   inp.addEventListener('focus',()=>{
     autoResize();
-    _closeDd();_closeCarDd();
+    _closeAllDd();
     pop(inp.value);
     positionDd();
     dd.classList.add('open');
@@ -1883,7 +1901,7 @@ function recalcBlock(tid){
   });
 }
 function recalcAll(){tables.forEach(t=>{recalcBlock(t.id);});}
-function rebuildBlock(tObj){document.querySelectorAll('.car-portal').forEach(d=>d.remove());const old=document.querySelector(`.match-block[data-tid="${tObj.id}"]`);if(old){const nd=buildTable(tObj);old.replaceWith(nd);recalcBlock(tObj.id);updateLeaderboard();}}
+function rebuildBlock(tObj){document.querySelectorAll('.car-portal').forEach(d=>d.remove());_activeCarDd=null;_activeCarInp=null;const old=document.querySelector(`.match-block[data-tid="${tObj.id}"]`);if(old){const nd=buildTable(tObj);old.replaceWith(nd);recalcBlock(tObj.id);updateLeaderboard();}}
 function rebuildAll(){renderAll();}
 function addMatch(){
   const t=mkTable(4);tables.push(t);save();renderAll();
@@ -2070,6 +2088,7 @@ function openCatDd(btn,tid){
 // ── RENDER ALL ──
 function renderAll(){
   document.querySelectorAll('.car-portal').forEach(d=>d.remove());
+  _activeCarDd=null;_activeCarInp=null;
   const area=document.getElementById('tablesArea');area.innerHTML='';
   categories.forEach(cat=>{
     const section=document.createElement('div');section.className='cat-section';
@@ -2093,6 +2112,9 @@ function renderAll(){
     const bStageRec=document.createElement('button');bStageRec.className='cat-btn';bStageRec.textContent=`🎯 ${T('catStageRec')}`;
     bStageRec.style.cssText='color:#34d399;';
     bStageRec.addEventListener('click',e=>{e.stopPropagation();openStageRecModal(cat.id);});
+    const bCarStats=document.createElement('button');bCarStats.className='cat-btn';bCarStats.textContent=`🚗 ${T('catCarStats')}`;
+    bCarStats.style.cssText='color:#c084fc;';
+    bCarStats.addEventListener('click',e=>{e.stopPropagation();openCarStatsModal(cat.id);});
     const bExp=document.createElement('button');bExp.className='cat-btn';bExp.textContent=`📊 ${T('catExport')}`;
     bExp.style.cssText='color:var(--green);';
     bExp.addEventListener('click',e=>{e.stopPropagation();exportCategory(cat.id);});
@@ -2100,7 +2122,7 @@ function renderAll(){
     bEdit.addEventListener('click',e=>{e.stopPropagation();openCatModal(cat.id);});
     const bDel=document.createElement('button');bDel.className='cat-btn danger';bDel.textContent=T('catDelete');
     bDel.addEventListener('click',e=>{e.stopPropagation();deleteCategory(cat.id);});
-    acts.append(bAdd,bTime,bScore,bStageRec,bExp,bEdit,bDel);
+    acts.append(bAdd,bTime,bScore,bStageRec,bCarStats,bExp,bEdit,bDel);
     hdr.append(left,acts);section.appendChild(hdr);
     const body=document.createElement('div');body.id=`catBody-${cat.id}`;
     body.className='cat-body'+(cat.collapsed?' hidden':'');
@@ -2490,7 +2512,7 @@ async function captureTableImage(){
   const LABEL_W=90;
   const COL_W=82;
   const ROW_RND=32;
-  const ROW_P=52;
+  const ROW_P=66;
   const ROW_TOT=38;
   const TITLE_H=50;
   const DESC_H=descTxt?32:0;
@@ -2523,9 +2545,11 @@ async function captureTableImage(){
   }
   const ROW_STAGE=Math.max(28, maxLines*LINE_H + STAGE_PAD*2);
 
+  const anyBans=(tObj.bans||[]).slice(0,pc).some(b=>b);
+  const BAN_BAR_H=anyBans?22:0;
   const tableH=ROW_RND+ROW_STAGE+ROW_P*pc+ROW_TOT;
   const W=PAD*2+LABEL_W+COL_W*activeRows;
-  const H=PAD+TITLE_H+DESC_H+tableH+FOOT;
+  const H=PAD+TITLE_H+DESC_H+BAN_BAR_H+tableH+FOOT;
 
   const canvas=document.createElement('canvas');
   canvas.width=W*2;canvas.height=H*2;
@@ -2550,6 +2574,27 @@ async function captureTableImage(){
     ctx.font=`600 11px "Exo 2",Sarabun,sans-serif`;ctx.fillStyle=dimColor;
     fillTextEllipsis(ctx,descTxt,W/2,y+14,W-PAD*2-16);
     y+=DESC_H;
+  }
+
+  // BAN bar
+  if(anyBans){
+    ctx.fillStyle='rgba(239,68,68,.08)';
+    ctx.fillRect(PAD,y,W-PAD*2,BAN_BAR_H);
+    ctx.strokeStyle='rgba(239,68,68,.3)';ctx.lineWidth=.5;
+    ctx.strokeRect(PAD,y,W-PAD*2,BAN_BAR_H);
+    ctx.textAlign='left';ctx.font='700 8px Rajdhani,monospace';ctx.fillStyle='#ef4444';
+    ctx.fillText('🚫',PAD+5,y+BAN_BAR_H/2+3);
+    let bx=PAD+18;
+    for(let bp=0;bp<pc;bp++){
+      const bn=(tObj.bans||[])[bp]||'';if(!bn)continue;
+      const pLabel=(tObj.players[bp]||'').trim()||('P'+(bp+1));
+      const txt=pLabel+': '+bn;
+      ctx.font='600 7px "Exo 2",sans-serif';ctx.fillStyle='#ef4444';
+      ctx.fillText(txt,bx,y+BAN_BAR_H/2+3);
+      bx+=ctx.measureText(txt).width+12;
+      if(bx>W-PAD-20)break;
+    }
+    y+=BAN_BAR_H;
   }
 
   const allScores=[];
@@ -2681,8 +2726,9 @@ async function captureTableImage(){
       ctx.fillText(tv,cx+COL_W/2,ry+ROW_P/2+1);
 
       const s=allScores[r][p];
+      const scoreChipY=ry+ROW_P/2+7;
       if(s!==null){
-        const cW=30,cH=13,cX=cx+COL_W/2-cW/2,cY=ry+ROW_P/2+7;
+        const cW=30,cH=13,cX=cx+COL_W/2-cW/2,cY=scoreChipY;
         ctx.fillStyle=s===12?'rgba(239,68,68,.2)':s===11?'rgba(245,197,24,.2)':s>=8?'rgba(34,197,94,.15)':'rgba(90,120,170,.1)';
         roundRect(ctx,cX,cY,cW,cH,6);ctx.fill();
         ctx.fillStyle=s===12?redClr:s===11?goldColor:s>=8?greenClr:dimColor;
@@ -2690,7 +2736,15 @@ async function captureTableImage(){
         ctx.fillText(`+${s}`,cx+COL_W/2,cY+cH/2+3);
       } else if(activeRows>ROWS_BASE&&r>=ROWS_BASE){
         ctx.fillStyle=dimColor;ctx.font=`600 7px Rajdhani,monospace`;ctx.textAlign='center';
-        ctx.fillText('NO PT',cx+COL_W/2,ry+ROW_P-8);
+        ctx.fillText('NO PT',cx+COL_W/2,ry+ROW_P-16);
+      }
+      // ── Car name ──
+      const carName=((tObj.rows[r].cars||[])[p]||'').trim();
+      if(carName){
+        const carCls=getCarClass(carName);
+        const carColor=carCls==='T'?'#22c55e':carCls==='A'?'#a855f7':dimColor;
+        ctx.font=`600 7px "Exo 2",sans-serif`;ctx.textAlign='center';ctx.fillStyle=carColor;
+        fillTextEllipsis(ctx,carName,cx+COL_W/2,ry+ROW_P-4,COL_W-8);
       }
     }
   }
@@ -2832,6 +2886,29 @@ function importExcel(){
 
       if(!currentT)continue;
 
+      // ── Car sub-row ──
+      const carRowM=c2.match(/^\[Car\]\s*(?:รอบ|Round|Vòng|回合|轮次)\s*(\d+)/i);
+      if(carRowM){
+        const rIdx=parseInt(carRowM[1])-1;
+        if(rIdx>=0&&rIdx<ROWS_MAX){
+          for(let p=0;p<(currentT.playerCount||MAX_P);p++){
+            const ci=2+p*2;const cn=(vals[ci]||'').trim();
+            if(cn){if(!currentT.rows[rIdx].cars)currentT.rows[rIdx].cars=Array(MAX_P).fill('');currentT.rows[rIdx].cars[p]=cn;}
+          }
+        }
+        continue;
+      }
+
+      // ── Ban row ──
+      if(/^🚫\s*Ban$/i.test(c2)){
+        if(!currentT.bans)currentT.bans=Array(MAX_P).fill('');
+        for(let p=0;p<(currentT.playerCount||MAX_P);p++){
+          const bi=2+p*2;const bn=(vals[bi]||'').trim();
+          if(bn)currentT.bans[p]=bn;
+        }
+        continue;
+      }
+
       const roundMatch=c2.match(/(?:[-–]\s*)?(?:รอบ|Round|Vòng|回合|轮次)\s*(\d+)(?:\s*\(([^)]*)\))?/i);
       if(!roundMatch)continue;
       const roundIdx=parseInt(roundMatch[1])-1;
@@ -2911,6 +2988,24 @@ async function exportExcel(tablesToExport, sheetTitle){
       nc.alignment={horizontal:'center'};
     }
     rn++;
+    // ── BANS ROW ──
+    const bansArr=(tObj.bans||[]).slice(0,pc);
+    if(bansArr.some(b=>b)){
+      ws.getCell(rn,1).value='';
+      ws.getCell(rn,2).value='🚫 Ban';
+      ws.getCell(rn,2).font={bold:true,italic:true,color:{argb:'FFEF4444'}};
+      ws.getCell(rn,2).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFCE8E8'}};
+      for(let p=0;p<maxPc;p++){
+        const tc2=3+p*2,pc2=4+p*2;
+        const bv=p<pc?bansArr[p]||'':'';
+        ws.mergeCells(rn,tc2,rn,pc2);
+        const bc=ws.getCell(rn,tc2);bc.value=bv;
+        bc.font={italic:true,color:{argb:'FFEF4444'}};
+        bc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFCE8E8'}};
+        bc.alignment={horizontal:'center'};
+      }
+      rn++;
+    }
     for(let r=0;r<activeRows;r++){
       const row=tObj.rows[r];const scores=calcScores(row,r,pc);
       const parsed=row.times.slice(0,pc).map(t=>parseTime(t));
@@ -2924,6 +3019,24 @@ async function exportExcel(tablesToExport, sheetTitle){
         [ws.getCell(rn,tc2),ws.getCell(rn,pc2)].forEach(c=>c.alignment={horizontal:'center'});
         if(p<pc&&parsed[p]!==null&&parsed[p]===best){const fl=isKR&&p===kp?{type:'pattern',pattern:'solid',fgColor:{argb:'FFFF6666'}}:{type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFF99'}};ws.getCell(rn,tc2).fill=fl;ws.getCell(rn,pc2).fill=fl;ws.getCell(rn,pc2).font={bold:true};}
       }rn++;
+      // ── CAR SUB-ROW ──
+      const carsArr=(row.cars||[]).slice(0,pc);
+      if(carsArr.some(cv=>cv)){
+        ws.getCell(rn,1).value='';
+        ws.getCell(rn,2).value=`[Car] ${T('round')} ${r+1}`;
+        ws.getCell(rn,2).font={italic:true,color:{argb:'FF9B59B6'}};
+        ws.getCell(rn,2).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8F0FF'}};
+        for(let p=0;p<maxPc;p++){
+          const tc2=3+p*2,pc2=4+p*2;
+          const cv2=p<pc?carsArr[p]||'':'';
+          ws.mergeCells(rn,tc2,rn,pc2);
+          const cc=ws.getCell(rn,tc2);cc.value=cv2;
+          cc.font={italic:true,color:{argb:'FF9B59B6'}};
+          cc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8F0FF'}};
+          cc.alignment={horizontal:'center'};
+        }
+        rn++;
+      }
     }
     const mt=Array(pc).fill(0);tObj.rows.forEach((row2,r2)=>{calcScores(row2,r2,pc).forEach((s,p)=>{if(s!==null)mt[p]+=s;});});
     ws.mergeCells(rn,1,rn,2);ws.getCell(rn,1).value=`${T('grandTotal')}`;ws.getCell(rn,1).font={bold:true,italic:true};ws.getCell(rn,1).alignment={horizontal:'right'};
@@ -3240,6 +3353,286 @@ function saveStageRecImage(){
   link.href=canvas.toDataURL('image/png');link.click();
 }
 
+
+// ══════════════════════════════════════════════════════════════
+// CAR USAGE STATS
+// ══════════════════════════════════════════════════════════════
+
+function calcCarUsage(tableList){
+  const usage={};
+  tableList.forEach(tObj=>{
+    const pc=tObj.playerCount||4;
+    const ar=tObj.rowCount||ROWS_BASE;
+    tObj.rows.forEach((row,r)=>{
+      if(r>=ar)return;
+      (row.cars||[]).slice(0,pc).forEach(car=>{
+        const name=(car||'').trim();
+        if(name)usage[name]=(usage[name]||0)+1;
+      });
+    });
+  });
+  return usage;
+}
+
+function getCarClass(name){
+  if(CAR_T.includes(name))return'T';
+  if(CAR_A.includes(name))return'A';
+  return'?';
+}
+
+let _carStatsCatId=null,_carStatsFilter='all';
+
+function openCarStatsModal(catId){
+  _carStatsCatId=catId;
+  _carStatsFilter='all';
+  const cat=catId!=null?categories.find(c=>c.id===catId):null;
+  const title=cat?`🚗 ${T('carStats')} — ${cat.name}`:`🚗 ${T('allCarStats')}`;
+  document.getElementById('carStatsModalTitle').textContent=title;
+  _renderCarStatsBody();
+  document.getElementById('carStatsModal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function _renderCarStatsBody(){
+  const cat=_carStatsCatId!=null?categories.find(c=>c.id===_carStatsCatId):null;
+  const tList=cat?tables.filter(t=>t.catId===_carStatsCatId):tables;
+  const usage=calcCarUsage(tList);
+  const filter=_carStatsFilter;
+
+  // ── Filter tabs ──
+  const filterDiv=document.getElementById('carStatsFilter');
+  filterDiv.innerHTML='';
+  const tabs=[
+    {key:'all',  label:T('allClasses'), color:'var(--blue2)'},
+    {key:'T',    label:'🟢 '+T('classT'), color:'#22c55e'},
+    {key:'A',    label:'🟣 '+T('classA'), color:'#a855f7'},
+  ];
+  tabs.forEach(tab=>{
+    const btn=document.createElement('button');
+    btn.style.cssText=[
+      'padding:4px 12px;border-radius:6px;cursor:pointer;',
+      'font-family:Rajdhani,monospace;font-size:.68rem;font-weight:700;',
+      'letter-spacing:.5px;transition:all .18s;border:1px solid;',
+      filter===tab.key
+        ?`background:${tab.color};color:#fff;border-color:${tab.color};box-shadow:0 0 8px ${tab.color}44;`
+        :`background:transparent;color:${tab.color};border-color:${tab.color}55;`,
+    ].join('');
+    btn.textContent=tab.label;
+    btn.addEventListener('click',()=>{_carStatsFilter=tab.key;_renderCarStatsBody();});
+    filterDiv.appendChild(btn);
+  });
+
+  // ── Build sorted list ──
+  let sorted=Object.entries(usage)
+    .map(([name,count])=>({name,count,cls:getCarClass(name)}))
+    .filter(item=>filter==='all'||item.cls===filter)
+    .sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
+
+  const body=document.getElementById('carStatsBody');
+  body.innerHTML='';
+
+  if(!sorted.length){
+    body.innerHTML=`<div style="padding:32px;text-align:center;color:var(--dim);font-family:'Rajdhani',monospace;font-size:.85rem;letter-spacing:.5px;">${T('noDataYet')}</div>`;
+    return;
+  }
+
+  const maxCount=sorted[0].count;
+  const CLS_COLOR={T:'#22c55e',A:'#a855f7','?':'var(--dim)'};
+
+  // column headers
+  const hdr=document.createElement('div');
+  hdr.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 14px 5px;border-bottom:1px solid var(--card-border);background:var(--hdr-bg);flex-shrink:0;';
+  hdr.innerHTML=`
+    <div style="width:22px;flex-shrink:0;"></div>
+    <div style="flex:1;font-family:'Rajdhani',monospace;font-size:.6rem;font-weight:700;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;">${T('carLabel')}</div>
+    <div style="width:80px;flex-shrink:0;font-family:'Rajdhani',monospace;font-size:.6rem;font-weight:700;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;text-align:right;">${T('carUsage').toUpperCase()}</div>
+  `;
+  body.appendChild(hdr);
+
+  sorted.forEach((item,i)=>{
+    const clsColor=CLS_COLOR[item.cls]||'var(--dim)';
+    const pct=maxCount>0?Math.round(item.count/maxCount*100):0;
+    const isTop=i===0;
+
+    const row=document.createElement('div');
+    row.style.cssText=[
+      'display:flex;align-items:center;gap:8px;padding:9px 14px;',
+      'border-bottom:1px solid var(--tbl-row-border);',
+      'transition:background .12s;position:relative;',
+      isTop?'background:rgba(168,85,247,.06);':'',
+    ].join('');
+    row.addEventListener('mouseenter',()=>{if(!isTop)row.style.background='var(--card-hover)';});
+    row.addEventListener('mouseleave',()=>{if(!isTop)row.style.background='';});
+
+    // class dot + rank
+    const rankCell=document.createElement('div');
+    rankCell.style.cssText='width:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;';
+    const dot=document.createElement('div');
+    dot.style.cssText=`width:8px;height:8px;border-radius:50%;background:${clsColor};flex-shrink:0;box-shadow:0 0 6px ${clsColor}88;`;
+    rankCell.appendChild(dot);
+
+    // name + bar
+    const info=document.createElement('div');info.style.cssText='flex:1;min-width:0;';
+    const nameEl=document.createElement('div');
+    nameEl.style.cssText=`font-family:'Exo 2',sans-serif;font-weight:${isTop?'700':'600'};font-size:.82rem;color:${isTop?clsColor:'var(--text)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
+    nameEl.textContent=item.name;nameEl.title=item.name;
+
+    const clsBadge=document.createElement('span');
+    clsBadge.style.cssText=`font-family:'Rajdhani',monospace;font-size:.56rem;font-weight:700;color:${clsColor};margin-left:6px;letter-spacing:.5px;opacity:.8;`;
+    clsBadge.textContent=item.cls==='?'?'':item.cls;
+    nameEl.appendChild(clsBadge);
+
+    const barTrack=document.createElement('div');
+    barTrack.style.cssText='height:3px;background:var(--input-bg);border-radius:2px;overflow:hidden;margin-top:4px;';
+    const barFill=document.createElement('div');
+    barFill.style.cssText=`height:100%;border-radius:2px;background:linear-gradient(90deg,${clsColor}aa,${clsColor});width:0%;transition:width .5s ease;`;
+    barTrack.appendChild(barFill);
+    setTimeout(()=>{barFill.style.width=pct+'%';},30+i*10);
+    info.appendChild(nameEl);info.appendChild(barTrack);
+
+    // count
+    const countWrap=document.createElement('div');
+    countWrap.style.cssText='flex-shrink:0;width:80px;text-align:right;';
+    const numEl=document.createElement('div');
+    numEl.style.cssText=`font-family:'Orbitron',monospace;font-weight:900;font-size:${isTop?'1.1':'0.9'}rem;color:${isTop?clsColor:'var(--blue2)'};${isTop?'text-shadow:0 0 12px '+clsColor+'77;':''}`;
+    numEl.textContent=item.count;
+    const unitEl=document.createElement('div');
+    unitEl.style.cssText="font-family:'Rajdhani',monospace;font-size:.58rem;color:var(--dim);letter-spacing:.5px;text-transform:uppercase;margin-top:1px;";
+    unitEl.textContent=T('carUsage');
+    countWrap.appendChild(numEl);countWrap.appendChild(unitEl);
+
+    row.appendChild(rankCell);row.appendChild(info);row.appendChild(countWrap);
+    body.appendChild(row);
+  });
+  if(body.lastElementChild&&body.lastElementChild!==hdr)body.lastElementChild.style.borderBottom='none';
+}
+
+function closeCarStatsModal(){
+  document.getElementById('carStatsModal').style.display='none';
+  document.body.style.overflow='';
+}
+
+function saveCarStatsImage(){
+  const titleEl=document.getElementById('carStatsModalTitle');
+  const titleTxt=titleEl?titleEl.textContent:'🚗 Car Stats';
+  const cat=_carStatsCatId!=null?categories.find(c=>c.id===_carStatsCatId):null;
+  const tList=cat?tables.filter(t=>t.catId===_carStatsCatId):tables;
+  const usage=calcCarUsage(tList);
+  const filter=_carStatsFilter;
+  let sorted=Object.entries(usage)
+    .map(([name,count])=>({name,count,cls:getCarClass(name)}))
+    .filter(item=>filter==='all'||item.cls===filter)
+    .sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
+  if(!sorted.length){alert(T('noDataYet'));return;}
+
+  const isLight=currentMode==='light';
+  const cs=getComputedStyle(document.documentElement);
+  const cv=(v,fb)=>cs.getPropertyValue(v).trim()||fb;
+  const bgColor =cv('--bg',    isLight?'#dde8f8':'#04081a');
+  const textColor=cv('--text', isLight?'#0a1a3a':'#e8f0ff');
+  const dimColor =cv('--dim',  isLight?'#4a6898':'#5a78aa');
+  const goldColor=cv('--gold', isLight?'#b8860b':'#f5c518');
+  const blueColor=cv('--ac1',  isLight?'#1558c0':'#1d6fe8');
+  const blue2    =cv('--ac2',  isLight?'#1a72e8':'#3b9dff');
+  const s1Color  =cv('--s1',   isLight?'#c8daf5':'#071230');
+  const cardBg   =isLight?'rgba(255,255,255,.98)':s1Color+'ee';
+  const hdrBg    =isLight?cv('--s2','#b8ccee'):s1Color;
+  const rowAlt   =isLight?'rgba(0,0,0,.03)':'rgba(255,255,255,.025)';
+
+  const CLS_COLOR={T:'#22c55e',A:'#a855f7','?':dimColor};
+  const PAD=26,DOT_COL=28,NAME_COL=240,BAR_COL=110,COUNT_COL=70;
+  const W=PAD*2+DOT_COL+NAME_COL+BAR_COL+COUNT_COL;
+  const TITLE_H=54,HDR_H=34,ROW_H=40,FOOT=26;
+  const H=PAD+TITLE_H+HDR_H+ROW_H*sorted.length+FOOT;
+  const maxCount=sorted[0].count;
+
+  const canvas=document.createElement('canvas');
+  canvas.width=W*2;canvas.height=H*2;
+  const ctx=canvas.getContext('2d');ctx.scale(2,2);
+
+  // bg + card
+  ctx.fillStyle=bgColor;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=cardBg;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.fill();
+  ctx.strokeStyle=blueColor+'44';ctx.lineWidth=1;roundRect(ctx,PAD/2,PAD/2,W-PAD,H-PAD,14);ctx.stroke();
+  const acc=ctx.createLinearGradient(PAD/2,0,W-PAD/2,0);
+  acc.addColorStop(0,'transparent');acc.addColorStop(.35,blueColor);acc.addColorStop(.65,'#a855f7');acc.addColorStop(1,'transparent');
+  ctx.fillStyle=acc;ctx.fillRect(PAD/2,PAD/2,W-PAD,3);
+
+  // title
+  let y=PAD+6;
+  ctx.textAlign='center';ctx.fillStyle=goldColor;
+  ctx.font='bold 17px Rajdhani,Orbitron,sans-serif';
+  fillTextEllipsis(ctx,titleTxt,W/2,y+22,W-PAD*2-16);
+  y+=TITLE_H;
+
+  // col headers
+  ctx.fillStyle=hdrBg;ctx.fillRect(PAD,y,W-PAD*2,HDR_H);
+  ctx.strokeStyle=blueColor+'44';ctx.lineWidth=.5;ctx.strokeRect(PAD,y,W-PAD*2,HDR_H);
+  ctx.font='700 9px Rajdhani,sans-serif';ctx.fillStyle=dimColor;
+  const nameStartX=PAD+DOT_COL+6;
+  ctx.textAlign='left';ctx.fillText(T('carLabel').toUpperCase(),nameStartX,y+HDR_H/2+3);
+  ctx.textAlign='right';ctx.fillText(T('carUsage').toUpperCase(),W-PAD-6,y+HDR_H/2+3);
+  y+=HDR_H;
+
+  sorted.forEach((item,i)=>{
+    const ry=y+i*ROW_H;const cy=ry+ROW_H/2;
+    const cc=CLS_COLOR[item.cls]||dimColor;
+    ctx.fillStyle=i===0?'rgba(168,85,247,.07)':i%2===1?rowAlt:cardBg;
+    ctx.fillRect(PAD,ry,W-PAD*2,ROW_H);
+    ctx.strokeStyle=blueColor+'18';ctx.lineWidth=.5;ctx.strokeRect(PAD,ry,W-PAD*2,ROW_H);
+
+    // accent stripe
+    ctx.fillStyle=cc;ctx.fillRect(PAD,ry,3,ROW_H);
+
+    // class dot
+    ctx.beginPath();ctx.arc(PAD+DOT_COL/2,cy,5,0,Math.PI*2);
+    ctx.fillStyle=cc;ctx.fill();
+    if(i===0){ctx.shadowColor=cc;ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;}
+
+    // car name
+    ctx.textAlign='left';ctx.font=(i===0?'700':'600')+' 11px "Exo 2",Sarabun,sans-serif';
+    ctx.fillStyle=i===0?cc:textColor;
+    fillTextEllipsis(ctx,item.name,nameStartX,cy+4,NAME_COL-14);
+
+    // class badge
+    ctx.font='700 8px Rajdhani,sans-serif';ctx.fillStyle=cc;ctx.globalAlpha=.7;
+    const nw=ctx.measureText(item.name+'  ').width;
+    ctx.fillText(item.cls==='?'?'':item.cls,nameStartX+Math.min(nw,NAME_COL-30),cy+4);
+    ctx.globalAlpha=1;
+
+    // bar
+    const barX=PAD+DOT_COL+NAME_COL+8;
+    const barW=BAR_COL-20;const barH=5;const barY=cy-barH/2;
+    ctx.fillStyle=isLight?'rgba(0,0,0,.07)':'rgba(255,255,255,.07)';
+    roundRect(ctx,barX,barY,barW,barH,3);ctx.fill();
+    const filled=maxCount>0?Math.round(item.count/maxCount*barW):0;
+    if(filled>0){
+      const bg=ctx.createLinearGradient(barX,0,barX+filled,0);
+      bg.addColorStop(0,cc+'aa');bg.addColorStop(1,cc);
+      ctx.fillStyle=bg;
+      roundRect(ctx,barX,barY,filled,barH,3);ctx.fill();
+    }
+
+    // count
+    ctx.textAlign='right';ctx.font='900 13px Orbitron,monospace';
+    ctx.fillStyle=i===0?cc:blue2;
+    if(i===0){ctx.shadowColor=cc;ctx.shadowBlur=8;}
+    ctx.fillText(item.count,W-PAD-6,cy+5);
+    ctx.shadowBlur=0;ctx.shadowColor='transparent';
+    ctx.font='500 8px Rajdhani,sans-serif';ctx.fillStyle=dimColor;
+    ctx.fillText(T('carUsage'),W-PAD-6,cy+14);
+  });
+
+  ctx.textAlign='right';ctx.font='500 8px "Exo 2",sans-serif';ctx.fillStyle=dimColor+'99';
+  ctx.fillText('🏁 Race Time Tracker',W-PAD,H-10);
+
+  const link=document.createElement('a');
+  const safeName=(cat?cat.name:'all').replace(/[^a-zA-Z0-9฀-๿]/g,'_').substring(0,20);
+  const filterLabel=_carStatsFilter==='all'?'all':_carStatsFilter;
+  link.download='car_stats_'+safeName+'_'+filterLabel+'_'+Date.now()+'.png';
+  link.href=canvas.toDataURL('image/png');link.click();
+}
+
 function closeStageRecModal(){
   document.getElementById('stageRecModal').style.display='none';
   document.body.style.overflow='';
@@ -3316,7 +3709,7 @@ document.addEventListener('click',e=>{
 });
 
 // ── INIT ──
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeTotals();closeCatModal();closeBestTimeModal();closeScoreModal();closeStageRecModal();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeTotals();closeCatModal();closeBestTimeModal();closeScoreModal();closeStageRecModal();closeCarStatsModal();}});
 applyTheme(currentColor, currentMode);
 loadState();
 document.querySelectorAll('.lang-opt').forEach(o=>o.classList.toggle('active',o.dataset.lang===lang));
