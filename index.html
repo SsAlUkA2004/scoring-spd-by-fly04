@@ -614,6 +614,25 @@ td.rnd-td{width:52px;}td.stage-td{width:145px;}
 .stage-ban-warn{font-family:'Rajdhani',monospace;font-size:.58rem;font-weight:700;color:#ef4444;letter-spacing:.5px;margin-top:2px;display:block;}
 @media(max-width:640px){.ban-phase-note{display:none;}.ban-chip-name{max-width:60px;}.ban-inp{font-size:.68rem;padding:4px 5px;}}
 @media(max-width:400px){.ban-chip-name{max-width:44px;}.ban-inp{font-size:.6rem;}}
+/* ── CAR SELECTOR ── */
+.car-sw{margin-top:3px;width:100%;}
+.car-inp{
+  width:100%;
+  background:rgba(168,85,247,.08);
+  border:1px solid rgba(168,85,247,.28);
+  color:var(--text2);
+  font-family:'Exo 2',sans-serif;font-size:.63rem;font-weight:600;
+  padding:3px 6px;border-radius:5px;outline:none;transition:all .2s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.car-inp:focus{border-color:#a855f7;box-shadow:0 0 6px rgba(168,85,247,.22);}
+.car-inp::placeholder{color:rgba(168,85,247,.35);font-size:.58rem;}
+.car-inp.has-car{border-color:rgba(168,85,247,.5);color:#c084fc;}
+.car-grp-t{color:#22c55e!important;}
+.car-grp-a{color:#a855f7!important;}
+@media(max-width:640px){.car-inp{font-size:.58rem;padding:2px 4px;}}
+@media(max-width:400px){.car-inp{font-size:.54rem;}}
+
 
 
 /* ── TIME CELL ── */
@@ -625,7 +644,7 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
   position:relative;
   box-sizing:border-box;
   width:100%;
-  min-height:58px;
+  min-height:82px;
 }
 
 .king-badge{
@@ -1202,27 +1221,27 @@ const I18N={
     catLabel:'หมวดหมู่',allBestTime:'เวลาด่านทั้งหมด',allScore:'คะแนนรวมทั้งหมด',collapseAll:'ย่อทั้งหมด',expandAll:'ขยายทั้งหมด',
     catBestTime:'เวลาด่าน',catScore:'คะแนน',catExport:'Export',catAddMatch:'＋ การแข่งขัน',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'รีเซ็ตตารางนี้?',noDataYet:'ยังไม่มีข้อมูล',rounds9:'9 รอบ',rounds13:'13 รอบ',
-    randStage:'🎲 สุ่มแผนที่',allStageRec:'สถิติด่านทั้งหมด',stageRec:'สถิติด่าน',stageRecTitle:'🎯 สถิติผู้ถือเร็วสุดต่อด่าน',stageUnit:'ด่าน',catStageRec:'สถิติ',matchUnit:'การแข่งขัน',noCatMatches:'— ยังไม่มีการแข่งขัน —',minMatch:'ต้องมีการแข่งขันอย่างน้อย 1 รายการ',deleteCatConfirm:'ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก',importSuccess:'นำเข้าสำเร็จ',bestTimeCol:'เวลาดีสุด',importFail:'ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้',noCat:'ไม่มีหมวดหมู่',editCatTitle:'✏️ แก้ไขหมวดหมู่',createCatTitle:'📁 สร้างหมวดหมู่',importErrRead:'ไม่สามารถอ่านไฟล์ได้',importErrSheet:'ไม่พบ Sheet ในไฟล์นี้',importErrData:'ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป',banPhase:'MAP BAN',banPH:'🚫 เลือกแบน...',banRemove:'ยกเลิกแบน',banLabel:'แบน',banNote:'ผู้เล่น 2-4 คน แบนได้คนละ 1 แผนที่'},
+    randStage:'🎲 สุ่มแผนที่',allStageRec:'สถิติด่านทั้งหมด',stageRec:'สถิติด่าน',stageRecTitle:'🎯 สถิติผู้ถือเร็วสุดต่อด่าน',stageUnit:'ด่าน',catStageRec:'สถิติ',matchUnit:'การแข่งขัน',noCatMatches:'— ยังไม่มีการแข่งขัน —',minMatch:'ต้องมีการแข่งขันอย่างน้อย 1 รายการ',deleteCatConfirm:'ลบหมวดหมู่นี้? ตารางที่อยู่ในหมวดหมู่จะถูกย้ายออก',importSuccess:'นำเข้าสำเร็จ',bestTimeCol:'เวลาดีสุด',importFail:'ไม่พบข้อมูลการแข่งขันในไฟล์\n\nกรุณาตรวจสอบว่าไฟล์ถูก Export จากเว็บนี้',noCat:'ไม่มีหมวดหมู่',editCatTitle:'✏️ แก้ไขหมวดหมู่',createCatTitle:'📁 สร้างหมวดหมู่',importErrRead:'ไม่สามารถอ่านไฟล์ได้',importErrSheet:'ไม่พบ Sheet ในไฟล์นี้',importErrData:'ไฟล์ไม่ถูกต้องหรือข้อมูลน้อยเกินไป',banPhase:'MAP BAN',banPH:'🚫 เลือกแบน...',banRemove:'ยกเลิกแบน',banLabel:'แบน',banNote:'ผู้เล่น 2-4 คน แบนได้คนละ 1 แผนที่',carPH:'🚗 เลือกรถ...',carLabel:'รถ',classT:'Class T',classA:'Class A'},
   en:{title:'🏁 RACE TIME TRACKER',sub1:'Record Times · Calculate Points · Rank Players',sub2:'Enter digits e.g. 15699 → 1:56:99',addMatch:'Add Match',totalScore:'Total Score',exportExcel:'Export',importExcel:'Import',clearData:'Clear Data',totalAll:'Overall Standings',leaderboard:'🏆 LEADERBOARD',matchLabel:'Match',removeMatch:'✕ Remove',round:'Round',playerLabel:'Player',score:'Score',grandTotal:'⚡ Total',stagePH:'🔍 Select map...',rank:'Rank',player:'Player',confirmClear:'Clear all data?',confirmRemove:'Remove this match?',minP:'Minimum 2 players',maxP:'Maximum 6 players',kingMap:'👑 KING',pts:'pts',globeLabel:'English',stageLabel:'Maps',
     catLabel:'Category',allBestTime:'All Best Times',allScore:'Overall Score',collapseAll:'Collapse All',expandAll:'Expand All',
     catBestTime:'Best Times',catScore:'Score',catExport:'Export',catAddMatch:'＋ Match',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'Reset this table?',noDataYet:'No data yet',rounds9:'9 Rounds',rounds13:'13 Rounds',
-    randStage:'🎲 Random Maps',allStageRec:'All Map Records',stageRec:'Stage Records',stageRecTitle:'🎯 Stage Record Champions',stageUnit:'maps',catStageRec:'Records',matchUnit:'matches',noCatMatches:'— No matches in this category —',minMatch:'At least 1 match is required',deleteCatConfirm:'Delete this category? Matches will be moved out',importSuccess:'Import successful',bestTimeCol:'Best Time',importFail:'No match data found in file\n\nPlease check that the file was exported from this app',noCat:'No Category',editCatTitle:'✏️ Edit Category',createCatTitle:'📁 Create Category',importErrRead:'Cannot read file',importErrSheet:'No sheet found in this file',importErrData:'Invalid file or insufficient data',banPhase:'MAP BAN',banPH:'🚫 Ban a map...',banRemove:'Remove ban',banLabel:'Ban',banNote:'2–4 players · 1 ban each'},
+    randStage:'🎲 Random Maps',allStageRec:'All Map Records',stageRec:'Stage Records',stageRecTitle:'🎯 Stage Record Champions',stageUnit:'maps',catStageRec:'Records',matchUnit:'matches',noCatMatches:'— No matches in this category —',minMatch:'At least 1 match is required',deleteCatConfirm:'Delete this category? Matches will be moved out',importSuccess:'Import successful',bestTimeCol:'Best Time',importFail:'No match data found in file\n\nPlease check that the file was exported from this app',noCat:'No Category',editCatTitle:'✏️ Edit Category',createCatTitle:'📁 Create Category',importErrRead:'Cannot read file',importErrSheet:'No sheet found in this file',importErrData:'Invalid file or insufficient data',banPhase:'MAP BAN',banPH:'🚫 Ban a map...',banRemove:'Remove ban',banLabel:'Ban',banNote:'2–4 players · 1 ban each',carPH:'🚗 Select car...',carLabel:'Car',classT:'Class T',classA:'Class A'},
   zh:{title:'🏁 竞速时间追踪器',sub1:'记录时间 · 计算积分 · 排行榜',sub2:'输入数字 例如 15699 → 1:56:99',addMatch:'添加比赛',totalScore:'总分',exportExcel:'导出',importExcel:'导入',clearData:'清除数据',totalAll:'总排行',leaderboard:'🏆 排行榜',matchLabel:'比赛',removeMatch:'✕ 删除',round:'轮次',playerLabel:'玩家',score:'分数',grandTotal:'⚡ 总计',stagePH:'🔍 选择地图...',rank:'排名',player:'玩家',confirmClear:'清除所有数据？',confirmRemove:'删除此比赛？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'简体中文',stageLabel:'地图',
     catLabel:'分组',allBestTime:'全部最佳时间',allScore:'总积分',collapseAll:'全部折叠',expandAll:'全部展开',
     catBestTime:'最佳时间',catScore:'积分',catExport:'导出',catAddMatch:'＋ 比赛',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'重置此表格？',noDataYet:'暂无数据',rounds9:'9轮',rounds13:'13轮',
-    randStage:'🎲 随机地图',allStageRec:'全部赛道记录',stageRec:'赛道记录',stageRecTitle:'🎯 赛道最速记录排行',stageUnit:'赛道',catStageRec:'记录',matchUnit:'场比赛',noCatMatches:'— 此分组暂无比赛 —',minMatch:'至少需要1场比赛',deleteCatConfirm:'删除此分组？比赛将被移出',importSuccess:'导入成功',bestTimeCol:'最佳时间',importFail:'文件中未找到比赛数据\n\n请确认文件是从本网站导出的',noCat:'无分组',editCatTitle:'✏️ 编辑分组',createCatTitle:'📁 新建分组',importErrRead:'无法读取文件',importErrSheet:'文件中未找到工作表',importErrData:'文件无效或数据不足',banPhase:'地图封禁',banPH:'🚫 选择封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1张地图'},
+    randStage:'🎲 随机地图',allStageRec:'全部赛道记录',stageRec:'赛道记录',stageRecTitle:'🎯 赛道最速记录排行',stageUnit:'赛道',catStageRec:'记录',matchUnit:'场比赛',noCatMatches:'— 此分组暂无比赛 —',minMatch:'至少需要1场比赛',deleteCatConfirm:'删除此分组？比赛将被移出',importSuccess:'导入成功',bestTimeCol:'最佳时间',importFail:'文件中未找到比赛数据\n\n请确认文件是从本网站导出的',noCat:'无分组',editCatTitle:'✏️ 编辑分组',createCatTitle:'📁 新建分组',importErrRead:'无法读取文件',importErrSheet:'文件中未找到工作表',importErrData:'文件无效或数据不足',banPhase:'地图封禁',banPH:'🚫 选择封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1张地图',carPH:'🚗 选择赛车...',carLabel:'赛车',classT:'T级',classA:'A级'},
   vi:{title:'🏁 THEO DÕI THỜI GIAN ĐUA',sub1:'Ghi Thời Gian · Tính Điểm · Xếp Hạng',sub2:'Nhập số vd 15699 → 1:56:99',addMatch:'Thêm trận',totalScore:'Tổng điểm',exportExcel:'Xuất',importExcel:'Nhập',clearData:'Xóa dữ liệu',totalAll:'Bảng xếp hạng',leaderboard:'🏆 XẾP HẠNG',matchLabel:'Trận',removeMatch:'✕ Xóa',round:'Vòng',playerLabel:'Người chơi',score:'Điểm',grandTotal:'⚡ Tổng',stagePH:'🔍 Chọn bản đồ...',rank:'Hạng',player:'Người chơi',confirmClear:'Xóa tất cả?',confirmRemove:'Xóa trận này?',minP:'Tối thiểu 2 người',maxP:'Tối đa 6 người',kingMap:'👑 KING',pts:'điểm',globeLabel:'Tiếng Việt',stageLabel:'Bản đồ',
     catLabel:'Nhóm',allBestTime:'Thời gian tốt nhất',allScore:'Tổng điểm',collapseAll:'Thu gọn tất cả',expandAll:'Mở rộng tất cả',
     catBestTime:'Thời gian',catScore:'Điểm',catExport:'Xuất',catAddMatch:'＋ Trận',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'Đặt lại bảng này?',noDataYet:'Chưa có dữ liệu',rounds9:'9 vòng',rounds13:'13 vòng',
-    randStage:'🎲 Bản đồ ngẫu nhiên',allStageRec:'Tất cả kỷ lục',stageRec:'Kỷ lục bản đồ',stageRecTitle:'🎯 Bảng kỷ lục nhanh nhất',stageUnit:'bản đồ',catStageRec:'Kỷ lục',matchUnit:'trận',noCatMatches:'— Chưa có trận trong nhóm —',minMatch:'Cần ít nhất 1 trận',deleteCatConfirm:'Xóa nhóm này? Các trận sẽ được chuyển ra',importSuccess:'Nhập thành công',bestTimeCol:'Thời gian tốt',importFail:'Không tìm thấy dữ liệu\n\nVui lòng kiểm tra file được xuất từ ứng dụng này',noCat:'Không có nhóm',editCatTitle:'✏️ Sửa nhóm',createCatTitle:'📁 Tạo nhóm',importErrRead:'Không thể đọc file',importErrSheet:'Không tìm thấy sheet trong file',importErrData:'File không hợp lệ hoặc dữ liệu không đủ',banPhase:'CẤM BẢN ĐỒ',banPH:'🚫 Chọn cấm...',banRemove:'Hủy cấm',banLabel:'Cấm',banNote:'2-4 người chơi · mỗi người cấm 1 bản đồ'},
+    randStage:'🎲 Bản đồ ngẫu nhiên',allStageRec:'Tất cả kỷ lục',stageRec:'Kỷ lục bản đồ',stageRecTitle:'🎯 Bảng kỷ lục nhanh nhất',stageUnit:'bản đồ',catStageRec:'Kỷ lục',matchUnit:'trận',noCatMatches:'— Chưa có trận trong nhóm —',minMatch:'Cần ít nhất 1 trận',deleteCatConfirm:'Xóa nhóm này? Các trận sẽ được chuyển ra',importSuccess:'Nhập thành công',bestTimeCol:'Thời gian tốt',importFail:'Không tìm thấy dữ liệu\n\nVui lòng kiểm tra file được xuất từ ứng dụng này',noCat:'Không có nhóm',editCatTitle:'✏️ Sửa nhóm',createCatTitle:'📁 Tạo nhóm',importErrRead:'Không thể đọc file',importErrSheet:'Không tìm thấy sheet trong file',importErrData:'File không hợp lệ hoặc dữ liệu không đủ',banPhase:'CẤM BẢN ĐỒ',banPH:'🚫 Chọn cấm...',banRemove:'Hủy cấm',banLabel:'Cấm',banNote:'2-4 người chơi · mỗi người cấm 1 bản đồ',carPH:'🚗 Chọn xe...',carLabel:'Xe',classT:'Hạng T',classA:'Hạng A'},
   tw:{title:'🏁 競速時間追蹤器',sub1:'記錄時間 · 計算積分 · 排行榜',sub2:'輸入數字 例如 15699 → 1:56:99',addMatch:'新增比賽',totalScore:'總分',exportExcel:'匯出',importExcel:'匯入',clearData:'清除資料',totalAll:'總排行',leaderboard:'🏆 排行榜',matchLabel:'比賽',removeMatch:'✕ 刪除',round:'回合',playerLabel:'玩家',score:'分數',grandTotal:'⚡ 總計',stagePH:'🔍 選擇地圖...',rank:'排名',player:'玩家',confirmClear:'清除所有資料？',confirmRemove:'刪除此比賽？',minP:'最少2名玩家',maxP:'最多6名玩家',kingMap:'👑 王牌',pts:'分',globeLabel:'繁體中文',stageLabel:'地圖',
     catLabel:'分組',allBestTime:'全部最佳時間',allScore:'總積分',collapseAll:'全部折疊',expandAll:'全部展開',
     catBestTime:'最佳時間',catScore:'積分',catExport:'匯出',catAddMatch:'＋ 比賽',catEdit:'✏️',catDelete:'🗑',
     confirmResetTable:'重置此表格？',noDataYet:'暫無資料',rounds9:'9回合',rounds13:'13回合',
-    randStage:'🎲 隨機地圖',allStageRec:'全部賽道記錄',stageRec:'賽道記錄',stageRecTitle:'🎯 賽道最速記錄排行',stageUnit:'賽道',catStageRec:'記錄',matchUnit:'場比賽',noCatMatches:'— 此分組暫無比賽 —',minMatch:'至少需要1場比賽',deleteCatConfirm:'刪除此分組？比賽將被移出',importSuccess:'匯入成功',bestTimeCol:'最佳時間',importFail:'檔案中未找到比賽資料\n\n請確認檔案是從本網站匯出的',noCat:'無分組',editCatTitle:'✏️ 編輯分組',createCatTitle:'📁 新建分組',importErrRead:'無法讀取檔案',importErrSheet:'檔案中未找到工作表',importErrData:'檔案無效或資料不足',banPhase:'地圖封禁',banPH:'🚫 選擇封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1張地圖'}
+    randStage:'🎲 隨機地圖',allStageRec:'全部賽道記錄',stageRec:'賽道記錄',stageRecTitle:'🎯 賽道最速記錄排行',stageUnit:'賽道',catStageRec:'記錄',matchUnit:'場比賽',noCatMatches:'— 此分組暫無比賽 —',minMatch:'至少需要1場比賽',deleteCatConfirm:'刪除此分組？比賽將被移出',importSuccess:'匯入成功',bestTimeCol:'最佳時間',importFail:'檔案中未找到比賽資料\n\n請確認檔案是從本網站匯出的',noCat:'無分組',editCatTitle:'✏️ 編輯分組',createCatTitle:'📁 新建分組',importErrRead:'無法讀取檔案',importErrSheet:'檔案中未找到工作表',importErrData:'檔案無效或資料不足',banPhase:'地圖封禁',banPH:'🚫 選擇封禁...',banRemove:'取消封禁',banLabel:'封禁',banNote:'2-4名玩家 每人可封禁1張地圖',carPH:'🚗 選擇賽車...',carLabel:'賽車',classT:'T級',classA:'A級'}
 };
 let lang='th';
 function T(k){return(I18N[lang]||I18N.th)[k]||(I18N.th[k]||k);}
@@ -1230,6 +1249,40 @@ function T(k){return(I18N[lang]||I18N.th)[k]||(I18N.th[k]||k);}
 // ── STAGES ──
 const SBS={3:["City11","North Sea","TROY - Smeltery","All the way to Qian","Alpha Headquarters","Decisive Battle! Eye of the Sea","Dream of Heavenly Palace","Superstring Base","Dragon Crystal Lake","The Circular City of Troy","Stunning Jiangxi","Glimpses of Eden","Wushan Five Elements","Romantic Seaside","Polar Illusion","Endless Golden River","Travel to Tianfu","Foggy Mountain Maple","Winter Games","Loving Villa","Train Station","Nightless Sand City","Moonville","Dragon Gate","Forge Arena","King Inferno City","Blue and White Dreamland","320 Adventure Island","Star Dream Amusement Park","Winter Ancient","Moonlight Realm","Los Angeles","Train Station","City11 (Reversed)","Urban Chase","Magic Music City Holiday","Cologne Cathedral"],4:["Highway 1","Great Wall","West Lake","TROY - Experiment Field O","Thousand-House Miaozhai","Windy Airport","Decisive Battle! Snow Mountain","Back to Ancient Shu","Speed Aerospace City","Eternal Ancient Capital","Utopia","Dragon Boat Race","Titan's Peak","Clouds Heavenly Gate","Neuschwanstein","Eden Valley","Autumn Story","Dinosaur World","Flowers in the Summer Sea","Wind-Chased Green Meadow","Mermaid Island"],5:["Scenic Hills","Epic Legend","Atlantis","Atlantis(Reversed)","Mogao Grottoes","Old Street Construction","Crimson Leaves Town","Mars Base","Snow Chasm","Wild West","Sky City","Winter Gorge"],6:["Grand Canyon","Scotland Yard"],7:["Space Station","Painted Landscape"]};
 const SC={3:'#4fc3f7',4:'#81c784',5:'#ffb74d',6:'#f06292',7:'#ce93d8'};
+
+// ── CAR DATA ──
+const CAR_T=[
+  'Source Polaris EXA','Sequence Future LYR','Sun Wukong','Olina','Hallet',
+  'Dark Azure Dragon','Carefree','Mighty Titan','Glory Sentinel','Puffer Buddy','DuckMan'
+];
+const CAR_A=[
+  'Dragon Shadow','Cinder Serpent','S-Thunderflash','S-Resonance','S-StarLight',
+  'S-Phantom Star','S-Mars','S-Luna Shadow','S-Chrono Envoy','S-Ice Soul',
+  'L-Radiant Oracle','L-Feng','Dawnbreaker Glory','Spirit Breaker Bright',
+  'Aston Martin Valkyrie','Crimson Keelback','Diamond Reno',
+  'White Stallion Gilded Brilliance','Bladecore Phantom','Outer Star',
+  'L-Wolf Shadow','Building Blocks','King Husky','Dragon Jade Reno','Bugatti BOLIDE',
+  'Dragon and Lion Dance','Sharp Blade RX-7','AE86','L-Qing','Blue and White Ink',
+  'Maserati MC20 Cielo','Blue Rose','Red Flame Knight','L-White Wolf','Dark Moon',
+  'King of Phantom Sea','Bionic Night Owl','Peachy Love Song','Lullaby Overture','Rabbit Reno',
+  'Snowy Skywing','Ofanimon','Koenigsegg','Sky Luan','Dome Sound Whale',
+  'Crystal Star Lord','L-Glory Twins','Ruins Demon Lord','Scarlet Rhyme','Shadow of God',
+  'AOI Ogre AN-21','Asurada AKF-0','Fire Tiger','Frosty Tiger','Tian Shu Immortal Sword',
+  'Lu Bu Feng Xian','Colorful Stallion','Genesis Devourer','S-Skywalker','Asia Pentium',
+  'Eternal Age','Nether King Hades','VioletFlame Armor','Golden Sagittarius',
+  'Goddess of Wisdom','Thunder Divine Guard','Sky Devouring Taotie','Inferno Warrior',
+  'Galaxy Light','McLaren600LT','S-Adjudicator','Devour Fire','Sirius','Night of Dark',
+  'Eternal night Monarch','S-Stargazer','Commander SPX','Wind Breaker','Star Hunter',
+  'Twin Ares','Supreme Dragon','Ice Emperor','Inferno Revelation','Shade of Glory',
+  'Star Dancer','S-Lightchaser','Rimula','Sky Shadow','Hades','The Equalizer',
+  'Swift Meteor','Vulcan','Poseidon','S-Spirit Breaker','Black Eagle','White Stallion',
+  'Everstar','Glorious Light','Blue Shadow','The Leap','Revelation','Flash',
+  'Star Ocean Wings','Earth Cracking Armour','Black Lightchaser','Divine wind',
+  'Beauty of Time','Dark Valkyrie','S-Optimus Reno','Dawn Breaker','Inferno',
+  'Night Fury','Black Lightning'
+];
+const ALL_CARS=[...CAR_T.map(n=>({name:n,cls:'T'})),...CAR_A.map(n=>({name:n,cls:'A'}))];
+
 const ALL_S=[];for(const[s,l]of Object.entries(SBS))l.forEach(n=>ALL_S.push({name:n,stars:parseInt(s)}));
 
 const MAX_P=6,MIN_P=2,ROWS_BASE=9,ROWS_MAX=13;
@@ -1247,7 +1300,8 @@ function loadState(){
     if(t.collapsed===undefined||t.collapsed===null)t.collapsed=false;
     if(t.catId===undefined){t.catId=null;}
     else if(t.catId!==null&&!validCatIds.has(t.catId)){t.catId=null;}
-    while(t.rows.length<ROWS_MAX)t.rows.push({stage:'',times:Array(MAX_P).fill('')});
+    while(t.rows.length<ROWS_MAX)t.rows.push({stage:'',times:Array(MAX_P).fill(''),cars:Array(MAX_P).fill('')});
+    t.rows.forEach(row=>{if(!row.cars)row.cars=Array(MAX_P).fill('');while(row.cars.length<MAX_P)row.cars.push('');});
     if(!t.bans)t.bans=Array(MAX_P).fill('');
     while(t.bans.length<MAX_P)t.bans.push('');
   });
@@ -1266,7 +1320,7 @@ function mkTable(pc){
     id:tc++,playerCount:pc||4,rowCount:ROWS_BASE,collapsed:false,
     players:Array(MAX_P).fill(''),
     bans:Array(MAX_P).fill(''),
-    rows:Array.from({length:ROWS_MAX},()=>({stage:'',times:Array(MAX_P).fill('')}))
+    rows:Array.from({length:ROWS_MAX},()=>({stage:'',times:Array(MAX_P).fill(''),cars:Array(MAX_P).fill('')}))
   };
 }
 
@@ -1304,6 +1358,99 @@ function scClass(s){
   if(s>=8)return'sch';if(s>=5)return'scm';if(s>=2)return'scl';return'sc0';
 }
 
+
+
+// ══════════════════════════════════════════════════════════════
+// CAR SELECTOR SYSTEM
+// ══════════════════════════════════════════════════════════════
+let _activeCarDd=null,_activeCarInp=null;
+function _closeCarDd(){
+  if(_activeCarDd){_activeCarDd.classList.remove('open');_activeCarDd=null;_activeCarInp=null;}
+}
+function _closeAllDd(){_closeDd();_closeBanDd();_closeCarDd();}
+document.addEventListener('click',e=>{
+  if(_activeCarDd&&!_activeCarDd.contains(e.target)&&e.target!==_activeCarInp)_closeCarDd();
+},true);
+document.addEventListener('scroll',e=>{
+  if(_activeCarDd&&_activeCarInp&&!_activeCarDd.contains(e.target)){
+    const rect=_activeCarInp.getBoundingClientRect();
+    if(rect.bottom<0||rect.top>window.innerHeight)_closeCarDd();
+    else{_activeCarDd.style.top=(rect.bottom+2)+'px';_activeCarDd.style.left=rect.left+'px';}
+  }
+},true);
+
+function buildCarSelector(tObj,r,p){
+  const wrap=document.createElement('div');wrap.className='car-sw';
+  if(!tObj.rows[r].cars)tObj.rows[r].cars=Array(MAX_P).fill('');
+
+  const inp=document.createElement('input');
+  inp.type='text';inp.className='car-inp';
+  inp.placeholder=T('carPH');
+  const curVal=tObj.rows[r].cars[p]||'';
+  inp.value=curVal;inp.title=curVal;
+  if(curVal)inp.classList.add('has-car');
+  inp.autocomplete='off';inp.spellcheck=false;
+
+  const dd=document.createElement('div');dd.className='sdd sdd-portal car-portal';
+  document.body.appendChild(dd);
+
+  function posCarDd(){
+    const rect=inp.getBoundingClientRect();
+    dd.style.cssText='position:fixed;top:'+(rect.bottom+2)+'px;left:'+rect.left+'px;width:'+Math.max(rect.width,170)+'px;max-height:220px;z-index:99999;';
+    const below=window.innerHeight-rect.bottom;
+    if(below<230&&rect.top>230){dd.style.top='auto';dd.style.bottom=(window.innerHeight-rect.top+2)+'px';}
+    else dd.style.bottom='auto';
+  }
+  function popCar(q){
+    dd.innerHTML='';q=(q||'').toLowerCase();
+    let addedT=false,addedA=false;
+    for(const car of ALL_CARS){
+      if(q&&!car.name.toLowerCase().includes(q))continue;
+      if(car.cls==='T'&&!addedT){
+        const g=document.createElement('div');g.className='sdd-grp car-grp-t';
+        g.textContent=T('classT');dd.appendChild(g);addedT=true;
+      }
+      if(car.cls==='A'&&!addedA){
+        const g=document.createElement('div');g.className='sdd-grp car-grp-a';
+        g.textContent=T('classA');dd.appendChild(g);addedA=true;
+      }
+      const item=document.createElement('div');item.className='sdd-item';
+      const dot=document.createElement('span');dot.className='sdot';
+      dot.style.background=car.cls==='T'?'#22c55e':'#a855f7';
+      item.appendChild(dot);item.appendChild(document.createTextNode(car.name));
+      item.addEventListener('mousedown',e=>{
+        e.preventDefault();
+        inp.value=car.name;inp.title=car.name;inp.classList.add('has-car');
+        tObj.rows[r].cars[p]=car.name;save();_closeCarDd();
+      });
+      dd.appendChild(item);
+    }
+    if(!dd.children.length){
+      const ni=document.createElement('div');ni.className='sdd-item';ni.style.color='var(--dim)';ni.textContent='—';dd.appendChild(ni);
+    }
+  }
+
+  inp.addEventListener('focus',()=>{
+    _closeAllDd();
+    popCar(inp.value);posCarDd();
+    dd.classList.add('open');_activeCarDd=dd;_activeCarInp=inp;
+  });
+  inp.addEventListener('input',()=>{
+    tObj.rows[r].cars[p]=inp.value;save();
+    inp.title=inp.value;
+    if(inp.value)inp.classList.add('has-car');else inp.classList.remove('has-car');
+    popCar(inp.value);posCarDd();
+    dd.classList.add('open');_activeCarDd=dd;_activeCarInp=inp;
+  });
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Escape'||e.key==='Enter'){inp.blur();_closeCarDd();}
+  });
+  inp.addEventListener('blur',()=>setTimeout(()=>{if(_activeCarDd===dd)_closeCarDd();},160));
+
+  // Lightweight cleanup — no MutationObserver needed; portals purged on renderAll/rebuildBlock
+  wrap.appendChild(inp);
+  return wrap;
+}
 
 // ══════════════════════════════════════════════════════════════
 // MAP BAN SYSTEM
@@ -1383,7 +1530,7 @@ function buildBanSelector(tObj,p){
         const ni=document.createElement('div');ni.className='sdd-item';ni.style.color='var(--dim)';ni.textContent='—';dd.appendChild(ni);
       }
     }
-    inp.addEventListener('focus',()=>{_closeBanDd();_closeDd();popBan(inp.value);posBanDd();dd.classList.add('open');_activeBanDd=dd;_activeBanInp=inp;});
+    inp.addEventListener('focus',()=>{_closeBanDd();_closeDd();_closeCarDd();popBan(inp.value);posBanDd();dd.classList.add('open');_activeBanDd=dd;_activeBanInp=inp;});
     inp.addEventListener('input',()=>{popBan(inp.value);posBanDd();dd.classList.add('open');_activeBanDd=dd;_activeBanInp=inp;});
     inp.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Enter'){inp.blur();_closeBanDd();}});
     inp.addEventListener('blur',()=>setTimeout(()=>{if(_activeBanDd===dd)_closeBanDd();},160));
@@ -1489,7 +1636,7 @@ function buildStageSelector(tObj,r){
 
   inp.addEventListener('focus',()=>{
     autoResize();
-    _closeDd();
+    _closeDd();_closeCarDd();
     pop(inp.value);
     positionDd();
     dd.classList.add('open');
@@ -1658,7 +1805,8 @@ function buildTable(tObj){
       });
       inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur();});
       const chip=document.createElement('div');chip.className='score-chip scx';chip.textContent='—';chip.dataset.chip='1';
-      cw.appendChild(inp);cw.appendChild(chip);td.appendChild(cw);tr.appendChild(td);
+      const carSel=buildCarSelector(tObj,r,p);
+      cw.appendChild(inp);cw.appendChild(chip);cw.appendChild(carSel);td.appendChild(cw);tr.appendChild(td);
     }
     tbody.appendChild(tr);
   }
@@ -1735,7 +1883,7 @@ function recalcBlock(tid){
   });
 }
 function recalcAll(){tables.forEach(t=>{recalcBlock(t.id);});}
-function rebuildBlock(tObj){const old=document.querySelector(`.match-block[data-tid="${tObj.id}"]`);if(old){const nd=buildTable(tObj);old.replaceWith(nd);recalcBlock(tObj.id);updateLeaderboard();}}
+function rebuildBlock(tObj){document.querySelectorAll('.car-portal').forEach(d=>d.remove());const old=document.querySelector(`.match-block[data-tid="${tObj.id}"]`);if(old){const nd=buildTable(tObj);old.replaceWith(nd);recalcBlock(tObj.id);updateLeaderboard();}}
 function rebuildAll(){renderAll();}
 function addMatch(){
   const t=mkTable(4);tables.push(t);save();renderAll();
@@ -1921,6 +2069,7 @@ function openCatDd(btn,tid){
 
 // ── RENDER ALL ──
 function renderAll(){
+  document.querySelectorAll('.car-portal').forEach(d=>d.remove());
   const area=document.getElementById('tablesArea');area.innerHTML='';
   categories.forEach(cat=>{
     const section=document.createElement('div');section.className='cat-section';
