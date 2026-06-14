@@ -1033,6 +1033,181 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
   .main-grid{grid-template-columns:1fr 300px;}
   th.th-stage,td.stage-td{width:180px!important;}
 }
+
+/* ═══════════════════════════════════════════════════════
+   🏁 SPEEDDRIFT THEME UPGRADE  (appended — overrides above)
+   Speed FX · premium header/logo · glass polish
+   Uses --ac1/--ac2/--ac3/--gold so all 8 color themes work
+   ═══════════════════════════════════════════════════════ */
+
+/* ── deeper, richer base for premium feel ── */
+[data-mode="dark"] .bg-base{
+  background:
+    radial-gradient(ellipse at 50% -10%, color-mix(in srgb,var(--ac1) 22%,transparent) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 110%, color-mix(in srgb,var(--ac1) 14%,transparent) 0%, transparent 50%),
+    var(--bg);
+}
+
+/* ── SPEED STREAKS — horizontal light trails zooming past ── */
+.bg-speed,.bg-speed2{
+  position:absolute;top:0;left:-50%;width:200%;height:100%;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);
+  pointer-events:none;will-change:transform;
+}
+.bg-speed{
+  background-image:repeating-linear-gradient(96deg,
+    transparent 0, transparent 150px,
+    color-mix(in srgb,var(--ac3) 30%,transparent) 150px,
+    color-mix(in srgb,var(--ac3) 30%,transparent) 152px,
+    transparent 152px, transparent 300px);
+  opacity:.30;
+  animation:speedRun 1.6s linear infinite;
+}
+.bg-speed2{
+  background-image:repeating-linear-gradient(94deg,
+    transparent 0, transparent 380px,
+    color-mix(in srgb,var(--gold) 45%,transparent) 380px,
+    color-mix(in srgb,var(--gold) 45%,transparent) 383px,
+    transparent 383px, transparent 760px);
+  opacity:.18;
+  animation:speedRun2 .9s linear infinite;
+}
+@keyframes speedRun{from{transform:translateX(0)}to{transform:translateX(-300px)}}
+@keyframes speedRun2{from{transform:translateX(0)}to{transform:translateX(-760px)}}
+[data-mode="light"] .bg-speed{opacity:.16;}
+[data-mode="light"] .bg-speed2{opacity:.10;}
+
+/* ── PERSPECTIVE RACING GRID — receding floor rushing toward you ── */
+.bg-grid{
+  position:absolute;left:50%;bottom:0;
+  width:320vw;height:48vh;
+  transform:translateX(-50%) perspective(330px) rotateX(74deg);
+  transform-origin:bottom center;
+  background-image:
+    linear-gradient(color-mix(in srgb,var(--ac2) 60%,transparent) 1px,transparent 1px),
+    linear-gradient(90deg,color-mix(in srgb,var(--ac2) 60%,transparent) 1px,transparent 1px);
+  background-size:62px 62px;
+  opacity:.12;
+  -webkit-mask-image:linear-gradient(to top,#000 0%,#000 8%,transparent 78%);
+          mask-image:linear-gradient(to top,#000 0%,#000 8%,transparent 78%);
+  animation:gridRush 2.4s linear infinite;
+  pointer-events:none;will-change:background-position;
+}
+@keyframes gridRush{from{background-position:0 0,0 0}to{background-position:0 62px,0 0}}
+[data-mode="light"] .bg-grid{opacity:.08;}
+
+/* ── VIGNETTE for cinematic depth ── */
+.bg-vignette{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 32%,transparent 42%,rgba(0,0,8,.42) 100%);
+}
+[data-mode="light"] .bg-vignette{
+  background:radial-gradient(ellipse at 50% 32%,transparent 55%,rgba(10,20,60,.07) 100%);
+}
+
+/* ── TOP ACCENT — add a racing "pace car" light running along it ── */
+.top-accent{overflow:visible;}
+.top-accent::after{
+  content:'';position:absolute;top:-2px;left:0;
+  width:8px;height:7px;border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 14px 3px var(--ac2),0 0 6px 1px #fff;
+  animation:paceRun 4.5s cubic-bezier(.5,0,.5,1) infinite;
+  will-change:left;
+}
+@keyframes paceRun{0%{left:-2%;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:102%;opacity:0}}
+
+/* ════════════ PREMIUM HEADER / LOGO ════════════ */
+header{padding-top:34px;}
+@media(max-width:640px){header{padding-top:18px;}}
+
+/* kicker badge with F1 start-lights */
+.hdr-badge{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:5px 14px;margin-bottom:12px;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:30px;
+  font-family:'Rajdhani',monospace;font-weight:700;
+  font-size:.6rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--text2);
+  backdrop-filter:blur(8px);
+  box-shadow:0 0 18px color-mix(in srgb,var(--ac1) 22%,transparent),inset 0 0 12px color-mix(in srgb,var(--ac1) 8%,transparent);
+  transform:skewX(-7deg);
+}
+.hdr-badge>span:last-child{transform:skewX(7deg);display:inline-block;}
+.start-lights{display:inline-flex;gap:4px;transform:skewX(7deg);}
+.start-lights i{
+  width:7px;height:7px;border-radius:50%;
+  background:#3a0d0d;display:block;
+  box-shadow:inset 0 0 2px rgba(0,0,0,.6);
+  animation:slSeq 4s steps(1,end) infinite;
+}
+.start-lights i:nth-child(1){animation-delay:0s}
+.start-lights i:nth-child(2){animation-delay:.45s}
+.start-lights i:nth-child(3){animation-delay:.9s}
+.start-lights i:nth-child(4){animation-delay:1.35s}
+.start-lights i:nth-child(5){animation-delay:1.8s}
+@keyframes slSeq{
+  0%,52%{background:#ef2b2b;box-shadow:0 0 7px 1px #ef2b2b;}
+  56%,100%{background:#1ed760;box-shadow:0 0 7px 1px #1ed760;} /* lights out → GO */
+}
+
+/* logo: speed skew + stronger neon */
+#mainTitle{transform:skewX(-4deg);}
+[data-mode="dark"] #mainTitle .ch{
+  filter:drop-shadow(0 0 10px color-mix(in srgb,var(--ac2) 70%,transparent))
+         drop-shadow(0 0 2px color-mix(in srgb,var(--gold) 50%,transparent));
+}
+
+/* streaming chevrons under the logo — forward motion */
+.speed-bar{
+  position:relative;height:20px;max-width:540px;margin:6px auto 2px;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent);
+}
+.speed-bar::before{
+  content:'\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB\00BB';
+  position:absolute;top:50%;left:0;white-space:nowrap;
+  font-family:'Orbitron',monospace;font-weight:900;font-size:.82rem;letter-spacing:7px;
+  color:transparent;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--ac1) 90%,transparent),var(--gold),var(--ac2));
+  -webkit-background-clip:text;background-clip:text;
+  opacity:.6;
+  animation:chevRun 2.4s linear infinite;
+  will-change:transform;
+}
+@keyframes chevRun{from{transform:translate(0,-50%)}to{transform:translate(-118px,-50%)}}
+
+/* ════════════ PREMIUM GLASS POLISH ════════════ */
+.match-block,.sidebar,.cat-lb{
+  transition:background .35s,border-color .25s,transform .25s,box-shadow .25s;
+}
+.match-block:hover,.cat-lb:hover{
+  transform:translateY(-2px);
+  border-color:color-mix(in srgb,var(--ac2) 55%,var(--card-border));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--ac2) 18%,transparent),
+             0 14px 38px rgba(0,0,12,.42),
+             0 0 26px color-mix(in srgb,var(--ac1) 16%,transparent);
+}
+
+/* button sheen sweep on hover */
+.btn{position:relative;overflow:hidden;}
+.btn>*{position:relative;z-index:1;}
+.btn::after{
+  content:'';position:absolute;top:0;left:-130%;width:55%;height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
+  transform:skewX(-22deg);transition:left .55s ease;z-index:0;pointer-events:none;
+}
+.btn:hover::after{left:150%;}
+
+/* ════════════ ACCESSIBILITY: respect reduced motion ════════════ */
+@media(prefers-reduced-motion:reduce){
+  .bg-speed,.bg-speed2,.bg-grid,.top-accent::after,.speed-bar::before,
+  .start-lights i,.orb,.btn::after{animation:none!important;}
+  .bg-speed,.bg-speed2{opacity:.12;}
+}
 </style>
 </head>
 <body>
@@ -1040,16 +1215,25 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
   <div class="bg-base"></div>
   <div class="bg-checker"></div>
   <div class="bg-lines"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-speed"></div>
+  <div class="bg-speed2"></div>
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
   <div class="orb orb3"></div>
   <div class="orb orb4"></div>
+  <div class="bg-vignette"></div>
 </div>
 <div class="top-accent"></div>
 
 <div class="app">
   <header>
+    <div class="hdr-badge">
+      <span class="start-lights"><i></i><i></i><i></i><i></i><i></i></span>
+      <span>Race&nbsp;Timing&nbsp;System</span>
+    </div>
     <h1 id="mainTitle"></h1>
+    <div class="speed-bar"></div>
     <p class="sub-line" data-i18n="sub1"></p>
     <p class="sub-line" data-i18n="sub2"></p>
     <p class="sub-line sub-tiktok">TikTok: FLY04 (@thefly2004)</p>
