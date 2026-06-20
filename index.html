@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" data-color="blue" data-mode="dark">
+<html lang="th" data-color="platinum" data-mode="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -14,213 +14,205 @@
    accent vars: --ac1 (primary) --ac2 (bright) --ac3 (dim)
    ═══════════════════════════════════════════════════════ */
 
-/* ── BLUE (default) ── */
+/* ═══ 7 STAGE THEMES — derived from QQ Speed Asian Cup stage photos ═══
+   platinum=icy chrome trophy · voltage=cyan+magenta · aqua=turquoise
+   toxic=green laser · gold=golden beams · inferno=magenta+orange · scarlet=red */
+
+/* ── PLATINUM (icy chrome / cyan + magenta) ── */
 :root,
-[data-color="blue"][data-mode="dark"]{
-  --bg:#04081a; --s1:#071230; --s2:#0d1e4a; --s3:#1a3a7a;
-  --ac1:#1d6fe8; --ac2:#3b9dff; --ac3:#6cb8ff;
+[data-color="platinum"][data-mode="dark"]{
+  --bg:#05090f; --s1:#0a1422; --s2:#102035; --s3:#1d3a54;
+  --ac1:#34b4d6; --ac2:#6fe0f2; --ac3:#aceefa;
   --gold:#f5c518; --gold2:#ffdd57;
-  --text:#e8f0ff; --text2:#b8d0f0; --dim:#5a78aa;
-  --card-bg:rgba(13,30,74,.88); --card-border:rgba(29,111,232,.4);
-  --card-hover:rgba(29,111,232,.06);
-  --hdr-bg:linear-gradient(90deg,rgba(29,111,232,.22),rgba(13,30,74,.4));
-  --input-bg:rgba(7,18,48,.45); --input-border:rgba(29,111,232,.3);
-  --tbl-head:rgba(7,18,48,.97); --tbl-row-border:rgba(29,111,232,.12);
-  --orb1:rgba(29,111,232,.26); --orb2:rgba(5,20,80,.55);
+  --text:#eaf7fc; --text2:#bcdde9; --dim:#5e8496;
+  --card-bg:rgba(16,32,53,.86); --card-border:rgba(52,180,214,.38);
+  --card-hover:rgba(52,180,214,.06);
+  --hdr-bg:linear-gradient(90deg,rgba(52,180,214,.20),rgba(10,20,34,.4));
+  --input-bg:rgba(10,20,34,.45); --input-border:rgba(52,180,214,.3);
+  --tbl-head:rgba(5,9,15,.97); --tbl-row-border:rgba(52,180,214,.12);
+  --orb1:rgba(52,180,214,.22); --orb2:rgba(150,46,150,.30);
+  --beam:rgba(150,225,245,.45); --beam2:rgba(210,90,200,.30); --spotop:.5;
 }
-[data-color="blue"][data-mode="light"]{
-  --bg:#dde8f8; --s1:#c8daf5; --s2:#b8ccee; --s3:#7aa3d4;
-  --ac1:#1558c0; --ac2:#1a72e8; --ac3:#2a86f0;
+[data-color="platinum"][data-mode="light"]{
+  --bg:#e4eef4; --s1:#d2e2ec; --s2:#bdd4e2; --s3:#7fa8bc;
+  --ac1:#0e7a9a; --ac2:#0e9ec4; --ac3:#19b6d8;
   --gold:#c47f00; --gold2:#e09a00;
-  --text:#0a1a3a; --text2:#1a3060; --dim:#4a6898;
-  --card-bg:rgba(255,255,255,.88); --card-border:rgba(21,88,192,.3);
-  --card-hover:rgba(21,88,192,.05);
-  --hdr-bg:linear-gradient(90deg,rgba(21,88,192,.12),rgba(200,218,245,.5));
-  --input-bg:rgba(230,240,255,.7); --input-border:rgba(21,88,192,.25);
-  --tbl-head:rgba(220,232,248,.97); --tbl-row-border:rgba(21,88,192,.1);
-  --orb1:rgba(21,88,192,.1); --orb2:rgba(100,160,240,.08);
+  --text:#062028; --text2:#0d3e4c; --dim:#3d7888;
+  --card-bg:rgba(255,255,255,.9); --card-border:rgba(14,122,154,.3);
+  --card-hover:rgba(14,122,154,.05);
+  --hdr-bg:linear-gradient(90deg,rgba(14,122,154,.12),rgba(210,226,236,.5));
+  --input-bg:rgba(232,244,250,.7); --input-border:rgba(14,122,154,.25);
+  --tbl-head:rgba(224,238,244,.97); --tbl-row-border:rgba(14,122,154,.1);
+  --orb1:rgba(14,122,154,.1); --orb2:rgba(180,90,180,.08);
+  --beam:rgba(14,122,154,.18); --beam2:rgba(180,90,180,.12); --spotop:.2;
 }
 
-/* ── RED ── */
-[data-color="red"][data-mode="dark"]{
-  --bg:#1a0404; --s1:#300707; --s2:#4a0d0d; --s3:#7a1a1a;
-  --ac1:#e81d1d; --ac2:#ff4d4d; --ac3:#ff8080;
+/* ── VOLTAGE (electric cyan + magenta, symmetric) ── */
+[data-color="voltage"][data-mode="dark"]{
+  --bg:#070613; --s1:#0d0b26; --s2:#15123e; --s3:#272066;
+  --ac1:#22b8ff; --ac2:#5fd0ff; --ac3:#a6e6ff;
   --gold:#f5c518; --gold2:#ffdd57;
-  --text:#ffe8e8; --text2:#f0b8b8; --dim:#aa5a5a;
-  --card-bg:rgba(74,13,13,.88); --card-border:rgba(232,29,29,.4);
-  --card-hover:rgba(232,29,29,.06);
-  --hdr-bg:linear-gradient(90deg,rgba(232,29,29,.22),rgba(48,7,7,.4));
-  --input-bg:rgba(48,7,7,.45); --input-border:rgba(232,29,29,.3);
-  --tbl-head:rgba(26,4,4,.97); --tbl-row-border:rgba(232,29,29,.12);
-  --orb1:rgba(232,29,29,.28); --orb2:rgba(80,5,5,.55);
+  --text:#eaf4ff; --text2:#b8cff2; --dim:#5f74a2;
+  --card-bg:rgba(21,18,62,.86); --card-border:rgba(34,184,255,.4);
+  --card-hover:rgba(34,184,255,.06);
+  --hdr-bg:linear-gradient(90deg,rgba(34,184,255,.2),rgba(13,11,38,.45));
+  --input-bg:rgba(13,11,38,.5); --input-border:rgba(34,184,255,.3);
+  --tbl-head:rgba(7,6,19,.97); --tbl-row-border:rgba(34,184,255,.12);
+  --orb1:rgba(34,184,255,.24); --orb2:rgba(225,35,190,.3);
+  --beam:rgba(90,205,255,.45); --beam2:rgba(255,75,215,.42); --spotop:0;
 }
-[data-color="red"][data-mode="light"]{
-  --bg:#f8dddd; --s1:#f5c8c8; --s2:#eeb8b8; --s3:#d47a7a;
-  --ac1:#c01515; --ac2:#e81a1a; --ac3:#f02a2a;
+[data-color="voltage"][data-mode="light"]{
+  --bg:#dee9fb; --s1:#cbd9f5; --s2:#b6c9ee; --s3:#7a9bd4;
+  --ac1:#1466c0; --ac2:#1a7ee8; --ac3:#2a90f0;
   --gold:#c47f00; --gold2:#e09a00;
-  --text:#3a0a0a; --text2:#601a1a; --dim:#986060;
-  --card-bg:rgba(255,255,255,.88); --card-border:rgba(192,21,21,.3);
+  --text:#091233; --text2:#152a5e; --dim:#5f74a2;
+  --card-bg:rgba(255,255,255,.9); --card-border:rgba(20,102,192,.3);
+  --card-hover:rgba(20,102,192,.05);
+  --hdr-bg:linear-gradient(90deg,rgba(20,102,192,.12),rgba(203,217,245,.5));
+  --input-bg:rgba(232,240,255,.7); --input-border:rgba(20,102,192,.25);
+  --tbl-head:rgba(222,233,251,.97); --tbl-row-border:rgba(20,102,192,.1);
+  --orb1:rgba(20,102,192,.1); --orb2:rgba(220,60,180,.1);
+  --beam:rgba(26,126,232,.16); --beam2:rgba(220,60,180,.14); --spotop:0;
+}
+
+/* ── AQUA (turquoise / teal) ── */
+[data-color="aqua"][data-mode="dark"]{
+  --bg:#03100f; --s1:#06201e; --s2:#0a3330; --s3:#135e57;
+  --ac1:#14c4b0; --ac2:#3ee0cf; --ac3:#88f0e4;
+  --gold:#f5c518; --gold2:#ffdd57;
+  --text:#e7fffb; --text2:#aef0e7; --dim:#4f9e93;
+  --card-bg:rgba(10,51,48,.86); --card-border:rgba(20,196,176,.4);
+  --card-hover:rgba(20,196,176,.06);
+  --hdr-bg:linear-gradient(90deg,rgba(20,196,176,.2),rgba(6,32,30,.4));
+  --input-bg:rgba(6,32,30,.5); --input-border:rgba(20,196,176,.3);
+  --tbl-head:rgba(3,16,15,.97); --tbl-row-border:rgba(20,196,176,.12);
+  --orb1:rgba(20,196,176,.24); --orb2:rgba(6,70,64,.55);
+  --beam:rgba(80,235,215,.45); --beam2:rgba(60,210,225,0); --spotop:0;
+}
+[data-color="aqua"][data-mode="light"]{
+  --bg:#ddf6f3; --s1:#c8efe9; --s2:#b2e6de; --s3:#79ccc0;
+  --ac1:#0e8a7c; --ac2:#12ab9a; --ac3:#1ac4b1;
+  --gold:#c47f00; --gold2:#e09a00;
+  --text:#052824; --text2:#0c4d45; --dim:#4a9a8e;
+  --card-bg:rgba(255,255,255,.9); --card-border:rgba(14,138,124,.3);
+  --card-hover:rgba(14,138,124,.05);
+  --hdr-bg:linear-gradient(90deg,rgba(14,138,124,.12),rgba(200,239,233,.5));
+  --input-bg:rgba(228,248,244,.7); --input-border:rgba(14,138,124,.25);
+  --tbl-head:rgba(220,246,240,.97); --tbl-row-border:rgba(14,138,124,.1);
+  --orb1:rgba(14,138,124,.1); --orb2:rgba(60,210,190,.1);
+  --beam:rgba(18,171,154,.18); --beam2:rgba(60,210,225,0); --spotop:0;
+}
+
+/* ── TOXIC (neon green laser) ── */
+[data-color="toxic"][data-mode="dark"]{
+  --bg:#03110a; --s1:#061e12; --s2:#0a3019; --s3:#135a30;
+  --ac1:#19c94f; --ac2:#5cff8f; --ac3:#a6ffc2;
+  --gold:#f5c518; --gold2:#ffdd57;
+  --text:#e7ffee; --text2:#aef0c5; --dim:#4f9e6c;
+  --card-bg:rgba(10,48,25,.86); --card-border:rgba(25,201,79,.4);
+  --card-hover:rgba(25,201,79,.06);
+  --hdr-bg:linear-gradient(90deg,rgba(25,201,79,.22),rgba(6,30,18,.4));
+  --input-bg:rgba(6,30,18,.5); --input-border:rgba(25,201,79,.3);
+  --tbl-head:rgba(3,17,10,.97); --tbl-row-border:rgba(25,201,79,.12);
+  --orb1:rgba(25,201,79,.24); --orb2:rgba(6,70,28,.55);
+  --beam:rgba(110,255,150,.5); --beam2:rgba(60,230,110,0); --spotop:0;
+}
+[data-color="toxic"][data-mode="light"]{
+  --bg:#ddf8e6; --s1:#c8f0d6; --s2:#b6eec6; --s3:#7ad49c;
+  --ac1:#13863a; --ac2:#19a84e; --ac3:#27bf63;
+  --gold:#c47f00; --gold2:#e09a00;
+  --text:#062813; --text2:#0d502a; --dim:#4a9866;
+  --card-bg:rgba(255,255,255,.9); --card-border:rgba(19,134,58,.3);
+  --card-hover:rgba(19,134,58,.05);
+  --hdr-bg:linear-gradient(90deg,rgba(19,134,58,.12),rgba(200,240,214,.5));
+  --input-bg:rgba(230,255,238,.7); --input-border:rgba(19,134,58,.25);
+  --tbl-head:rgba(220,248,230,.97); --tbl-row-border:rgba(19,134,58,.1);
+  --orb1:rgba(19,134,58,.1); --orb2:rgba(90,220,130,.1);
+  --beam:rgba(25,168,78,.18); --beam2:rgba(60,230,110,0); --spotop:0;
+}
+
+/* ── GOLD (golden beam) ── */
+[data-color="gold"][data-mode="dark"]{
+  --bg:#100b03; --s1:#1e1605; --s2:#322405; --s3:#5e4609;
+  --ac1:#e0a91a; --ac2:#ffc83d; --ac3:#ffe08a;
+  --gold:#ffd24a; --gold2:#ffe27a;
+  --text:#fff6dc; --text2:#f0d99b; --dim:#a98a4c;
+  --card-bg:rgba(50,36,5,.86); --card-border:rgba(224,169,26,.4);
+  --card-hover:rgba(224,169,26,.06);
+  --hdr-bg:linear-gradient(90deg,rgba(224,169,26,.22),rgba(30,22,5,.4));
+  --input-bg:rgba(30,22,5,.5); --input-border:rgba(224,169,26,.3);
+  --tbl-head:rgba(16,11,3,.97); --tbl-row-border:rgba(224,169,26,.12);
+  --orb1:rgba(224,169,26,.26); --orb2:rgba(120,72,0,.5);
+  --beam:rgba(255,205,90,.5); --beam2:rgba(255,170,40,0); --spotop:0;
+}
+[data-color="gold"][data-mode="light"]{
+  --bg:#fdf6dc; --s1:#faedbf; --s2:#f5e08f; --s3:#d4bc50;
+  --ac1:#9a7400; --ac2:#bd8c00; --ac3:#dba500;
+  --gold:#9a7400; --gold2:#bd8c00;
+  --text:#2a1f03; --text2:#50400a; --dim:#988440;
+  --card-bg:rgba(255,255,255,.9); --card-border:rgba(154,116,0,.3);
+  --card-hover:rgba(154,116,0,.05);
+  --hdr-bg:linear-gradient(90deg,rgba(154,116,0,.12),rgba(250,237,191,.5));
+  --input-bg:rgba(255,248,220,.7); --input-border:rgba(154,116,0,.25);
+  --tbl-head:rgba(250,240,200,.97); --tbl-row-border:rgba(154,116,0,.1);
+  --orb1:rgba(154,116,0,.1); --orb2:rgba(220,170,40,.1);
+  --beam:rgba(189,140,0,.18); --beam2:rgba(255,170,40,0); --spotop:0;
+}
+
+/* ── INFERNO (magenta + orange crossfire) ── */
+[data-color="inferno"][data-mode="dark"]{
+  --bg:#120410; --s1:#240722; --s2:#3a0c34; --s3:#681656;
+  --ac1:#e63aa6; --ac2:#ff6ec7; --ac3:#ff9edb;
+  --gold:#f5c518; --gold2:#ffdd57;
+  --text:#ffe9f7; --text2:#f3bbe0; --dim:#a85f8a;
+  --card-bg:rgba(58,12,52,.86); --card-border:rgba(230,58,166,.4);
+  --card-hover:rgba(230,58,166,.06);
+  --hdr-bg:linear-gradient(90deg,rgba(230,58,166,.22),rgba(36,7,34,.4));
+  --input-bg:rgba(36,7,34,.5); --input-border:rgba(230,58,166,.3);
+  --tbl-head:rgba(18,4,16,.97); --tbl-row-border:rgba(230,58,166,.12);
+  --orb1:rgba(230,58,166,.26); --orb2:rgba(205,55,15,.34);
+  --beam:rgba(255,90,200,.45); --beam2:rgba(255,95,40,.42); --spotop:0;
+}
+[data-color="inferno"][data-mode="light"]{
+  --bg:#f8dfee; --s1:#f5c8e0; --s2:#eeb2d2; --s3:#d47aa8;
+  --ac1:#bb1670; --ac2:#d61f86; --ac3:#e83fa0;
+  --gold:#c47f00; --gold2:#e09a00;
+  --text:#3a0a26; --text2:#601846; --dim:#98607e;
+  --card-bg:rgba(255,255,255,.9); --card-border:rgba(187,22,112,.3);
+  --card-hover:rgba(187,22,112,.05);
+  --hdr-bg:linear-gradient(90deg,rgba(187,22,112,.12),rgba(245,200,224,.5));
+  --input-bg:rgba(255,230,244,.7); --input-border:rgba(187,22,112,.25);
+  --tbl-head:rgba(248,221,236,.97); --tbl-row-border:rgba(187,22,112,.1);
+  --orb1:rgba(187,22,112,.1); --orb2:rgba(230,90,40,.1);
+  --beam:rgba(214,31,134,.16); --beam2:rgba(255,95,40,.14); --spotop:0;
+}
+
+/* ── SCARLET (crimson beams + white spotlights) ── */
+[data-color="scarlet"][data-mode="dark"]{
+  --bg:#120303; --s1:#220606; --s2:#3a0a0a; --s3:#6a1616;
+  --ac1:#ef2b2b; --ac2:#ff5c5c; --ac3:#ff9494;
+  --gold:#f5c518; --gold2:#ffdd57;
+  --text:#ffe9e9; --text2:#f4b6b6; --dim:#a85858;
+  --card-bg:rgba(58,10,10,.86); --card-border:rgba(239,43,43,.4);
+  --card-hover:rgba(239,43,43,.06);
+  --hdr-bg:linear-gradient(90deg,rgba(239,43,43,.22),rgba(34,6,6,.4));
+  --input-bg:rgba(34,6,6,.5); --input-border:rgba(239,43,43,.3);
+  --tbl-head:rgba(18,3,3,.97); --tbl-row-border:rgba(239,43,43,.12);
+  --orb1:rgba(239,43,43,.26); --orb2:rgba(90,8,8,.55);
+  --beam:rgba(255,80,80,.45); --beam2:rgba(255,255,255,.5); --spotop:1;
+}
+[data-color="scarlet"][data-mode="light"]{
+  --bg:#f8dede; --s1:#f5c8c8; --s2:#eeb4b4; --s3:#d47a7a;
+  --ac1:#c01515; --ac2:#e01a1a; --ac3:#f02a2a;
+  --gold:#c47f00; --gold2:#e09a00;
+  --text:#3a0808; --text2:#601818; --dim:#985858;
+  --card-bg:rgba(255,255,255,.9); --card-border:rgba(192,21,21,.3);
   --card-hover:rgba(192,21,21,.05);
   --hdr-bg:linear-gradient(90deg,rgba(192,21,21,.12),rgba(245,200,200,.5));
   --input-bg:rgba(255,230,230,.7); --input-border:rgba(192,21,21,.25);
   --tbl-head:rgba(248,220,220,.97); --tbl-row-border:rgba(192,21,21,.1);
   --orb1:rgba(192,21,21,.1); --orb2:rgba(240,100,100,.08);
-}
-
-/* ── GREEN ── */
-[data-color="green"][data-mode="dark"]{
-  --bg:#04130a; --s1:#072010; --s2:#0d3a1e; --s3:#1a6a38;
-  --ac1:#1db858; --ac2:#2ecc71; --ac3:#6bde9e;
-  --gold:#f5c518; --gold2:#ffdd57;
-  --text:#e8fff0; --text2:#b8f0cc; --dim:#5aaa78;
-  --card-bg:rgba(13,58,30,.88); --card-border:rgba(29,184,88,.4);
-  --card-hover:rgba(29,184,88,.06);
-  --hdr-bg:linear-gradient(90deg,rgba(29,184,88,.22),rgba(7,32,16,.4));
-  --input-bg:rgba(7,32,16,.45); --input-border:rgba(29,184,88,.3);
-  --tbl-head:rgba(4,19,10,.97); --tbl-row-border:rgba(29,184,88,.12);
-  --orb1:rgba(29,184,88,.24); --orb2:rgba(5,60,20,.55);
-}
-[data-color="green"][data-mode="light"]{
-  --bg:#ddf8e8; --s1:#c8f0d8; --s2:#b8eeca; --s3:#7ad4a0;
-  --ac1:#158040; --ac2:#1aa855; --ac3:#2abf65;
-  --gold:#c47f00; --gold2:#e09a00;
-  --text:#0a2a18; --text2:#1a5030; --dim:#4a9860;
-  --card-bg:rgba(255,255,255,.88); --card-border:rgba(21,128,64,.3);
-  --card-hover:rgba(21,128,64,.05);
-  --hdr-bg:linear-gradient(90deg,rgba(21,128,64,.12),rgba(200,240,216,.5));
-  --input-bg:rgba(230,255,240,.7); --input-border:rgba(21,128,64,.25);
-  --tbl-head:rgba(220,248,232,.97); --tbl-row-border:rgba(21,128,64,.1);
-  --orb1:rgba(21,128,64,.1); --orb2:rgba(100,220,140,.08);
-}
-
-/* ── CYAN ── */
-[data-color="cyan"][data-mode="dark"]{
-  --bg:#020e10; --s1:#041820; --s2:#062a35; --s3:#0d5060;
-  --ac1:#0891b2; --ac2:#22d3ee; --ac3:#67e8f9;
-  --gold:#f5c518; --gold2:#ffdd57;
-  --text:#e0fafe; --text2:#a8eef6; --dim:#4a9aaa;
-  --card-bg:rgba(6,42,53,.88); --card-border:rgba(8,145,178,.4);
-  --card-hover:rgba(8,145,178,.06);
-  --hdr-bg:linear-gradient(90deg,rgba(8,145,178,.22),rgba(4,24,32,.4));
-  --input-bg:rgba(4,24,32,.45); --input-border:rgba(8,145,178,.3);
-  --tbl-head:rgba(2,14,16,.97); --tbl-row-border:rgba(8,145,178,.12);
-  --orb1:rgba(8,145,178,.24); --orb2:rgba(2,50,65,.55);
-}
-[data-color="cyan"][data-mode="light"]{
-  --bg:#ddf8fc; --s1:#c8f0f8; --s2:#b0e8f4; --s3:#6acce0;
-  --ac1:#0e7a9a; --ac2:#0e9ec4; --ac3:#12b8e0;
-  --gold:#c47f00; --gold2:#e09a00;
-  --text:#02282e; --text2:#0a4858; --dim:#3a8898;
-  --card-bg:rgba(255,255,255,.88); --card-border:rgba(14,122,154,.3);
-  --card-hover:rgba(14,122,154,.05);
-  --hdr-bg:linear-gradient(90deg,rgba(14,122,154,.12),rgba(200,240,248,.5));
-  --input-bg:rgba(220,248,255,.7); --input-border:rgba(14,122,154,.25);
-  --tbl-head:rgba(210,245,252,.97); --tbl-row-border:rgba(14,122,154,.1);
-  --orb1:rgba(14,122,154,.1); --orb2:rgba(80,210,235,.08);
-}
-
-/* ── YELLOW ── */
-[data-color="yellow"][data-mode="dark"]{
-  --bg:#14100a; --s1:#201800; --s2:#3a2c00; --s3:#6a5000;
-  --ac1:#d4a017; --ac2:#fbbf24; --ac3:#fcd34d;
-  --gold:#fbbf24; --gold2:#fde68a;
-  --text:#fff8e0; --text2:#f0d878; --dim:#a8820a;
-  --card-bg:rgba(58,44,0,.88); --card-border:rgba(212,160,23,.4);
-  --card-hover:rgba(212,160,23,.06);
-  --hdr-bg:linear-gradient(90deg,rgba(212,160,23,.22),rgba(32,24,0,.4));
-  --input-bg:rgba(32,24,0,.45); --input-border:rgba(212,160,23,.3);
-  --tbl-head:rgba(20,16,10,.97); --tbl-row-border:rgba(212,160,23,.12);
-  --orb1:rgba(212,160,23,.26); --orb2:rgba(80,55,0,.55);
-}
-[data-color="yellow"][data-mode="light"]{
-  --bg:#fdf8dd; --s1:#faf0c0; --s2:#f5e490; --s3:#d4bc50;
-  --ac1:#a07800; --ac2:#c49000; --ac3:#e0a800;
-  --gold:#8a6000; --gold2:#b07800;
-  --text:#2a1e00; --text2:#4a3800; --dim:#786000;
-  --card-bg:rgba(255,255,255,.88); --card-border:rgba(160,120,0,.3);
-  --card-hover:rgba(160,120,0,.05);
-  --hdr-bg:linear-gradient(90deg,rgba(160,120,0,.12),rgba(250,240,192,.5));
-  --input-bg:rgba(255,250,210,.7); --input-border:rgba(160,120,0,.25);
-  --tbl-head:rgba(253,248,220,.97); --tbl-row-border:rgba(160,120,0,.1);
-  --orb1:rgba(160,120,0,.1); --orb2:rgba(230,190,50,.08);
-}
-
-/* ── PURPLE ── */
-[data-color="purple"][data-mode="dark"]{
-  --bg:#0e0416; --s1:#180830; --s2:#2a1050; --s3:#4a2080;
-  --ac1:#7c3aed; --ac2:#a855f7; --ac3:#c084fc;
-  --gold:#f5c518; --gold2:#ffdd57;
-  --text:#f0e8ff; --text2:#d0b8f0; --dim:#8a5aaa;
-  --card-bg:rgba(42,16,80,.88); --card-border:rgba(124,58,237,.4);
-  --card-hover:rgba(124,58,237,.06);
-  --hdr-bg:linear-gradient(90deg,rgba(124,58,237,.22),rgba(24,8,48,.4));
-  --input-bg:rgba(24,8,48,.45); --input-border:rgba(124,58,237,.3);
-  --tbl-head:rgba(14,4,22,.97); --tbl-row-border:rgba(124,58,237,.12);
-  --orb1:rgba(124,58,237,.26); --orb2:rgba(40,5,80,.55);
-}
-[data-color="purple"][data-mode="light"]{
-  --bg:#eeddf8; --s1:#e0c8f5; --s2:#d0b0ee; --s3:#a87ad4;
-  --ac1:#6820c0; --ac2:#8028e8; --ac3:#9a3af0;
-  --gold:#c47f00; --gold2:#e09a00;
-  --text:#1e0a3a; --text2:#3a1860; --dim:#786898;
-  --card-bg:rgba(255,255,255,.88); --card-border:rgba(104,32,192,.3);
-  --card-hover:rgba(104,32,192,.05);
-  --hdr-bg:linear-gradient(90deg,rgba(104,32,192,.12),rgba(224,200,245,.5));
-  --input-bg:rgba(240,230,255,.7); --input-border:rgba(104,32,192,.25);
-  --tbl-head:rgba(238,220,248,.97); --tbl-row-border:rgba(104,32,192,.1);
-  --orb1:rgba(104,32,192,.1); --orb2:rgba(180,100,240,.08);
-}
-
-/* ── ORANGE ── */
-[data-color="orange"][data-mode="dark"]{
-  --bg:#150800; --s1:#281200; --s2:#3e1c00; --s3:#703200;
-  --ac1:#e85c1d; --ac2:#fb923c; --ac3:#fdba74;
-  --gold:#f5c518; --gold2:#ffdd57;
-  --text:#fff0e0; --text2:#f0c898; --dim:#aa7a3a;
-  --card-bg:rgba(62,28,0,.88); --card-border:rgba(232,92,29,.4);
-  --card-hover:rgba(232,92,29,.06);
-  --hdr-bg:linear-gradient(90deg,rgba(232,92,29,.22),rgba(40,18,0,.4));
-  --input-bg:rgba(40,18,0,.45); --input-border:rgba(232,92,29,.3);
-  --tbl-head:rgba(21,8,0,.97); --tbl-row-border:rgba(232,92,29,.12);
-  --orb1:rgba(232,92,29,.26); --orb2:rgba(80,30,0,.55);
-}
-[data-color="orange"][data-mode="light"]{
-  --bg:#fdf0dd; --s1:#fae0c0; --s2:#f5ceaa; --s3:#d4946a;
-  --ac1:#b04800; --ac2:#d45800; --ac3:#e86810;
-  --gold:#c47f00; --gold2:#e09a00;
-  --text:#2a1000; --text2:#502000; --dim:#886040;
-  --card-bg:rgba(255,255,255,.88); --card-border:rgba(176,72,0,.3);
-  --card-hover:rgba(176,72,0,.05);
-  --hdr-bg:linear-gradient(90deg,rgba(176,72,0,.12),rgba(250,224,192,.5));
-  --input-bg:rgba(255,242,225,.7); --input-border:rgba(176,72,0,.25);
-  --tbl-head:rgba(253,240,221,.97); --tbl-row-border:rgba(176,72,0,.1);
-  --orb1:rgba(176,72,0,.1); --orb2:rgba(240,150,60,.08);
-}
-
-/* ── PINK ── */
-[data-color="pink"][data-mode="dark"]{
-  --bg:#160410; --s1:#280820; --s2:#400e34; --s3:#701a5c;
-  --ac1:#db2777; --ac2:#f472b6; --ac3:#f9a8d4;
-  --gold:#f5c518; --gold2:#ffdd57;
-  --text:#ffe8f5; --text2:#f0b8d8; --dim:#aa5a8a;
-  --card-bg:rgba(64,14,52,.88); --card-border:rgba(219,39,119,.4);
-  --card-hover:rgba(219,39,119,.06);
-  --hdr-bg:linear-gradient(90deg,rgba(219,39,119,.22),rgba(40,8,32,.4));
-  --input-bg:rgba(40,8,32,.45); --input-border:rgba(219,39,119,.3);
-  --tbl-head:rgba(22,4,16,.97); --tbl-row-border:rgba(219,39,119,.12);
-  --orb1:rgba(219,39,119,.26); --orb2:rgba(80,5,60,.55);
-}
-[data-color="pink"][data-mode="light"]{
-  --bg:#f8ddf0; --s1:#f5c8e8; --s2:#eeb0dc; --s3:#d47ab4;
-  --ac1:#a01568; --ac2:#c01a80; --ac3:#d82a90;
-  --gold:#c47f00; --gold2:#e09a00;
-  --text:#3a0a28; --text2:#601848; --dim:#986080;
-  --card-bg:rgba(255,255,255,.88); --card-border:rgba(160,21,104,.3);
-  --card-hover:rgba(160,21,104,.05);
-  --hdr-bg:linear-gradient(90deg,rgba(160,21,104,.12),rgba(245,200,232,.5));
-  --input-bg:rgba(255,230,248,.7); --input-border:rgba(160,21,104,.25);
-  --tbl-head:rgba(248,221,240,.97); --tbl-row-border:rgba(160,21,104,.1);
-  --orb1:rgba(160,21,104,.1); --orb2:rgba(240,100,200,.08);
+  --beam:rgba(224,26,26,.16); --beam2:rgba(120,120,130,.18); --spotop:.3;
 }
 
 /* Apply ac vars as blue2/blue3 etc for compatibility */
@@ -287,6 +279,79 @@ html,body{
   100%{transform:translate(0,0) scale(1);}
 }
 .top-accent{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--blue),var(--gold),var(--blue),transparent);z-index:500;animation:scanAnim 3s ease-in-out infinite;}
+
+/* ═══ STAGE LIGHTING — per-theme arena beams, truss, LED, spotlights ═══ */
+.bg-beams,.bg-beams2{
+  position:absolute;left:50%;top:-12%;width:170vw;height:128vh;
+  transform:translateX(-50%);transform-origin:50% 0;
+  pointer-events:none;mix-blend-mode:screen;will-change:transform;
+  -webkit-mask-image:radial-gradient(120% 96% at 50% 0%,#000 0%,#000 28%,transparent 74%);
+          mask-image:radial-gradient(120% 96% at 50% 0%,#000 0%,#000 28%,transparent 74%);
+}
+.bg-beams{
+  background:conic-gradient(from 0deg at 50% 0%,
+    transparent 108deg,var(--beam) 112deg,transparent 116deg,
+    transparent 128deg,var(--beam) 133deg,transparent 137deg,
+    transparent 150deg,var(--beam) 156deg,transparent 160deg,
+    transparent 174deg,var(--beam) 180deg,transparent 186deg,
+    transparent 200deg,var(--beam) 206deg,transparent 210deg,
+    transparent 223deg,var(--beam) 228deg,transparent 232deg,
+    transparent 244deg,var(--beam) 248deg,transparent 252deg,
+    transparent 360deg);
+  background-repeat:no-repeat;opacity:.7;
+  animation:beamSway 9s ease-in-out infinite alternate;
+}
+.bg-beams2{
+  background:conic-gradient(from 0deg at 50% 0%,
+    transparent 118deg,var(--beam2) 122deg,transparent 126deg,
+    transparent 140deg,var(--beam2) 145deg,transparent 149deg,
+    transparent 166deg,var(--beam2) 171deg,transparent 175deg,
+    transparent 188deg,var(--beam2) 193deg,transparent 197deg,
+    transparent 213deg,var(--beam2) 218deg,transparent 222deg,
+    transparent 236deg,var(--beam2) 241deg,transparent 245deg,
+    transparent 360deg);
+  background-repeat:no-repeat;opacity:.5;
+  animation:beamSway2 12s ease-in-out infinite alternate;
+}
+@keyframes beamSway{0%{transform:translateX(-50%) rotate(-3deg)}100%{transform:translateX(-50%) rotate(3deg)}}
+@keyframes beamSway2{0%{transform:translateX(-50%) rotate(3.5deg)}100%{transform:translateX(-50%) rotate(-3.5deg)}}
+.bg-truss{position:absolute;top:5vh;left:0;right:0;height:32vh;display:flex;justify-content:center;align-items:flex-start;gap:5vw;pointer-events:none;}
+.bg-truss i{
+  width:14vw;height:14vw;max-width:210px;max-height:210px;flex:none;
+  border:2px solid var(--ac2);border-radius:6px;transform:rotate(45deg);
+  box-shadow:0 0 20px color-mix(in srgb,var(--ac2) 55%,transparent),
+             inset 0 0 22px color-mix(in srgb,var(--ac2) 22%,transparent);
+  animation:trussPulse 4.2s ease-in-out infinite;
+}
+.bg-truss i:nth-child(1){margin-top:3vh;animation-delay:0s;}
+.bg-truss i:nth-child(2){width:17vw;height:17vw;max-width:260px;max-height:260px;animation-delay:.7s;}
+.bg-truss i:nth-child(3){margin-top:3vh;animation-delay:1.4s;}
+@keyframes trussPulse{0%,100%{opacity:.28}50%{opacity:.72}}
+.bg-led{position:absolute;top:9vh;bottom:16vh;width:4.5vw;max-width:64px;pointer-events:none;border-radius:5px;filter:blur(3px);
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--ac2) 50%,transparent) 30%,color-mix(in srgb,var(--beam2) 55%,transparent) 70%,transparent);
+  animation:ledPulse 3.6s ease-in-out infinite;}
+.bg-led-l{left:.5vw;}
+.bg-led-r{right:.5vw;animation-delay:1.2s;}
+@keyframes ledPulse{0%,100%{opacity:.22}50%{opacity:.55}}
+.bg-spots{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:var(--spotop,0);
+  background:
+    radial-gradient(circle 60px at 20% 80%,rgba(255,255,255,.18),transparent 62%),
+    radial-gradient(circle 84px at 50% 90%,rgba(255,255,255,.15),transparent 62%),
+    radial-gradient(circle 52px at 78% 82%,rgba(255,255,255,.15),transparent 62%),
+    radial-gradient(circle 40px at 34% 94%,rgba(255,255,255,.12),transparent 62%),
+    radial-gradient(circle 46px at 66% 95%,rgba(255,255,255,.12),transparent 62%);
+  animation:spotsDrift 7s ease-in-out infinite alternate;}
+@keyframes spotsDrift{0%{transform:translateX(-14px)}100%{transform:translateX(14px)}}
+[data-color="gold"] .bg-beams{opacity:.9;}
+[data-color="toxic"] .bg-beams{filter:saturate(1.35) brightness(1.12);}
+[data-color="toxic"] .bg-grid{opacity:.22;}
+[data-color="voltage"] .bg-beams2{opacity:.72;}
+[data-color="inferno"] .bg-beams2{opacity:.66;}
+[data-color="aqua"] .bg-beams{animation-duration:14s;}
+[data-color="platinum"] .bg-beams{opacity:.58;}
+[data-mode="light"] .bg-beams,[data-mode="light"] .bg-beams2{opacity:.16;}
+[data-mode="light"] .bg-truss{opacity:.4;}
+[data-mode="light"] .bg-led{opacity:.4;}
 
 /* ── LAYOUT ── */
 .app{position:relative;z-index:1;max-width:1600px;margin:0 auto;padding:16px 16px 80px;}
@@ -1213,6 +1278,12 @@ header{padding-top:34px;}
 <body>
 <div class="bg-fx">
   <div class="bg-base"></div>
+  <div class="bg-beams"></div>
+  <div class="bg-beams2"></div>
+  <div class="bg-truss"><i></i><i></i><i></i></div>
+  <div class="bg-led bg-led-l"></div>
+  <div class="bg-led bg-led-r"></div>
+  <div class="bg-spots"></div>
   <div class="bg-checker"></div>
   <div class="bg-lines"></div>
   <div class="bg-grid"></div>
@@ -1276,14 +1347,13 @@ header{padding-top:34px;}
           <div class="tp-divider"></div>
           <div class="tp-section-lbl">COLOR</div>
           <div class="tp-colors">
-            <button class="tp-color" data-color="blue"   style="background:linear-gradient(135deg,#1d6fe8,#3b9dff)" title="Blue"   onclick="setColor('blue')"></button>
-            <button class="tp-color" data-color="red"    style="background:linear-gradient(135deg,#e81d1d,#ff4d4d)" title="Red"    onclick="setColor('red')"></button>
-            <button class="tp-color" data-color="green"  style="background:linear-gradient(135deg,#1db858,#2ecc71)" title="Green"  onclick="setColor('green')"></button>
-            <button class="tp-color" data-color="cyan"   style="background:linear-gradient(135deg,#0891b2,#22d3ee)" title="Cyan"   onclick="setColor('cyan')"></button>
-            <button class="tp-color" data-color="yellow" style="background:linear-gradient(135deg,#d4a017,#fbbf24)" title="Yellow" onclick="setColor('yellow')"></button>
-            <button class="tp-color" data-color="purple" style="background:linear-gradient(135deg,#7c3aed,#a855f7)" title="Purple" onclick="setColor('purple')"></button>
-            <button class="tp-color" data-color="orange" style="background:linear-gradient(135deg,#e85c1d,#fb923c)" title="Orange" onclick="setColor('orange')"></button>
-            <button class="tp-color" data-color="pink"   style="background:linear-gradient(135deg,#db2777,#f472b6)" title="Pink"   onclick="setColor('pink')"></button>
+            <button class="tp-color" data-color="platinum" style="background:linear-gradient(135deg,#34b4d6,#aceefa)" title="Platinum · Chrome" onclick="setColor('platinum')"></button>
+            <button class="tp-color" data-color="voltage"  style="background:linear-gradient(135deg,#22b8ff,#ff3bd0)" title="Voltage · Cyan+Magenta" onclick="setColor('voltage')"></button>
+            <button class="tp-color" data-color="aqua"     style="background:linear-gradient(135deg,#14c4b0,#88f0e4)" title="Aqua · Turquoise" onclick="setColor('aqua')"></button>
+            <button class="tp-color" data-color="toxic"    style="background:linear-gradient(135deg,#19c94f,#a6ffc2)" title="Toxic · Green Laser" onclick="setColor('toxic')"></button>
+            <button class="tp-color" data-color="gold"     style="background:linear-gradient(135deg,#e0a91a,#ffe08a)" title="Gold · Golden Beam" onclick="setColor('gold')"></button>
+            <button class="tp-color" data-color="inferno"  style="background:linear-gradient(135deg,#e63aa6,#ff5a28)" title="Inferno · Magenta+Orange" onclick="setColor('inferno')"></button>
+            <button class="tp-color" data-color="scarlet"  style="background:linear-gradient(135deg,#ef2b2b,#ff9494)" title="Scarlet · Crimson" onclick="setColor('scarlet')"></button>
           </div>
         </div>
       </div>
@@ -3841,16 +3911,17 @@ function buildTitle(){
 
 // ── THEME SYSTEM ──
 const COLOR_SWATCHES={
-  blue:'linear-gradient(135deg,#1d6fe8,#3b9dff)',
-  red:'linear-gradient(135deg,#e81d1d,#ff4d4d)',
-  green:'linear-gradient(135deg,#1db858,#2ecc71)',
-  cyan:'linear-gradient(135deg,#0891b2,#22d3ee)',
-  yellow:'linear-gradient(135deg,#d4a017,#fbbf24)',
-  purple:'linear-gradient(135deg,#7c3aed,#a855f7)',
-  orange:'linear-gradient(135deg,#e85c1d,#fb923c)',
-  pink:'linear-gradient(135deg,#db2777,#f472b6)',
+  platinum:'linear-gradient(135deg,#34b4d6,#aceefa)',
+  voltage:'linear-gradient(135deg,#22b8ff,#ff3bd0)',
+  aqua:'linear-gradient(135deg,#14c4b0,#88f0e4)',
+  toxic:'linear-gradient(135deg,#19c94f,#a6ffc2)',
+  gold:'linear-gradient(135deg,#e0a91a,#ffe08a)',
+  inferno:'linear-gradient(135deg,#e63aa6,#ff5a28)',
+  scarlet:'linear-gradient(135deg,#ef2b2b,#ff9494)',
 };
-let currentColor=localStorage.getItem('rtColor')||'blue';
+const VALID_COLORS=['platinum','voltage','aqua','toxic','gold','inferno','scarlet'];
+let currentColor=localStorage.getItem('rtColor')||'platinum';
+if(!VALID_COLORS.includes(currentColor))currentColor='platinum';
 let currentMode=localStorage.getItem('rtMode')||'dark';
 
 function applyTheme(color,mode){
