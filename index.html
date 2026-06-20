@@ -1401,6 +1401,17 @@ th{border-bottom:3px solid color-mix(in srgb,var(--ac2) 50%,var(--card-border));
 .stage-pal{display:flex;gap:5px;}
 .stage-pal i{width:22px;height:14px;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);}
 @media(max-width:520px){.stage-grid{grid-template-columns:1fr 1fr;gap:10px;}.stage-name{font-size:.78rem;}.stage-desc{font-size:.66rem;}.stage-ph-hint{font-size:.58rem;}}
+/* stage image + upload slot */
+.stage-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.stage-ph.has-img::after{border-color:transparent;}
+.stage-ph-empty{cursor:pointer;}
+.stage-card.dragover{border-color:var(--ac2);}
+.stage-card.dragover .stage-ph{outline:2px solid var(--ac2);outline-offset:-4px;}
+.stage-up-btn{position:absolute;bottom:8px;right:8px;z-index:4;width:26px;height:26px;border-radius:6px;border:1px solid rgba(255,255,255,.45);background:rgba(0,0,0,.5);color:#fff;cursor:pointer;font-size:.82rem;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:background .15s,transform .15s;opacity:0;line-height:1;padding:0;}
+.stage-card:hover .stage-up-btn{opacity:1;}
+.stage-up-btn:hover{background:var(--ac1);transform:scale(1.08);}
+.stage-rm-btn{right:40px;}
+.stage-rm-btn:hover{background:#e02b2b;}
 </style>
 </head>
 <body>
@@ -4131,22 +4142,81 @@ function buildStageGallery(){
     const grid=document.createElement('div');grid.className='stage-grid';
     uniq.forEach(name=>{
       const th=stageTheme(name);
-      const card=document.createElement('div');card.className='stage-card';
+      const card=document.createElement('div');card.className='stage-card';card.dataset.stage=name;
       const g=`linear-gradient(135deg,${th.c[3]},${th.c[2]})`;
-      card.innerHTML=`<div class="stage-ph" style="background:${g}"><div class="stage-ph-grad" style="background:linear-gradient(160deg,${th.c[1]}33,transparent 70%)"></div><span class="stage-tag" style="background:${th.c[2]}">${th.tag}</span><span class="stage-ph-ico">🏞️</span><span class="stage-ph-hint">Add stage image<br><b>1920 × 1080</b></span></div><div class="stage-info"><div class="stage-row"><span class="stage-name">${name}</span><span class="stage-star" style="color:${col};border-color:${col}66">${star}★</span></div><div class="stage-desc">${th.d}</div><div class="stage-pal">${th.c.map(c=>`<i style="background:${c}"></i>`).join('')}</div></div>`;
+      const src=getStageImg(name);
+      let ph;
+      if(src){
+        ph=`<div class="stage-ph has-img" style="background:${g}"><img class="stage-img" src="${encodeURI(src)}" alt="${name}" loading="lazy"><span class="stage-tag" style="background:${th.c[2]}">${th.tag}</span><button class="stage-up-btn" data-act="replace" title="Replace image">⤓</button>`+(hasUserStageImg(name)?`<button class="stage-up-btn stage-rm-btn" data-act="remove" title="Remove image">✕</button>`:'')+`</div>`;
+      } else {
+        ph=`<div class="stage-ph stage-ph-empty" style="background:${g}" data-act="replace"><div class="stage-ph-grad" style="background:linear-gradient(160deg,${th.c[1]}33,transparent 70%)"></div><span class="stage-tag" style="background:${th.c[2]}">${th.tag}</span><span class="stage-ph-ico">🏞️</span><span class="stage-ph-hint">Click or drop image<br><b>1920 × 1080</b></span></div>`;
+      }
+      card.innerHTML=ph+`<div class="stage-info"><div class="stage-row"><span class="stage-name">${name}</span><span class="stage-star" style="color:${col};border-color:${col}66">${star}★</span></div><div class="stage-desc">${th.d}</div><div class="stage-pal">${th.c.map(c=>`<i style="background:${c}"></i>`).join('')}</div></div>`;
       grid.appendChild(card);
     });
     sec.appendChild(grid);wrap.appendChild(sec);
   });
 }
-function openStagePage(){const ov=document.getElementById('stagePageOverlay');if(!ov)return;buildStageGallery();ov.style.display='flex';document.body.style.overflow='hidden';}
+const DEFAULT_STAGE_IMG={
+  'Atlantis':'stages/Atlantis.png',
+  'Atlantis(Reversed)':'stages/Atlantis(Reversed).png',
+  'Crimson Leaves Town':'stages/Crimson Leaves Town.png',
+  'Epic Legend':'stages/Epic legend.png',
+  'Grand Canyon':'stages/Grand Canyon.png',
+  'Old Street Construction':'stages/Old Street Construction.png',
+  'Scenic Hills':'stages/Scenic Hills.png',
+  'Scotland Yard':'stages/Scotland Yard.png',
+  'Sky City':'stages/Sky City.png',
+  'Space Station':'stages/Space Station.png'
+};
+function stageImgKey(n){return 'rtStageImg:'+n;}
+function hasUserStageImg(n){try{return !!localStorage.getItem(stageImgKey(n));}catch(e){return false;}}
+function getStageImg(n){try{return localStorage.getItem(stageImgKey(n))||DEFAULT_STAGE_IMG[n]||'';}catch(e){return DEFAULT_STAGE_IMG[n]||'';}}
+function clearStageImg(n){try{localStorage.removeItem(stageImgKey(n));}catch(e){}buildStageGallery();}
+function processStageFile(name,file){
+  if(!file||!/^image\//.test(file.type)){alert('Please choose an image file.');return;}
+  const fr=new FileReader();
+  fr.onload=function(){
+    const img=new Image();
+    img.onload=function(){
+      let w=img.width,h=img.height;const maxW=1280;if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      let data;try{data=c.toDataURL('image/jpeg',0.82);}catch(e){data=fr.result;}
+      try{localStorage.setItem(stageImgKey(name),data);}catch(e){alert('Could not save — browser storage is full. Use a smaller image or remove some saved ones.');return;}
+      buildStageGallery();
+    };
+    img.onerror=function(){alert('Could not read that image file.');};
+    img.src=fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+let _stageUploadInit=false;
+function initStageUpload(){
+  if(_stageUploadInit)return;_stageUploadInit=true;
+  const wrap=document.getElementById('stageGalleryBody');if(!wrap)return;
+  let inp=document.getElementById('stageFileInput');
+  if(!inp){inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.id='stageFileInput';inp.style.display='none';document.body.appendChild(inp);}
+  let target=null;
+  inp.addEventListener('change',function(){if(target&&inp.files&&inp.files[0])processStageFile(target,inp.files[0]);inp.value='';});
+  wrap.addEventListener('click',function(e){
+    const card=e.target.closest('.stage-card');if(!card)return;const name=card.dataset.stage;
+    const act=e.target.closest('[data-act]');if(!act)return;
+    if(act.dataset.act==='remove'){e.stopPropagation();clearStageImg(name);return;}
+    target=name;inp.click();
+  });
+  wrap.addEventListener('dragover',function(e){const card=e.target.closest('.stage-card');if(card){e.preventDefault();card.classList.add('dragover');}});
+  wrap.addEventListener('dragleave',function(e){const card=e.target.closest('.stage-card');if(card)card.classList.remove('dragover');});
+  wrap.addEventListener('drop',function(e){const card=e.target.closest('.stage-card');if(!card)return;e.preventDefault();card.classList.remove('dragover');const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)processStageFile(card.dataset.stage,f);});
+}
+function openStagePage(){const ov=document.getElementById('stagePageOverlay');if(!ov)return;buildStageGallery();initStageUpload();ov.style.display='flex';document.body.style.overflow='hidden';}
 function closeStagePage(){const ov=document.getElementById('stagePageOverlay');if(ov)ov.style.display='none';document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStagePage();});
 </script>
 <div id="stagePageOverlay">
   <div class="stage-page-hdr">
     <div class="stage-page-title">🖼 STAGE VISUAL GUIDE
-      <span class="stage-page-sub">Placeholder + recommended image theme for every map — drop real artwork in later</span>
+      <span class="stage-page-sub">Click a card or drag an image onto it to set its artwork · saved in your browser · 10 maps preloaded</span>
     </div>
     <button class="btn btn-clear" onclick="closeStagePage()">✕ Close</button>
   </div>
