@@ -1273,6 +1273,134 @@ header{padding-top:34px;}
   .start-lights i,.orb,.btn::after{animation:none!important;}
   .bg-speed,.bg-speed2{opacity:.12;}
 }
+
+/* ════════════════════════════════════════════════════════════════
+   LAYOUT001 ESPORTS RESTYLE — bold tournament-bracket look
+   (visual only · structure/fields/JS untouched · themed via vars)
+   ════════════════════════════════════════════════════════════════ */
+.match-block{
+  border-radius:12px;
+  border:1px solid color-mix(in srgb,var(--ac1) 42%,var(--card-border));
+  box-shadow:0 12px 36px rgba(0,0,12,.5),
+             0 0 0 1px color-mix(in srgb,var(--ac1) 16%,transparent),
+             inset 0 1px 0 rgba(255,255,255,.06);
+}
+.match-block::before{
+  height:4px;
+  background:linear-gradient(90deg,var(--ac1),var(--ac2),#fff,var(--ac2),var(--ac1));
+  background-size:300% 100%;
+}
+
+/* ── header band: glossy esports bar, match # as bold tag ── */
+.block-hdr{
+  padding:11px 14px;
+  background:linear-gradient(180deg,
+     color-mix(in srgb,var(--ac1) 34%,var(--s2)) 0%,
+     color-mix(in srgb,var(--ac1) 10%,var(--s1)) 100%);
+  border-bottom:2px solid color-mix(in srgb,var(--ac1) 42%,var(--card-border));
+}
+.block-num{
+  font-family:'Orbitron',monospace;font-size:.8rem;font-weight:900;
+  letter-spacing:1.5px;color:var(--text);
+  text-shadow:0 1px 0 rgba(0,0,0,.45),0 0 12px color-mix(in srgb,var(--ac2) 55%,transparent);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.block-num::before{
+  content:'';width:5px;height:16px;border-radius:2px;flex:none;
+  background:linear-gradient(180deg,var(--ac2),var(--ac1));
+  box-shadow:0 0 8px color-mix(in srgb,var(--ac2) 70%,transparent);
+}
+
+/* ── thead: bright player banner (layout001 ROUND-header feel) ── */
+thead{
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--ac1) 44%,var(--s2)) 0%,
+    color-mix(in srgb,var(--ac1) 15%,var(--s1)) 100%)!important;
+}
+th{border-bottom:3px solid color-mix(in srgb,var(--ac2) 50%,var(--card-border));}
+.th-player-lbl{
+  color:color-mix(in srgb,var(--ac3) 80%,#fff);
+  font-size:.58rem;letter-spacing:2.5px;
+}
+.th-pi{
+  font-family:'Orbitron',monospace;font-size:.94rem;font-weight:900;
+  color:var(--text);letter-spacing:.5px;
+  border-bottom:2px solid color-mix(in srgb,var(--ac2) 38%,transparent);
+  text-shadow:0 1px 0 rgba(0,0,0,.4),0 0 12px color-mix(in srgb,var(--ac2) 40%,transparent);
+}
+.th-pi:focus{border-bottom-color:var(--ac2);}
+.th-pi::placeholder{color:color-mix(in srgb,var(--ac3) 45%,transparent);font-weight:700;}
+.th-rnd-inner,.th-stage-inner{
+  color:color-mix(in srgb,var(--ac3) 70%,var(--text2));
+  font-weight:800;
+}
+
+/* ── round number: big bold numeral ── */
+.rnd-lbl{
+  font-family:'Orbitron',monospace;font-size:1.35rem;font-weight:900;
+  color:var(--text);line-height:1;padding:14px 2px;
+  text-shadow:0 0 14px color-mix(in srgb,var(--ac2) 55%,transparent);
+}
+
+/* ── stage / map cell: cleaner chip ── */
+.si{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ac1) 7%,var(--input-bg)),var(--input-bg));
+  border:1px solid color-mix(in srgb,var(--ac1) 26%,var(--input-border));
+  border-radius:7px;font-weight:700;
+}
+
+/* ── time input: glossy panel ── */
+.ti{
+  font-family:'Orbitron',monospace;font-size:.86rem;font-weight:800;letter-spacing:.06em;
+  border:1px solid color-mix(in srgb,var(--ac1) 28%,var(--input-border));
+  background:linear-gradient(180deg,color-mix(in srgb,var(--ac1) 9%,var(--input-bg)),var(--input-bg));
+  border-radius:8px;padding:7px 2px;
+}
+.ti:focus{border-color:var(--ac2);box-shadow:0 0 10px color-mix(in srgb,var(--ac2) 35%,transparent);}
+
+/* ── point pills: bold tournament +score ── */
+.score-chip{
+  font-family:'Orbitron',monospace;font-size:.82rem;font-weight:900;
+  padding:3px 12px;border-radius:8px;min-width:44px;letter-spacing:.5px;
+}
+.sc12{background:linear-gradient(135deg,rgba(239,68,68,.3),rgba(239,68,68,.14));box-shadow:0 0 10px rgba(239,68,68,.3);}
+.sc11{background:linear-gradient(135deg,rgba(245,197,24,.32),rgba(245,197,24,.14));box-shadow:0 0 10px rgba(245,197,24,.3);}
+.sch{background:linear-gradient(135deg,rgba(34,197,94,.24),rgba(34,197,94,.1));color:var(--green);}
+.scm{background:linear-gradient(135deg,color-mix(in srgb,var(--ac2) 22%,transparent),color-mix(in srgb,var(--ac2) 8%,transparent));color:var(--ac2);}
+
+/* ── league summary bar: bigger numbers ── */
+.total-row-border{height:3px;}
+.total-val{font-size:1.05rem;padding:14px 4px;}
+.tv-top{font-size:1.34rem;}
+.tr-lbl{font-size:.66rem;letter-spacing:2px;}
+
+/* ════ STAGE VISUAL GUIDE (image placeholders + auto theme) ════ */
+#stagePageOverlay{position:fixed;inset:0;z-index:600;background:color-mix(in srgb,var(--bg) 88%,#000);backdrop-filter:blur(10px);display:none;flex-direction:column;animation:modalFadeIn .25s ease;}
+.stage-page-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 22px;background:linear-gradient(180deg,color-mix(in srgb,var(--ac1) 32%,var(--s2)),color-mix(in srgb,var(--ac1) 8%,var(--s1)));border-bottom:2px solid color-mix(in srgb,var(--ac1) 42%,var(--card-border));}
+.stage-page-title{font-family:'Orbitron',monospace;font-weight:900;font-size:1.02rem;letter-spacing:1px;color:var(--text);text-shadow:0 0 14px color-mix(in srgb,var(--ac2) 50%,transparent);display:flex;flex-direction:column;gap:3px;}
+.stage-page-sub{font-family:'Exo 2',sans-serif;font-weight:600;font-size:.72rem;letter-spacing:.2px;color:var(--text2);}
+.stage-page-body{flex:1;overflow-y:auto;padding:20px 22px 60px;}
+.stage-sec{max-width:1520px;margin:0 auto 30px;}
+.stage-sec-hdr{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--card-border);}
+.stage-sec-star{font-family:'Orbitron',monospace;font-weight:900;font-size:1rem;letter-spacing:1px;}
+.stage-sec-count{font-family:'Rajdhani',monospace;font-weight:700;font-size:.7rem;letter-spacing:1px;color:var(--dim);text-transform:uppercase;}
+.stage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;}
+.stage-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,10,.3);transition:transform .2s,border-color .2s;}
+.stage-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--ac2) 55%,var(--card-border));}
+.stage-ph{position:relative;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-bottom:1px solid var(--card-border);}
+.stage-ph-grad{position:absolute;inset:0;}
+.stage-ph::after{content:'';position:absolute;inset:8px;border:2px dashed rgba(255,255,255,.42);border-radius:8px;pointer-events:none;}
+.stage-ph-ico{font-size:1.7rem;position:relative;z-index:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.55));}
+.stage-ph-hint{position:relative;z-index:1;font-family:'Rajdhani',monospace;font-weight:700;font-size:.7rem;text-align:center;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.75);letter-spacing:.5px;line-height:1.5;}
+.stage-tag{position:absolute;top:8px;left:8px;z-index:2;font-family:'Orbitron',monospace;font-weight:700;font-size:.56rem;letter-spacing:1px;color:#fff;padding:3px 8px;border-radius:5px;text-transform:uppercase;box-shadow:0 2px 6px rgba(0,0,0,.45);}
+.stage-info{padding:11px 13px 13px;}
+.stage-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;}
+.stage-name{font-family:'Exo 2',sans-serif;font-weight:800;font-size:.9rem;color:var(--text);line-height:1.2;}
+.stage-star{font-family:'Orbitron',monospace;font-weight:900;font-size:.66rem;border:1px solid;border-radius:5px;padding:2px 6px;flex:none;}
+.stage-desc{font-family:'Exo 2',sans-serif;font-size:.74rem;line-height:1.5;color:var(--text2);margin-bottom:9px;}
+.stage-pal{display:flex;gap:5px;}
+.stage-pal i{width:22px;height:14px;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);}
+@media(max-width:520px){.stage-grid{grid-template-columns:1fr 1fr;gap:10px;}.stage-name{font-size:.78rem;}.stage-desc{font-size:.66rem;}.stage-ph-hint{font-size:.58rem;}}
 </style>
 </head>
 <body>
@@ -1363,6 +1491,7 @@ header{padding-top:34px;}
       <button class="btn" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#c084fc;" onclick="openScoreModal(null)">🏆 <span class="btn-txt" data-i18n="allScore">คะแนนรวมทั้งหมด</span></button>
       <button class="btn" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.35);color:#34d399;" onclick="openStageRecModal(null)">🎯 <span class="btn-txt" data-i18n="allStageRec">สถิติด่านทั้งหมด</span></button>
       <button class="btn" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#c084fc;" onclick="openCarStatsModal(null)">🚗 <span class="btn-txt" data-i18n="allCarStats">สถิติรถทั้งหมด</span></button>
+      <button class="btn" style="background:color-mix(in srgb,var(--ac1) 12%,transparent);border-color:color-mix(in srgb,var(--ac1) 38%,transparent);color:var(--ac2);" onclick="openStagePage()">🖼 <span class="btn-txt">Stages</span></button>
       <button class="btn" id="btnCollapseAll" style="background:var(--input-bg);border-color:var(--card-border);color:var(--text2);" onclick="collapseAll()">⊟ <span class="btn-txt" id="collapseAllTxt" data-i18n="collapseAll">ย่อทั้งหมด</span></button>
       <button class="btn btn-excel" onclick="importExcel()">📥 <span class="btn-txt" data-i18n="importExcel">Import</span></button>
       <button class="btn btn-clear" onclick="confirmClear()">🗑 <span class="btn-txt" data-i18n="clearData">ล้างข้อมูล</span></button>
@@ -3972,6 +4101,56 @@ document.getElementById('globeLabel').textContent=T('globeLabel');
 buildTitle();
 document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=T(el.dataset.i18n));
 renderAll();
+
+// ════ STAGE VISUAL GUIDE ════
+const STAGE_THEMES=[
+  {re:/snow|winter|ice|polar|glacier|chasm/i,tag:'Frozen',c:['#dff1ff','#7fc7ff','#3a78c2','#0c2a4d'],d:'Crisp frozen atmosphere — drifting snow, pale-blue ice and long cold shadows. Use a wintry slope or glacial canyon under overcast light; lean on white-blue highlights and breath-fog haze.'},
+  {re:/sea|ocean|island|seaside|mermaid|azure|lake|river|boat|atlantis|eden valley/i,tag:'Aquatic',c:['#d3fff6','#3ee0cf','#0e9ec4','#063b46'],d:'Bright aquatic mood — turquoise water, sea spray and open horizons. Show a coastal circuit or submerged city; lean on teal-cyan reflections and sunlit foam.'},
+  {re:/desert|sand|golden river|wild west|dune|gobi/i,tag:'Desert',c:['#fff2cf','#ffc83d','#d4882a','#5e3a0a'],d:'Warm desert haze — sun-bleached sand, dust trails and golden light. Use dunes or a sun-baked canyon road with amber tones and heat shimmer.'},
+  {re:/space|aerospace|mars|superstring|alpha|cosmo|galax/i,tag:'Sci-Fi',c:['#e6e0ff','#a86bff','#3b6bff','#0a0a2e'],d:'Futuristic, weightless sci-fi — neon panels, deep space and chrome rails. Show an orbital track or launch facility; violet-cyan glow over a dark void.'},
+  {re:/dragon|ancient|palace|gate|forge|inferno|king|shu|capital|grottoes|mogao|epic|legend/i,tag:'Mythic',c:['#ffe0c0','#ff7a3c','#c0392b','#3a0e0a'],d:'Epic mythic grandeur — carved stone, fire and old-world majesty. Use a temple, dragon gate or molten forge; amber-crimson palette with drifting embers.'},
+  {re:/canyon|gorge|hill|cliff|scotland|highland|great wall|mountain|maple|foggy|five elements|wushan/i,tag:'Rugged',c:['#e9e3d0','#b4a06a','#6b7d4a','#2e2a1a'],d:'Rugged outdoor terrain — rock faces, ridgelines and misty distance. Show cliffs or a mountain pass in earthy ochre-green under soft fog.'},
+  {re:/forest|valley|meadow|green|flower|garden|autumn|villa|tianfu|jiangxi/i,tag:'Verdant',c:['#e6ffe0','#7fe08f','#2f9e54','#103a1e'],d:'Lush verdant calm — foliage, blossoms and dappled daylight. Use rolling greenery or a flower valley with fresh greens and warm sun.'},
+  {re:/amusement|dream|magic|music|illusion|painted|landscape|blue and white|romantic|holiday|adventure|320|star dream/i,tag:'Whimsical',c:['#ffe3f5','#ff8fd0','#7ab8ff','#2a2a5e'],d:'Playful, dreamlike whimsy — candy colours and soft glow. Show a theme park or surreal painted world in pastel pinks and blues.'},
+  {re:/night|moon|nightless|eclipse|dark/i,tag:'Nocturnal',c:['#dfe0ff','#9a8fff','#4b3a8c','#0c0a26'],d:'Quiet nocturnal mood — moonlight, city glow and deep blue night. Use a night skyline or moonlit road; cool indigo with bright neon points.'},
+  {re:/city|urban|troy|station|los angeles|cologne|11|chase|circular|neuschwanstein/i,tag:'Metropolis',c:['#e0f3ff','#39c0ff','#2a6fdb','#0a1530'],d:'High-energy metropolis — glass towers, traffic-light trails and neon signage. Show a downtown circuit at dusk in electric blue with sign glow.'}
+];
+const STAGE_DEFAULT={tag:'Speed',c:['#eaf4ff','#5fd0ff','#1d6fe8','#0a1530'],d:'High-velocity race energy — motion blur, light streaks and bold track lighting. Use a dynamic speedway shot with strong accent streaks and depth of field.'};
+function stageTheme(name){const n=String(name).toLowerCase();for(const t of STAGE_THEMES){if(t.re.test(n))return t;}return STAGE_DEFAULT;}
+function buildStageGallery(){
+  const wrap=document.getElementById('stageGalleryBody');if(!wrap)return;wrap.innerHTML='';
+  [7,6,5,4,3].forEach(star=>{
+    const list=(typeof SBS!=='undefined'&&SBS[star])?SBS[star]:null;if(!list||!list.length)return;
+    const seen=new Set();
+    const sec=document.createElement('div');sec.className='stage-sec';
+    const uniq=list.filter(n=>{if(seen.has(n))return false;seen.add(n);return true;});
+    const col=(typeof SC!=='undefined'&&SC[star])?SC[star]:'var(--ac2)';
+    const h=document.createElement('div');h.className='stage-sec-hdr';
+    h.innerHTML=`<span class="stage-sec-star" style="color:${col}">${star}★ TIER</span><span class="stage-sec-count">${uniq.length} maps</span>`;
+    sec.appendChild(h);
+    const grid=document.createElement('div');grid.className='stage-grid';
+    uniq.forEach(name=>{
+      const th=stageTheme(name);
+      const card=document.createElement('div');card.className='stage-card';
+      const g=`linear-gradient(135deg,${th.c[3]},${th.c[2]})`;
+      card.innerHTML=`<div class="stage-ph" style="background:${g}"><div class="stage-ph-grad" style="background:linear-gradient(160deg,${th.c[1]}33,transparent 70%)"></div><span class="stage-tag" style="background:${th.c[2]}">${th.tag}</span><span class="stage-ph-ico">🏞️</span><span class="stage-ph-hint">Add stage image<br><b>1920 × 1080</b></span></div><div class="stage-info"><div class="stage-row"><span class="stage-name">${name}</span><span class="stage-star" style="color:${col};border-color:${col}66">${star}★</span></div><div class="stage-desc">${th.d}</div><div class="stage-pal">${th.c.map(c=>`<i style="background:${c}"></i>`).join('')}</div></div>`;
+      grid.appendChild(card);
+    });
+    sec.appendChild(grid);wrap.appendChild(sec);
+  });
+}
+function openStagePage(){const ov=document.getElementById('stagePageOverlay');if(!ov)return;buildStageGallery();ov.style.display='flex';document.body.style.overflow='hidden';}
+function closeStagePage(){const ov=document.getElementById('stagePageOverlay');if(ov)ov.style.display='none';document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStagePage();});
 </script>
+<div id="stagePageOverlay">
+  <div class="stage-page-hdr">
+    <div class="stage-page-title">🖼 STAGE VISUAL GUIDE
+      <span class="stage-page-sub">Placeholder + recommended image theme for every map — drop real artwork in later</span>
+    </div>
+    <button class="btn btn-clear" onclick="closeStagePage()">✕ Close</button>
+  </div>
+  <div class="stage-page-body"><div id="stageGalleryBody"></div></div>
+</div>
 </body>
 </html>
