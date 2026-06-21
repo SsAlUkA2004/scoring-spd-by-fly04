@@ -2918,7 +2918,7 @@ async function captureTableImage(){
   const ac1=cv('--ac1', isLight?'#c01515':'#ef2b2b');
 
   // ── sizes ──
-  const SCALE=2, PAD=24, COL_W=130;
+  const SCALE=2, PAD=24, BASE_COL_W=130;
   const HEAD_H=46, BAND_H=46, ENTRY_H=80, E_GAP=7, BODY_PAD=12;
   // Fixed print height: always size the column body as if MAX_P players are present,
   // so 2–5 player exports print at the SAME dimensions as a full 6-player export.
@@ -2934,8 +2934,18 @@ async function captureTableImage(){
   const anyBans=(tObj.bans||[]).slice(0,pc).some(b=>b);
   const BAN_H=anyBans?40:0;
   const FOOT_H=78, ACCENT=4;
-  const W=PAD*2 + COL_W*activeRows;
   const H=PAD + ACCENT + TITLE_H + BAN_H + COL_H + FOOT_H + PAD;
+  // ── force a consistent 16:9 frame for every player & round count ──
+  // Portrait tables (the common case) get their round columns widened to fill
+  // the 16:9 width; very wide tables (many rounds) are centred with top/bottom
+  // breathing room. Either way every export lands at exactly 16:9.
+  const RATIO=16/9;
+  let COL_W, W;
+  const naturalW=PAD*2 + BASE_COL_W*activeRows;
+  if(naturalW < H*RATIO){ W=Math.round(H*RATIO); COL_W=(W-PAD*2)/activeRows; }
+  else { W=naturalW; COL_W=BASE_COL_W; }
+  const H16=Math.max(H, Math.round(W/RATIO));
+  const offY=Math.round((H16-H)/2);
 
   // ── preload stage background images ──
   const imgCache={};
@@ -2951,8 +2961,11 @@ async function captureTableImage(){
   })));
 
   const canvas=document.createElement('canvas');
-  canvas.width=W*SCALE;canvas.height=H*SCALE;
+  canvas.width=W*SCALE;canvas.height=H16*SCALE;
   const ctx=canvas.getContext('2d');ctx.scale(SCALE,SCALE);
+  // paint the full 16:9 frame, then centre the table block within it
+  ctx.fillStyle=bgColor;ctx.fillRect(0,0,W,H16);
+  ctx.translate(0,offY);
 
   function drawCover(img,x,y,w,h){
     const ir=img.width/img.height, rr=w/h;let dw,dh;
