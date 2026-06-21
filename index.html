@@ -1029,6 +1029,10 @@ td.king-td{padding-top:0 !important;vertical-align:middle;}
 .img-input:focus{border-color:var(--blue2);box-shadow:0 0 8px rgba(29,111,232,.2);}
 .img-input::placeholder{color:var(--dim);font-size:.82rem;}
 .img-textarea{resize:vertical;min-height:70px;font-family:'Exo 2','Sarabun',sans-serif;}
+.fmt-toggle{display:flex;gap:8px;}
+.fmt-btn{flex:1;background:var(--input-bg);border:1px solid var(--input-border);color:var(--text2);font-family:'Rajdhani','Sarabun',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:.5px;padding:10px 10px;border-radius:8px;cursor:pointer;transition:all .18s;}
+.fmt-btn:hover{border-color:var(--gold);color:var(--text);}
+.fmt-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(245,197,24,.12);box-shadow:0 0 10px rgba(245,197,24,.18);}
 
 /* ── BLOCK ACTION BUTTONS ── */
 .btn-img,.btn-rst{
@@ -1538,6 +1542,13 @@ th{border-bottom:3px solid color-mix(in srgb,var(--ac2) 50%,var(--card-border));
         <div class="img-field">
           <label class="img-label">รายละเอียด (ไม่บังคับ)</label>
           <textarea id="imgModalDesc" class="img-input img-textarea" placeholder="เช่น วันที่ 5 มิ.ย. 2026 รอบชิงชนะเลิศ..." rows="3"></textarea>
+        </div>
+        <div class="img-field" id="imgFormatField" style="display:none">
+          <label class="img-label">รูปแบบการแข่งขัน</label>
+          <div class="fmt-toggle">
+            <button type="button" class="fmt-btn" data-fmt="solo" onclick="setImgFormat('solo')">⚔️ เดี่ยว</button>
+            <button type="button" class="fmt-btn" data-fmt="team" onclick="setImgFormat('team')">🛡️ ทีม</button>
+          </div>
         </div>
         <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
           <button class="btn btn-clear" onclick="closeSaveImgModal()">ยกเลิก</button>
@@ -2845,11 +2856,22 @@ function resetTable(tid){
 
 // ── SAVE IMAGE MODAL ──
 let _saveImageTid=null;
+let _imgFormat='solo';
+function setImgFormat(f){
+  _imgFormat=f;
+  const tObj=tables.find(t=>t.id===_saveImageTid);
+  if(tObj){tObj.matchFormat=f;save();}
+  document.querySelectorAll('#imgFormatField .fmt-btn').forEach(b=>b.classList.toggle('active',b.dataset.fmt===f));
+}
 function openSaveImageModal(tid){
   _saveImageTid=tid;
   const tObj=tables.find(t=>t.id===tid);
   document.getElementById('imgModalTitle').value=`${T('matchLabel')} #${tObj.id+1}`;
   document.getElementById('imgModalDesc').value='';
+  const _ff=document.getElementById('imgFormatField');
+  const _pc=tObj.playerCount||4;
+  if(_pc===4||_pc===6){_ff.style.display='flex';setImgFormat(tObj.matchFormat||'solo');}
+  else{_ff.style.display='none';}
   document.getElementById('saveImgModal').style.display='flex';
   document.body.style.overflow='hidden';
   setTimeout(()=>document.getElementById('imgModalTitle').focus(),100);
@@ -2911,7 +2933,7 @@ async function captureTableImage(){
   const TITLE_H=descTxt?86:66;
   const anyBans=(tObj.bans||[]).slice(0,pc).some(b=>b);
   const BAN_H=anyBans?40:0;
-  const FOOT_H=54, ACCENT=4;
+  const FOOT_H=78, ACCENT=4;
   const W=PAD*2 + COL_W*activeRows;
   const H=PAD + ACCENT + TITLE_H + BAN_H + COL_H + FOOT_H + PAD;
 
@@ -3084,46 +3106,97 @@ async function captureTableImage(){
   }
   y+=COL_H;
 
-  // ── footer total bar ──
+  // ── footer scoreboard bar (VS format) ──
   const fy=y;
   const fg=ctx.createLinearGradient(0,fy,W,fy);
   fg.addColorStop(0,ac1+'73');fg.addColorStop(.5,goldColor+'33');fg.addColorStop(1,ac1+'73');
   ctx.fillStyle=fg;ctx.fillRect(0,fy,W,FOOT_H);
   ctx.fillStyle=goldColor+'66';ctx.fillRect(0,fy,W,2);
-  ctx.textAlign='left';ctx.font='700 16px Sarabun,Rajdhani,sans-serif';ctx.fillStyle=goldColor;
-  ctx.fillText('⚡ '+T('grandTotal').replace('⚡','').trim(),PAD,fy+FOOT_H/2+6);
-
-  const chips=[];
-  for(let p=0;p<pc;p++){
-    const nm=(tObj.players[p]||'').trim()||('P'+(p+1));
-    const isTop=tots[p]===maxT&&maxT>0;
-    ctx.font='700 16px Rajdhani,sans-serif';const nameW=ctx.measureText(nm).width;
-    ctx.font='800 19px Rajdhani,monospace';const numW=ctx.measureText(String(tots[p])).width;
-    const base=nameW+9+numW;
-    chips.push({nm,tot:tots[p],isTop,nameW,base,w:base+(isTop?24:0)});
-  }
-  const GAP=24;
-  const totalW=chips.reduce((a,c)=>a+c.w,0)+GAP*Math.max(0,chips.length-1);
-  let startX=W/2-totalW/2;
   const midY=fy+FOOT_H/2;
-  for(const c of chips){
-    if(c.isTop){
-      ctx.fillStyle='rgba(245,197,24,.16)';roundRect(ctx,startX,midY-15,c.w,30,15);ctx.fill();
-      ctx.strokeStyle=goldColor+'80';ctx.lineWidth=1;roundRect(ctx,startX,midY-15,c.w,30,15);ctx.stroke();
+
+  // metric per player: rounds-won for 2P, total score otherwise
+  const isTeam=(pc===4||pc===6)&&(tObj.matchFormat==='team');
+  let wins=null;
+  if(pc===2){
+    wins=[0,0];
+    for(let r=0;r<activeRows;r++){
+      const s=allScores[r];const a=(s[0]==null?-1:s[0]),b=(s[1]==null?-1:s[1]);
+      if(a<0&&b<0)continue;
+      if(a>b)wins[0]++;else if(b>a)wins[1]++;
     }
-    let x=startX+(c.isTop?12:0);
-    ctx.textAlign='left';ctx.font='700 16px Rajdhani,sans-serif';ctx.fillStyle=c.isTop?goldColor:'#e89a9a';
-    ctx.fillText(c.nm,x,midY+6);
-    x+=c.nameW+9;
-    ctx.font='800 19px Rajdhani,monospace';ctx.fillStyle=c.isTop?goldColor:'#ff8a8a';
-    if(c.isTop){ctx.shadowColor=goldColor;ctx.shadowBlur=8;}
-    ctx.fillText(String(c.tot),x,midY+6);
-    ctx.shadowBlur=0;
-    startX+=c.w+GAP;
+  }
+  const vals=[];for(let p=0;p<pc;p++)vals.push(pc===2?wins[p]:tots[p]);
+  const maxVal=Math.max(...vals,0);
+
+  // ── VS emblem — italic Rajdhani (echoes the ROUND headers), gold→red gradient + glow ──
+  function drawVS(cx,sz){
+    ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+    const g=ctx.createLinearGradient(cx-sz,0,cx+sz,0);
+    g.addColorStop(0,'#ff6b6b');g.addColorStop(.5,goldColor);g.addColorStop(1,'#ff6b6b');
+    ctx.strokeStyle=goldColor+'7a';ctx.lineWidth=Math.max(1.5,sz*0.06);
+    ctx.beginPath();ctx.moveTo(cx-sz*0.96,midY+sz*0.46);ctx.lineTo(cx-sz*0.60,midY-sz*0.46);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx+sz*0.60,midY+sz*0.46);ctx.lineTo(cx+sz*0.96,midY-sz*0.46);ctx.stroke();
+    ctx.font=`italic 900 ${sz}px Rajdhani,sans-serif`;
+    ctx.shadowColor='rgba(0,0,0,.55)';ctx.shadowBlur=6;ctx.shadowOffsetY=2;
+    ctx.fillStyle=g;ctx.fillText('VS',cx,midY+1);
+    ctx.restore();
   }
 
-  ctx.textAlign='right';ctx.font='500 11px "Exo 2",sans-serif';ctx.fillStyle=dimColor;
-  ctx.fillText('🏁 Race Time Tracker',W-PAD,midY+5);
+  // ── element builders (each returns {w, draw(cx)}) ──
+  const FNAME='700 15px Sarabun,Rajdhani,sans-serif';
+  const FVAL ='900 23px Rajdhani,monospace';
+  const FBIG ='900 31px Rajdhani,monospace';
+  function playerEl(name,val,top){
+    ctx.font=FNAME;const nw=ctx.measureText(name).width;
+    ctx.font=FVAL;const vw=ctx.measureText(String(val)).width;
+    const w=Math.max(nw,vw,30);
+    return {w,draw(cx){
+      if(top){ctx.fillStyle='rgba(245,197,24,.14)';roundRect(ctx,cx-w/2-10,midY-20,w+20,40,10);ctx.fill();
+        ctx.strokeStyle=goldColor+'70';ctx.lineWidth=1;roundRect(ctx,cx-w/2-10,midY-20,w+20,40,10);ctx.stroke();}
+      ctx.textAlign='center';
+      ctx.font=FNAME;ctx.fillStyle=top?goldColor:'#ffcaca';
+      fillTextEllipsis(ctx,name,cx,midY-3,w+18);
+      ctx.font=FVAL;ctx.fillStyle=top?goldColor:'#ff8a8a';
+      if(top){ctx.shadowColor=goldColor;ctx.shadowBlur=7;}
+      ctx.fillText(String(val),cx,midY+19);ctx.shadowBlur=0;
+    }};
+  }
+  function bigEl(num,top){
+    ctx.font=FBIG;const w=ctx.measureText(String(num)).width;
+    return {w,draw(cx){
+      ctx.textAlign='center';ctx.font=FBIG;ctx.fillStyle=top?goldColor:'#ffd9d9';
+      if(top){ctx.shadowColor=goldColor;ctx.shadowBlur=10;}
+      ctx.fillText(String(num),cx,midY+11);ctx.shadowBlur=0;
+    }};
+  }
+  function vsEl(sz){return {w:sz*1.95,draw(cx){drawVS(cx,sz);}};}
+
+  const els=[];
+  if(isTeam){
+    const half=pc/2;
+    const lt=vals.slice(0,half).reduce((a,b)=>a+b,0);
+    const rt=vals.slice(half).reduce((a,b)=>a+b,0);
+    const lWin=lt>rt, rWin=rt>lt;
+    for(let p=0;p<half;p++)els.push(playerEl((tObj.players[p]||'').trim()||('P'+(p+1)),vals[p],false));
+    els.push(bigEl(lt,lWin));
+    els.push(vsEl(34));
+    els.push(bigEl(rt,rWin));
+    for(let p=half;p<pc;p++)els.push(playerEl((tObj.players[p]||'').trim()||('P'+(p+1)),vals[p],false));
+  }else{
+    for(let p=0;p<pc;p++){
+      if(p>0)els.push(vsEl(21));
+      els.push(playerEl((tObj.players[p]||'').trim()||('P'+(p+1)),vals[p],vals[p]===maxVal&&maxVal>0));
+    }
+  }
+
+  const GAP=18;
+  const totalW=els.reduce((a,e)=>a+e.w,0)+GAP*Math.max(0,els.length-1);
+  let ex=W/2-totalW/2;
+  for(const e of els){ex+=e.w/2;e.draw(ex);ex+=e.w/2+GAP;}
+  ctx.textBaseline='alphabetic';
+
+  ctx.textAlign='right';ctx.font='500 9px "Exo 2",sans-serif';ctx.fillStyle=dimColor;
+  ctx.fillText('🏁 Race Time Tracker',W-PAD,fy+FOOT_H-8);
 
   const link=document.createElement('a');
   link.download=`race_match_${tObj.id+1}_${Date.now()}.png`;
