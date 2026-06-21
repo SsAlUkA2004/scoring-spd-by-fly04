@@ -2919,7 +2919,7 @@ async function captureTableImage(){
 
   // ── sizes ──
   const SCALE=2, PAD=24, COL_W=130;
-  const HEAD_H=46, BAND_H=46, ENTRY_H=66, E_GAP=7, BODY_PAD=12;
+  const HEAD_H=46, BAND_H=46, ENTRY_H=80, E_GAP=7, BODY_PAD=12;
   // Fixed print height: always size the column body as if MAX_P players are present,
   // so 2–5 player exports print at the SAME dimensions as a full 6-player export.
   const bodyH=BODY_PAD*2 + MAX_P*ENTRY_H + (MAX_P-1)*E_GAP;
@@ -3062,28 +3062,32 @@ async function captureTableImage(){
       const nameClr=isKingHL?'#ff9494':isBestHL?goldColor:'#ffe9e9';
       const timeClr=isKingHL?'#ff7b7b':isBestHL?'#ffe9a8':'#f4cccc';
       const pName=(tObj.players[p]||'').trim()||('P'+(p+1));
-      ctx.shadowColor='rgba(0,0,0,.85)';ctx.shadowBlur=3;ctx.shadowOffsetY=1;
-      ctx.textAlign='center';ctx.fillStyle=nameClr;ctx.font='700 14px Rajdhani,sans-serif';
-      fillTextEllipsis(ctx,(isKingHL?'👑 ':'')+pName,ecx,ey+13,COL_W-12);
+      ctx.shadowColor='rgba(0,0,0,.9)';ctx.shadowBlur=5;ctx.shadowOffsetY=2;
+      ctx.textAlign='center';ctx.fillStyle=nameClr;ctx.font='800 18px Rajdhani,sans-serif';
+      fillTextEllipsis(ctx,(isKingHL?'👑 ':'')+pName,ecx,ey+17,COL_W-10);
       const tv=tObj.rows[r].times[p]||'—';
-      ctx.fillStyle=timeClr;ctx.font='700 14px Rajdhani,monospace';
-      ctx.fillText(tv,ecx,ey+30);
+      ctx.fillStyle=timeClr;ctx.font='800 18px Rajdhani,monospace';
+      ctx.fillText(tv,ecx,ey+39);
       ctx.shadowBlur=0;ctx.shadowOffsetY=0;
       if(sc!==null){
-        const chipW=34,chipH=15,chipX=ecx-chipW/2,chipY=ey+36;
+        const chipW=44,chipH=19,chipX=ecx-chipW/2,chipY=ey+46;
         ctx.fillStyle=isKingHL?'rgba(239,43,43,.3)':isBestHL?'rgba(245,197,24,.22)':'rgba(255,255,255,.08)';
-        roundRect(ctx,chipX,chipY,chipW,chipH,5);ctx.fill();
-        ctx.fillStyle=isKingHL?'#ff7b7b':isBestHL?goldColor:'#e89a9a';
-        ctx.font='800 12px Rajdhani,monospace';ctx.fillText('+'+sc,ecx,chipY+11);
+        roundRect(ctx,chipX,chipY,chipW,chipH,6);ctx.fill();
+        ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;ctx.shadowOffsetY=1;
+        ctx.fillStyle=isKingHL?'#ff7b7b':isBestHL?goldColor:'#f0b0b0';
+        ctx.font='900 15px Rajdhani,monospace';ctx.fillText('+'+sc,ecx,chipY+14);
+        ctx.shadowBlur=0;ctx.shadowOffsetY=0;
       } else if(activeRows>ROWS_BASE&&r>=ROWS_BASE){
-        ctx.fillStyle=dimColor;ctx.font='600 9px Rajdhani,monospace';ctx.fillText('NO PT',ecx,ey+46);
+        ctx.fillStyle=dimColor;ctx.font='700 11px Rajdhani,monospace';ctx.fillText('NO PT',ecx,ey+58);
       }
       const carName=((tObj.rows[r].cars||[])[p]||'').trim();
       if(carName){
         const cls=getCarClass(carName);
-        const carClr=cls==='T'?'#22c55e':cls==='A'?'#c084fc':'rgba(244,182,182,.62)';
-        ctx.fillStyle=carClr;ctx.font='600 9px "Exo 2",sans-serif';
-        fillTextEllipsis(ctx,carName,ecx,ey+ENTRY_H-6,COL_W-10);
+        const carClr=cls==='T'?'#3dd86a':cls==='A'?'#cf9bff':'#ffd0d0';
+        ctx.shadowColor='rgba(0,0,0,.9)';ctx.shadowBlur=4;ctx.shadowOffsetY=1;
+        ctx.fillStyle=carClr;ctx.font='700 12px "Exo 2",sans-serif';
+        fillTextEllipsis(ctx,carName,ecx,ey+ENTRY_H-7,COL_W-8);
+        ctx.shadowBlur=0;ctx.shadowOffsetY=0;
       }
     }
 
