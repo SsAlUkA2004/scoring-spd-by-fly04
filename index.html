@@ -2898,8 +2898,16 @@ async function captureTableImage(){
   // ── sizes ──
   const SCALE=2, PAD=24, COL_W=130;
   const HEAD_H=46, BAND_H=46, ENTRY_H=66, E_GAP=7, BODY_PAD=12;
-  const bodyH=BODY_PAD*2 + pc*ENTRY_H + (pc-1)*E_GAP;
+  // Fixed print height: always size the column body as if MAX_P players are present,
+  // so 2–5 player exports print at the SAME dimensions as a full 6-player export.
+  const bodyH=BODY_PAD*2 + MAX_P*ENTRY_H + (MAX_P-1)*E_GAP;
   const COL_H=HEAD_H+bodyH+BAND_H;
+  // Scale each player slot up to fill the fixed body (capped for readability),
+  // then space them evenly down the column so fewer players read as a balanced
+  // table, not a clump squashed at the top.
+  const ENTRY_MAX=100;
+  const slotH=Math.min(ENTRY_MAX, Math.max(ENTRY_H, (bodyH - BODY_PAD*2 - (pc-1)*E_GAP)/pc));
+  const slotGap=(bodyH - BODY_PAD*2 - pc*slotH)/pc; // even space-around distribution
   const TITLE_H=descTxt?86:66;
   const anyBans=(tObj.bans||[]).slice(0,pc).some(b=>b);
   const BAN_H=anyBans?40:0;
@@ -3015,9 +3023,10 @@ async function captureTableImage(){
     if(isKing){ctx.font='13px sans-serif';ctx.fillText('👑',colX+COL_W-13,colY+15);}
 
     // entries
-    const bodyTop=colY+HEAD_H+BODY_PAD;
+    const bodyTop=colY+HEAD_H;
     for(let p=0;p<pc;p++){
-      const ey=bodyTop+p*(ENTRY_H+E_GAP), ecx=colX+COL_W/2;
+      const slotY=bodyTop+BODY_PAD+slotGap/2+p*(slotH+slotGap);
+      const ey=slotY+(slotH-ENTRY_H)/2, ecx=colX+COL_W/2;
       const sc=allScores[r][p];
       const isKingHL=sc===12;
       const isBestHL=allParsed[r][p]!==null&&allParsed[r][p]===allBest[r]&&!isKingHL;
